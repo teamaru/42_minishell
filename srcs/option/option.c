@@ -24,7 +24,7 @@ void parse_option(t_request *request, char **line)
   if (request->cmd_id != ECHO)
     return ;
   clear_white(line);
-  if (**line != OPTION)
+  if (**line != HYPHEN)
     return ;
   option = get_chunk(line);
   if (!is_valid_option(option))

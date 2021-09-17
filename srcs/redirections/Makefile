@@ -3,6 +3,7 @@ CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 INCLUDE := -I./
 SRCS := main.c \
+		append.c \
 		input.c \
 		output.c
 

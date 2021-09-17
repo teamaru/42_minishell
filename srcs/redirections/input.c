@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/15 22:30:32 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/16 21:02:21 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/17 21:08:09 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ void	redirecting_input(char *file_path)
 		perror("open");
 		exit(1);
 	}
-
 	// 標準入力(fd=0)をクローズする
-	close(0);
-
+	if (close(0) < 0)
+	{
+		perror("close");
+		exit(1);
+	}
 	// dup2でfile_fdの複製をfd=0として作成する
 	if (dup2(file_fd, 0) <  0)
 	{
@@ -39,7 +41,10 @@ void	redirecting_input(char *file_path)
 		close(file_fd);
 		exit(1);
 	}
-
 	// file_fdをクローズしファイルはfd=0からのみアクセス可能
-	close(file_fd);
+	if (close(file_fd) < 0)
+	{
+		perror("close");
+		exit(1);
+	}
 }

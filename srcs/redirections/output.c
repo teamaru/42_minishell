@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 13:59:06 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/17 15:45:36 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/17 16:55:06 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	redirecting_output(char *file_path)
 {
 	int	file_fd;
 
-	file_fd = open(file_path, O_RDWR | O_CREAT, S_IREAD | S_IWRITE);
+	file_fd = open(file_path, O_RDWR | O_CREAT | O_TRUNC, S_IREAD | S_IWRITE);
 	if (file_fd < 0)
 	{
 		perror(file_path);

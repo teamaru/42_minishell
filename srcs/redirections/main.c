@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 19:43:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/17 16:40:10 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/17 16:49:04 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	exec_command(char *command)
 {
 	char	*arg[2];
 
-	arg[0] = ft_strjoin("/usr/bin/", command);
+	arg[0] = ft_strjoin("/bin/", command);
 	arg[1] = NULL;
 	if (execve(arg[0], arg, NULL) < 0)
 	{

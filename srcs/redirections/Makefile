@@ -3,7 +3,9 @@ CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 INCLUDE := -I./
 SRCS := main.c \
-		input.c
+		input.c \
+		output.c
+
 OBJS := $(SRCS:.c=.o)
 DEPS := $(SRCS:%.c=%.d)
 LIBFTDIR := ../../libft/
@@ -36,4 +38,4 @@ fclean:
 test: $(LIBFT)
 	$(CC) -g $(CFLAGS) $(SRCS) $(LIBFT) $(INCLUDE) -o $(REDIRECT)
 
-re: fclean al
+re: fclean all

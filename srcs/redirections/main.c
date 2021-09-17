@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 19:43:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/16 21:03:34 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/17 16:40:10 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,12 @@ int	main(int ac, char **av)
 	*/
 	if (!ft_strncmp(redirection, "<", 2) || !ft_strncmp(redirection, "0<", 3))
 		redirecting_input(file_name);
+
+	/*
+	** > (output)
+	*/
+	if (!ft_strncmp(redirection, ">", 2))
+		redirecting_output(file_name);
 
 	exec_command(command);
 	return (0);

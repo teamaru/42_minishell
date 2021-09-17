@@ -1,28 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirect.h                                         :+:      :+:    :+:   */
+/*   output.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/15 22:51:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/17 14:08:34 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/09/17 13:59:06 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/09/17 15:45:36 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REDIRECT_H
-# define REDIRECT_H
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include <redirect.h>
 
 /*
-** open
+** command > file_path
 */
-#include <fcntl.h>
+void	redirecting_output(char *file_path)
+{
+	int	file_fd;
 
-void	redirecting_input(char *file_path);
-void	redirecting_output(char *file_path);
+	file_fd = open(file_path, O_RDWR | O_CREAT, S_IREAD | S_IWRITE);
+	if (file_fd < 0)
+	{
+		perror(file_path);
+		exit(1);
+	}
 
-#endif
+	close(1);
+
+	// file_fdの複製をfd=0として作成
+	if (dup2(file_fd, 1) < 0)
+	{
+		perror("dup");
+		close(file_fd);
+		exit(1);
+	}
+
+	close(file_fd);
+}

@@ -44,6 +44,41 @@ t_token_type get_token_type(char *token)
   return (token_type);
 }
 
+int token_listsize(t_token *tokens)
+{
+  int size;
+  t_token *token;
+
+  token = tokens;
+  size = 0;
+  while (token)
+  {
+    size++;
+    token = token->next;
+  }
+  return (size);
+}
+
+char **token_list_to_array(t_token *tokens)
+{
+  int i;
+  char **array;
+  t_token *token;
+
+  array = malloc(sizeof(char*) * (token_listsize(tokens) + 1));
+  if (!array)
+    return (NULL);
+  token = tokens;
+  i = -1;
+  while (token)
+  {
+    array[++i] = ft_strdup(token->token);
+    token = token->next;
+  }
+  array[i + 1] = NULL;
+  return (array);
+}
+
 void free_tokens(t_token **head)
 {
   t_token	*token;
@@ -98,16 +133,6 @@ void	append_token(t_token **head, t_token *new)
 t_bool is_delimiter(int c)
 {
   return (ft_strchr_i(DELIMITERS, c) != -1);
-}
-
-void get_string(char *line, int *i)
-{
-  char qt;
-
-  qt = line[*i];
-  while (line[++*i])
-    if (line[*i] == qt)
-      return ;
 }
 
 t_bool find_closing_qt(char *line, int *i)
@@ -177,5 +202,4 @@ void tokenize(t_request *request, char *line)
     get_token(request, &line);
     get_delimiter(request, &line);
   }
-  //print_tokens(request);
 }

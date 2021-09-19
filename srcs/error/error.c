@@ -14,11 +14,14 @@
 
 t_bool print_err_msg(t_request *request, char *msg)
 {
+  (void)request;
   printf(MSG_HEADER);
+  /*
   if (request->cmd)
     printf("%s: ", request->cmd);
   if (request->arguments)
     printf("%s: ", request->arguments->arg);
+  */
   printf("%s", msg);
   return (FALSE);
 }

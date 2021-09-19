@@ -34,6 +34,8 @@
 #define ERR_MSG_INVLD_OPT "invalid option\n"
 #define ERR_MSG_INVLD_EXIT_CD "numeric argument required\n"
 #define ERR_MSG_TOO_MANY_ARGS "too many arguments\n"
+#define ERR_MSG_INVLD_SYNTX "syntax error near unexpected token \n"
+#define ERR_MSG_QT_NOT_CLSD "quote is not closed\n"
 
 typedef enum e_bool
 {
@@ -112,11 +114,8 @@ typedef struct s_cmd
 {
   struct s_cmd *prev;
   struct s_cmd *next;
-  char *cmd;
-  t_argument *arguments;
-  t_bool is_pipe;
-  char *file_path;
-  t_bool is_execution;
+  t_token *args;
+  t_token *rds;
 } t_cmd;
 
 typedef struct s_request
@@ -274,10 +273,12 @@ t_bool is_delimiter(int c);
 t_bool find_closing_qt(char *line, int *i);
 void get_token(t_request *request, char **line);
 void tokenize(t_request *request, char *line);
+int token_listsize(t_token *tokens);
+char **token_list_to_array(t_token *token);
 
 
 void free_cmd_list(t_cmd **head);
-t_cmd	*new_cmd(char *cmd);
+t_cmd	*new_cmd();
 void	append_cmd(t_cmd **head, t_cmd *new);
 void print_cmds(t_request *request);
 void parse(t_request *request);

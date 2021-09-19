@@ -23,7 +23,8 @@ void free_cmd_list(t_cmd **head)
 	while (cmd)
 	{
 		next = cmd->next;
-		free(cmd->cmd);
+    free_tokens(&cmd->args);
+    free_tokens(&cmd->rds);
 		free(cmd);
 		cmd = next;
 		next = NULL;
@@ -31,17 +32,17 @@ void free_cmd_list(t_cmd **head)
 	*head = NULL;
 }
 
-t_cmd	*new_cmd(char *cmd)
+t_cmd	*new_cmd()
 {
 	t_cmd	*new;
 
 	new = malloc(sizeof(t_cmd));
 	if (!new)
 		return (NULL);
-	new->cmd = ft_strdup(cmd);
-  free(cmd);
 	new->prev = NULL;
 	new->next = NULL;
+  new->args = NULL;
+  new->rds = NULL;
 	return (new);
 }
 
@@ -69,21 +70,54 @@ void print_cmds(t_request *request)
   cmd = request->cmds;
   while(cmd)
   {
-    printf("cmd :%s\n", cmd->cmd);
+    t_token *args;
+    t_token *rds;
+    args = cmd->args;
+    rds = cmd->rds;
+    printf("-----------\n");
+    while (args) {
+      printf("cmd args\t:%s\n", args->token);
+      args = args->next;
+    }
+    while (rds) {
+      printf("cmd rds\t\t:%s\n", rds->token);
+      rds = rds->next;
+    }
     cmd = cmd->next;
   }
 }
 
 void parse(t_request *request)
 {
-  t_token *token = request->tokens;
+  t_token *token;
+  t_cmd *cmd;
+
+  token = request->tokens;
   while (token)
   {
-    append_cmd(&request->cmds, new_cmd(ft_strdup(token->token)));
-    token = token->next;
+    cmd = new_cmd();
+    while (token && token->type != TYPE_PIPE)
+    {
+      if (token->type == TYPE_STR)
+        append_token(&cmd->args, new_token(ft_strdup(token->token)));
+      else
+      {
+        append_token(&cmd->rds, new_token(ft_strdup(token->token)));
+        token = token->next;
+        append_token(&cmd->rds, new_token(ft_strdup(token->token)));
+      }
+      token = token->next;
+    }
+    append_cmd(&request->cmds, cmd);
+    if (token)
+      token = token->next;
   }
   print_cmds(request);
 }
+
+
+
+
 
 t_bool is_type_redirect(t_token *token)
 {
@@ -111,6 +145,13 @@ t_bool is_quote_closed(t_token *token)
   return (is_quote_closed);
 }
 
+t_bool is_valid_token_pair(t_token *token)
+{
+  return (!((is_type_meta(token) && is_type_meta(token->next))
+      || (is_type_redirect(token) && is_type_meta(token->next))
+      || (is_type_redirect(token) && is_type_redirect(token->next))));
+}
+
 t_bool is_valid_syntax(t_request *request)
 {
   t_token *token;
@@ -119,20 +160,18 @@ t_bool is_valid_syntax(t_request *request)
   if (!token)
     return (TRUE);
   if (is_type_meta(token))
-    return (FALSE);
+    return (print_err_msg(request, ERR_MSG_INVLD_SYNTX));
   while (token)
   {
     if (!is_quote_closed(token))
-      return (FALSE);
+      return (print_err_msg(request, ERR_MSG_QT_NOT_CLSD));
     if (!token->next)
       break ;
-    if ((is_type_meta(token) && is_type_meta(token->next))
-      || (is_type_redirect(token) && is_type_meta(token->next))
-      || (is_type_redirect(token) && is_type_redirect(token->next)))
-      return (FALSE);
+    if (!is_valid_token_pair(token))
+      return (print_err_msg(request, ERR_MSG_INVLD_SYNTX));
     token = token->next;
   }
   if (is_type_redirect(token))
-    return (FALSE);
+    return (print_err_msg(request, ERR_MSG_INVLD_SYNTX));
   return (TRUE);
 }

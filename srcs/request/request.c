@@ -17,10 +17,7 @@ t_bool process_request(t_request *request, char *line)
   init_request(request);
   tokenize(request, line);
   if (!is_valid_syntax(request))
-  {
-    printf("error\n");
     return (TRUE);
-  }
   parse(request);
   /*
   if (!exec_request(request))
@@ -71,6 +68,7 @@ t_bool exec_request(t_request *request)
 void init_request(t_request *request)
 {
   request->tokens = NULL;
+  request->cmds = NULL;
   request->cmd = NULL;
   request->cmd_id = INVLD_CMD;
   request->option = NON;

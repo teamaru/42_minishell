@@ -171,7 +171,7 @@ t_bool is_valid_syntax(t_request *request)
       return (print_err_msg(request, ERR_MSG_INVLD_SYNTX));
     token = token->next;
   }
-  if (is_type_redirect(token))
+  if (is_type_redirect(token) || is_type_meta(token))
     return (print_err_msg(request, ERR_MSG_INVLD_SYNTX));
   return (TRUE);
 }

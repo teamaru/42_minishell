@@ -24,11 +24,10 @@ char *extract_string(char **line)
   char qt;
 
   qt = **line;
-  (*line)++;
   i = 1;
   while ((*line)[i] != qt)
     i++;
-  chunk = ft_strndup(*line, i++);
+  chunk = ft_strndup(*line, ++i);
   *line += i;
   return (chunk);
 }
@@ -50,7 +49,7 @@ char *get_chunk(char **line)
 {
   char *chunk;
 
-  if (is_qt(**line))
+  if (is_quote(**line))
     chunk = extract_string(line);
   else
     chunk = extract_chunk(line);

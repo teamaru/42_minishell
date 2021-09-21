@@ -14,22 +14,17 @@
 
 t_bool process_request(t_request *request, char *line)
 {
-  while (!is_end(line))
-  {
-    init_request(request);
-    parse_request(request, &line);
-    if (!exec_request(request))
-      return (FALSE);
-    free_all(request);
-  }
+  init_request(request);
+  tokenize(request, line);
+  if (!is_valid_syntax(request))
+    return (TRUE);
+  parse(request);
+  /*
+  if (!exec_request(request))
+    return (FALSE);
+    */
+  free_all(request);
   return (TRUE);
-}
-
-void parse_request(t_request *request, char **line)
-{
-  parse_cmd(request, line);
-  parse_option(request, line);
-  parse_arguments(request, line);
 }
 
 t_bool is_valid_request(t_request *request)
@@ -72,6 +67,8 @@ t_bool exec_request(t_request *request)
 
 void init_request(t_request *request)
 {
+  request->tokens = NULL;
+  request->cmds = NULL;
   request->cmd = NULL;
   request->cmd_id = INVLD_CMD;
   request->option = NON;

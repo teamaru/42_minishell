@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/mini_shell.h"
+#include <mini_shell.h>
 
 void	prepare_token_types(char **token_types)
 {

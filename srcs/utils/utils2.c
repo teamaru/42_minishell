@@ -17,19 +17,9 @@ t_bool is_chunk(char c)
   return (c && !is_white(c));
 }
 
-t_bool is_sgl_qt(char c)
+t_bool is_quote(char c)
 {
-  return (c == DBL_QT);
-}
-
-t_bool is_dbl_qt(char c)
-{
-  return (c == DBL_QT);
-}
-
-t_bool is_qt(char c)
-{
-  return (is_sgl_qt(c) || is_dbl_qt(c));
+  return (c == SGL_QT || c == DBL_QT);
 }
 
 t_bool is_end(char *line)

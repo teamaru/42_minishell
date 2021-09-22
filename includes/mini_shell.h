@@ -26,12 +26,16 @@
 #define PRMPT "$ "
 #define ROOT "/"
 #define META_CHARS ";\'\"<>|$?\\."
+#define DELIMITERS "|<> \t"
+#define TOKEN_TYPE_NUM 5
 #define MSG_HEADER "mini_shell: "
 #define MSG_EXIT "exit\n"
 #define ERR_MSG_INVLD_CMD "command not found\n"
 #define ERR_MSG_INVLD_OPT "invalid option\n"
 #define ERR_MSG_INVLD_EXIT_CD "numeric argument required\n"
 #define ERR_MSG_TOO_MANY_ARGS "too many arguments\n"
+#define ERR_MSG_INVLD_SYNTX "syntax error near unexpected token \n"
+#define ERR_MSG_QT_NOT_CLSD "quote is not closed\n"
 
 typedef enum e_bool
 {
@@ -63,13 +67,11 @@ typedef enum e_meta_char
 {
   SLASH = '/',
   PERIOD = '.',
-  SEMICOLON = ';',
   SGL_QT = '\'',
   DBL_QT = '\"',
-  OPTION = '-',
-  BCK_SLSH = '\\',
-  GRTR = '>',
-  LESS = '<'
+  HYPHEN = '-',
+  R_RDRCT = '>',
+  L_RDRCT = '<',
 } t_meat_char;
 
 typedef enum e_cmd_id
@@ -84,14 +86,43 @@ typedef enum e_cmd_id
   INVLD_CMD,
 } t_cmd_id;
 
+typedef enum e_token_type
+{
+  TYPE_R_RDRCT,
+  TYPE_RR_RDRCT,
+  TYPE_L_RDRCT,
+  TYPE_LL_RDRCT,
+  TYPE_PIPE,
+  TYPE_STR,
+} t_token_type;
+
 typedef struct s_argument
 {
   char *arg;
   struct s_argument *next;
 } t_argument;
 
+typedef struct s_token
+{
+  struct s_token *prev;
+  struct s_token *next;
+  char *token;
+  t_token_type type;
+} t_token;
+
+typedef struct s_cmd
+{
+  struct s_cmd *prev;
+  struct s_cmd *next;
+  t_token *args;
+  t_token *rds;
+} t_cmd;
+
 typedef struct s_request
 {
+  t_token *tokens;
+  t_cmd *cmds;
+
   char *cmd;
   t_cmd_id cmd_id;
   t_option option;
@@ -117,7 +148,6 @@ void parse_arguments(t_request *request, char **line);
  ** request.c **
  */
  t_bool process_request(t_request *request, char *line);
- void parse_request(t_request *request, char **line);
  t_bool is_valid_request(t_request *request);
  t_bool exec_request(t_request *request);
  void init_request(t_request *request);
@@ -224,8 +254,35 @@ void free_all(t_request *request);
 */
 t_bool is_chunk(char c);
 t_bool is_sgl_qt(char c);
-t_bool is_qt(char c);
+t_bool is_quote(char c);
 t_bool is_dbl_qt(char c);
 t_bool is_end(char *line);
+
+/*
+ ***********
+ ** token **
+ ***********
+ */
+/*
+ ** token.c **
+ */
+void free_tokens(t_token **head);
+t_token	*new_token(char *token);
+void	append_token(t_token **head, t_token *new);
+t_bool is_delimiter(int c);
+t_bool find_closing_qt(char *line, int *i);
+void get_token(t_request *request, char **line);
+void tokenize(t_request *request, char *line);
+int token_listsize(t_token *tokens);
+char **token_list_to_array(t_token *token);
+
+
+void free_cmd_list(t_cmd **head);
+t_cmd	*new_cmd();
+void	append_cmd(t_cmd **head, t_cmd *new);
+void print_cmds(t_request *request);
+void parse(t_request *request);
+
+t_bool is_valid_syntax(t_request *request);
 
 #endif

@@ -42,5 +42,7 @@ void multi_free(char **target)
 void free_all(t_request *request)
 {
 	free_arguments(&request->arguments);
+	free_tokens(&request->tokens);
+  free_cmd_list(&request->cmds);
 	free(request->cmd);
 }

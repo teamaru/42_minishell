@@ -65,13 +65,16 @@ typedef enum e_option
 
 typedef enum e_meta_char
 {
-  SLASH = '/',
+  SLSH = '/',
+  B_SLSH = '\\',
   PERIOD = '.',
   SGL_QT = '\'',
   DBL_QT = '\"',
   HYPHEN = '-',
   R_RDRCT = '>',
   L_RDRCT = '<',
+  DLL = '$',
+  SPC = ' ',
 } t_meat_char;
 
 typedef enum e_cmd_id
@@ -275,15 +278,22 @@ t_bool find_closing_qt(char *line, int *i);
 void get_token(t_request *request, char **line);
 void tokenize(t_request *request, char *line);
 int token_listsize(t_token *tokens);
+void print_tokens(t_token *head);
 char **token_list_to_array(t_token *token);
 
-
+/*
+ ***********
+ ** parse **
+ ***********
+ */
+/*
+ ** parse.c **
+ */
 void free_cmd_list(t_cmd **head);
 t_cmd	*new_cmd();
 void	append_cmd(t_cmd **head, t_cmd *new);
-void print_cmds(t_request *request);
+void print_cmds(t_cmd *head);
 void parse(t_request *request);
-
 t_bool is_valid_syntax(t_request *request);
 
 #endif

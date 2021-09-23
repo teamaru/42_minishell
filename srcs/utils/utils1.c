@@ -44,5 +44,6 @@ void free_all(t_request *request)
 	free_arguments(&request->arguments);
 	free_tokens(&request->tokens);
   free_cmd_list(&request->cmds);
+  free_environs(&request->environs);
 	free(request->cmd);
 }

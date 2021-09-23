@@ -122,10 +122,19 @@ typedef struct s_cmd
   t_token *rds;
 } t_cmd;
 
+typedef struct s_environ
+{
+  struct s_environ *next;
+  struct s_environ *prev;
+  char *key;
+  char *value;
+} t_environ;
+
 typedef struct s_request
 {
   t_token *tokens;
   t_cmd *cmds;
+  t_environ *environs;
 
   char *cmd;
   t_cmd_id cmd_id;
@@ -295,5 +304,18 @@ void	append_cmd(t_cmd **head, t_cmd *new);
 void print_cmds(t_cmd *head);
 void parse(t_request *request);
 t_bool is_valid_syntax(t_request *request);
+
+/*
+ ************
+ ** expand **
+ ************
+ */
+/*
+ ** expand.c **
+ */
+void expand(t_request *request);
+
+void free_environs(t_environ **head);
+void make_environ_hash(t_request *request);
 
 #endif

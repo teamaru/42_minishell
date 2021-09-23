@@ -64,10 +64,11 @@ void	append_cmd(t_cmd **head, t_cmd *new)
   new->prev = cmd;
 }
 
-void print_cmds(t_request *request)
+void print_cmds(t_cmd *head)
 {
   t_cmd *cmd;
-  cmd = request->cmds;
+
+  cmd = head;
   while(cmd)
   {
     t_token *args;
@@ -98,7 +99,7 @@ void parse(t_request *request)
     cmd = new_cmd();
     while (token && token->type != TYPE_PIPE)
     {
-      if (token->type == TYPE_STR)
+      if (token->type == TYPE_STR || token->type == TYPE_EXPDBL)
         append_token(&cmd->args, new_token(ft_strdup(token->token)));
       else
       {
@@ -112,7 +113,7 @@ void parse(t_request *request)
     if (token)
       token = token->next;
   }
-  print_cmds(request);
+  //print_cmds(request);
 }
 
 

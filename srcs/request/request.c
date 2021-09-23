@@ -19,6 +19,7 @@ t_bool process_request(t_request *request, char *line)
   if (!is_valid_syntax(request))
     return (TRUE);
   parse(request);
+  expand(request);
   /*
   if (!exec_request(request))
     return (FALSE);
@@ -69,6 +70,7 @@ void init_request(t_request *request)
 {
   request->tokens = NULL;
   request->cmds = NULL;
+  make_environ_hash(request);
   request->cmd = NULL;
   request->cmd_id = INVLD_CMD;
   request->option = NON;

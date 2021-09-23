@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/15 22:51:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/22 23:47:30 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/23 18:04:08 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,10 @@ void	redirecting_input(char *file_path);
 void	redirecting_output(char *file_path);
 void	redirecting_append(char *file_path);
 int		create_t_redirection_list(char *rd_str, t_command *cmd);
+
+/*
+** utils.c
+*/
+void	free_set(void **dst, void *src);
 
 #endif

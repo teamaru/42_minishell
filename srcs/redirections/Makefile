@@ -5,6 +5,7 @@ INCLUDE := -I./
 SRCS := main.c \
 		append.c \
 		create_t_redirection_list.c \
+		free.c \
 		input.c \
 		output.c
 
@@ -14,7 +15,7 @@ LIBFTDIR := ../../libft/
 LIBFT := $(LIBFTDIR)libft
 MAKEFLGS := -C
 
-RM := rm -f
+RM := rm -rf
 
 all: $(REDIRECT)
 
@@ -31,11 +32,11 @@ $(LIBFT):
 
 clean:
 	$(MAKE) $(MAKEFLGS) $(LIBFTDIR) clean
-	$(RM) $(OBJS) $(DEPS)
+	$(RM) $(OBJS) $(DEPS) $(REDIRECT).dSYM
 
 fclean:
 	$(MAKE) $(MAKEFLGS) $(LIBFTDIR) fclean
-	$(RM) $(OBJS) $(DEPS) $(REDIRECT)
+	$(RM) $(OBJS) $(DEPS) $(REDIRECT).dSYM $(REDIRECT)
 
 test: $(LIBFT)
 	$(CC) -g $(CFLAGS) $(SRCS) $(LIBFT) $(INCLUDE) -o $(REDIRECT)

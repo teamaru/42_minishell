@@ -94,6 +94,7 @@ typedef enum e_token_type
   TYPE_LL_RDRCT,
   TYPE_PIPE,
   TYPE_STR,
+  TYPE_EXPDBL,
 } t_token_type;
 
 typedef struct s_argument

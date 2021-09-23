@@ -41,6 +41,10 @@ t_token_type get_token_type(char *token)
     if (!ft_strcmp(token_types[token_type], token))
       break ;
   dispose_token_types(token_types);
+  if (token_type == TYPE_STR)
+    while (*token && token_type != TYPE_EXPDBL)
+      if (is_quote(*token) || *token++ == DLL)
+        token_type = TYPE_EXPDBL;
   return (token_type);
 }
 
@@ -184,9 +188,11 @@ void get_token(t_request *request, char **line)
   *line += i;
 }
 
-void print_tokens(t_request *request)
+void print_tokens(t_token *head)
 {
-  t_token *token = request->tokens;
+  t_token *token;
+
+  token = head;
   while (token)
   {
     printf("token token:%s\n", token->token);

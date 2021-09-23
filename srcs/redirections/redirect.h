@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/15 22:51:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/23 22:54:35 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/23 23:40:57 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,6 @@ typedef struct s_command
 */
 #include <fcntl.h>
 
-void	redirecting_input(char *file_path);
-void	redirecting_output(char *file_path);
-void	redirecting_append(char *file_path);
 int		create_t_redirection_list(char *rd_str, t_command *cmd);
 
 /*

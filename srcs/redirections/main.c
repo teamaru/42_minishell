@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 19:43:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/23 23:28:15 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/23 23:41:32 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ int	main(int ac, char **av)
 
 	// redirection list出力
 	print_t_command(&cmd);
-
 	// 複数リダイレクト(<, >, >>)実行部分
 	if (change_multi_references(&cmd) < 0)
 	{
@@ -106,6 +105,5 @@ int	main(int ac, char **av)
 
 	free_cmd(&cmd);
 	exec_command(command);
-	printf("end\n");
 	return (0);
 }

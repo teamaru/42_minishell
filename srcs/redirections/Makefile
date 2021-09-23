@@ -4,7 +4,9 @@ CFLAGS := -Wall -Wextra -Werror
 INCLUDE := -I./
 SRCS := main.c \
 		append.c \
+		change_reference.c \
 		create_t_redirection_list.c \
+		execution.c \
 		free.c \
 		input.c \
 		output.c

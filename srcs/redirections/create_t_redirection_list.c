@@ -55,7 +55,6 @@ bool	is_white(int c)
 	return (c == ' ' || ('\t' <= c && c <= '\r'));
 }
 
-//file名の長さ確認
 char	*new_file_path(char **str)
 {
 	char	*path;
@@ -63,7 +62,6 @@ char	*new_file_path(char **str)
 
 	if (!**str)
 		return (NULL);
-	//strがヌル文字になるまでインクリメントする
 	i = 0;
 	while ((*str)[i] && !is_white((*str)[i]))
 		i++;
@@ -85,7 +83,7 @@ t_redirection_list	*create_t_rd_list(int fd, int type, char *file_path)
 		return (NULL);
 	if (type == INPUT)
 		res->fd = 0;
-	else if (type == OUTPUT)
+	else if (type == OUTPUT || type == APPEND)
 		res->fd = 1;
 	res->type = type;
 	res->file_path = file_path;
@@ -131,17 +129,13 @@ int	create_t_redirection_list(char *rd_str, t_command *cmd)
 			fd = get_num(str);
 		while (is_white(*str))
 			str++;
-		// type設定
 		type = find_redirection_to_match(&str);
 		while (is_white(*str))
 			str++;
-		// filepath 設定
 		file_path = new_file_path(&str);
 		while (is_white(*str))
 			str++;
-		// redirection_list 作成
 		node = create_t_rd_list(fd, type, file_path);
-		// append cmd->*_rd
 		if (type == INPUT)
 			add_node_to_rd_list(&(cmd->input_rd), node);
 		else if (type == OUTPUT || type == APPEND)

@@ -6,24 +6,11 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 19:43:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/23 18:14:39 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/23 23:28:15 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./redirect.h"
-
-void	exec_command(char *command)
-{
-	char	*arg[2];
-
-	arg[0] = ft_strjoin("/bin/", command);
-	arg[1] = NULL;
-	if (execve(arg[0], arg, NULL) < 0)
-	{
-		perror("execve");
-		exit(1);
-	}
-}
 
 static char	*get_rd(int type)
 {
@@ -89,8 +76,6 @@ int	main(int ac, char **av)
 	char		*redirection_list;
 	char		*file_name;
 	t_command	cmd;
-	// int			i;
-	// int			fd;
 
 	(void)ac;
 
@@ -112,26 +97,15 @@ int	main(int ac, char **av)
 	// redirection list出力
 	print_t_command(&cmd);
 
+	// 複数リダイレクト(<, >, >>)実行部分
+	if (change_multi_references(&cmd) < 0)
+	{
+		printf("error\n");
+		free_cmd(&cmd);
+	}
 
-	/*
-	** < (input)
-	*/
-	// if (!ft_strncmp(redirection, "<", 2) || !ft_strncmp(redirection, "0<", 3))
-	// 	redirecting_input(file_name);
-
-	/*
-	** > (output)
-	*/
-	// if (!ft_strncmp(redirection, ">", 2))
-	// 	redirecting_output(file_name);
-
-	/*
-	** >> (appending output)
-	*/
-	// if (!ft_strncmp(redirection, ">>", 3))
-	// 	redirecting_append(file_name);
-
-	// exec_command(command);
 	free_cmd(&cmd);
+	exec_command(command);
+	printf("end\n");
 	return (0);
 }

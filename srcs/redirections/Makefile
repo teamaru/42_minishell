@@ -6,7 +6,8 @@ SRCS := main.c \
 		change_reference.c \
 		create_t_redirection_list.c \
 		execution.c \
-		free.c
+		free.c \
+		test.c
 
 OBJS := $(SRCS:.c=.o)
 DEPS := $(SRCS:%.c=%.d)

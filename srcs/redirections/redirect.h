@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/15 22:51:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/23 23:40:57 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/24 21:39:11 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,10 @@ void	free_set(void **dst, void *src);
 ** execution.c
 */
 void	exec_command(char *command);
+
+/*
+** test.c
+*/
+void	test_print_t_command(t_command *cmd);
 
 #endif

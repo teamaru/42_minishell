@@ -12,12 +12,13 @@
 
 #include <redirect.h>
 
-int get_num(char *str)
+
+int	get_num(char *str)
 {
-	int num;
+	int	num;
 
 	num = 0;
-	while (ft_isdigit(*str))
+	while(ft_isdigit(*str))
 	{
 		num = *str - '0' * num * 10;
 		str++;
@@ -25,10 +26,10 @@ int get_num(char *str)
 	return (num);
 }
 
-int find_redirection_to_match(char **str)
+int	find_redirection_to_match(char **str)
 {
-	int i;
-	int type;
+	int	i;
+	int	type;
 
 	i = 2;
 	type = -1;
@@ -49,15 +50,15 @@ int find_redirection_to_match(char **str)
 	*str += i;
 	return (type);
 }
-bool is_white(int c)
+bool	is_white(int c)
 {
 	return (c == ' ' || ('\t' <= c && c <= '\r'));
 }
 
-char *new_file_path(char **str)
+char	*new_file_path(char **str)
 {
-	char *path;
-	int i;
+	char	*path;
+	int		i;
 
 	if (!**str)
 		return (NULL);
@@ -72,9 +73,9 @@ char *new_file_path(char **str)
 	return (path);
 }
 
-t_redirection_list *create_t_rd_list(int fd, int type, char *file_path)
+t_redirection_list	*create_t_rd_list(int fd, int type, char *file_path)
 {
-	t_redirection_list *res;
+	t_redirection_list	*res;
 
 	(void)fd;
 	res = (t_redirection_list *)malloc(sizeof(t_redirection_list) * 1);
@@ -90,28 +91,29 @@ t_redirection_list *create_t_rd_list(int fd, int type, char *file_path)
 	return (res);
 }
 
-void add_node_to_rd_list(t_redirection_list **first, t_redirection_list *node)
+void	add_node_to_rd_list(t_redirection_list **first, t_redirection_list *node)
 {
-	t_redirection_list *tmp;
+	t_redirection_list	*tmp;
 
 	if (!*first)
 		*first = node;
 	else
 	{
 		tmp = *first;
-		while (tmp->next)
+		while(tmp->next)
 			tmp = tmp->next;
 		tmp->next = node;
 	}
 }
 
-int create_t_redirection_list(char *rd_str, t_complete_cmd *cmd)
+
+int	create_t_redirection_list(char *rd_str, t_command *cmd)
 {
-	int fd;
-	int type;
-	char *file_path;
-	char *str;
-	char *first;
+	int		fd;
+	int		type;
+	char	*file_path;
+	char	*str;
+	char	*first;
 	t_redirection_list *node;
 
 	str = ft_strdup(rd_str);
@@ -119,7 +121,7 @@ int create_t_redirection_list(char *rd_str, t_complete_cmd *cmd)
 		return (-1);
 	first = str;
 	fd = -1;
-	while (*str)
+	while(*str)
 	{
 		while (is_white(*str))
 			str++;
@@ -138,7 +140,7 @@ int create_t_redirection_list(char *rd_str, t_complete_cmd *cmd)
 			add_node_to_rd_list(&(cmd->input_rd), node);
 		else if (type == OUTPUT || type == APPEND)
 			add_node_to_rd_list(&(cmd->output_rd), node);
-		while (*str && is_white(*str))
+		while(*str && is_white(*str))
 			str++;
 	}
 	free(first);

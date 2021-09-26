@@ -6,15 +6,15 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 19:43:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/26 14:09:30 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/24 21:36:43 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./redirect.h"
 
-void free_t_redirection_list(t_redirection_list **node)
+void	free_t_redirection_list(t_redirection_list **node)
 {
-	t_redirection_list *tmp;
+	t_redirection_list	*tmp;
 
 	while (*node)
 	{
@@ -25,19 +25,19 @@ void free_t_redirection_list(t_redirection_list **node)
 	}
 }
 
-void free_cmd(t_complete_cmd *cmd)
+void	free_cmd(t_command *cmd)
 {
 
 	free_t_redirection_list(&cmd->output_rd);
 	free_t_redirection_list(&cmd->input_rd);
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	char *command;
-	char *redirection_list;
-	char *file_name;
-	t_complete_cmd cmd;
+	char		*command;
+	char		*redirection_list;
+	char		*file_name;
+	t_command	cmd;
 
 	(void)ac;
 
@@ -57,7 +57,7 @@ int main(int ac, char **av)
 	}
 
 	// redirection list出力
-	test_print_t_complete_cmd(&cmd);
+	test_print_t_command(&cmd);
 	// 複数リダイレクト(<, >, >>)実行部分
 	if (change_multi_references(&cmd) < 0)
 	{

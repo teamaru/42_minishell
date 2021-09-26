@@ -6,13 +6,13 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 21:32:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/24 21:36:59 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/26 14:09:41 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <redirect.h>
 
-static char	*test_get_rd(int type)
+static char *test_get_rd(int type)
 {
 	if (type == INPUT)
 		return ("<");
@@ -24,9 +24,9 @@ static char	*test_get_rd(int type)
 		return ("<<");
 }
 
-void	test_print_t_command(t_command *cmd)
+void test_print_t_complete_cmd(t_complete_cmd *cmd)
 {
-	t_redirection_list	*tmp;
+	t_redirection_list *tmp;
 
 	tmp = cmd->output_rd;
 	printf("----OUTPUT----\n");

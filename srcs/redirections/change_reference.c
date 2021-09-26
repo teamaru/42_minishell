@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 22:08:39 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/23 23:29:58 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/26 14:30:21 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ int	change_reference(int std_fd, int file_fd)
 	return (0);
 }
 
-int	change_multi_references(t_command *cmd)
+int	change_multi_references(t_pipe_list *cmd)
 {
-	int	file_fd;
+	int					file_fd;
 	t_redirection_list	*tmp;
 
 	tmp = cmd->output_rd;
-	while(tmp)
+	while (tmp)
 	{
 		file_fd = create_file_fd(tmp->file_path, tmp->type);
 		if (file_fd < 0)
@@ -67,7 +67,7 @@ int	change_multi_references(t_command *cmd)
 		tmp = tmp->next;
 	}
 	tmp = cmd->input_rd;
-	while(tmp)
+	while (tmp)
 	{
 		file_fd = create_file_fd(tmp->file_path, tmp->type);
 		if (file_fd < 0)

@@ -12,21 +12,28 @@
 
 #include <mini_shell.h>
 
-char *get_environment_key(char *token)
+t_bool is_env_end(char c)
+{
+  return (c == '\0' || c == DLL || c == SPC || is_quote(c));
+}
+
+char *get_env_key(char *token)
 {
   int i;
   char *key;
 
+  if (!*token)
+    return (NULL);
   i = 0;
   key = NULL;
-  while (token[i] && token[i] != SPC)
+  while (!is_env_end(token[i]))
     i++;
   if (i > 1)
-    key = ft_strndup(token + 1, i - 1);
+    key = ft_strndup(token, i);
   return (key);
 }
 
-char *get_environ_value(t_request *request, char *key)
+char *get_env_value(t_request *request, char *key)
 {
   t_environ *environ;
 
@@ -48,13 +55,13 @@ void replace_token(t_token *token, char *new_token)
   token->token = new_token;
 }
 
-char *join_tmp_tokens(t_token *tmp_tokens)
+char *join_expanded_tokens(t_token *expanded_tokens)
 {
   t_token *tmp_token;
   char *joined_token;
   char *tmp;
 
-  tmp_token = tmp_tokens;
+  tmp_token = expanded_tokens;
   joined_token = NULL;
   while (tmp_token)
   {
@@ -78,60 +85,181 @@ int get_str_len(char *token)
   return (len);
 }
 
-void get_tmp_token(char **token, t_token **tmp_tokens)
+void expand_quote(t_request *request, char **token, t_token **expanded_tokens)
 {
   int i;
   int len;
 
+  (void)request;
   i = 0;
   while ((*token)[i] && !is_quote((*token)[i]))
     i++;
   if (i > 0)
-    append_token(tmp_tokens, new_token(ft_strndup(*token, i)));
+    append_token(expanded_tokens, new_token(ft_strndup(*token, i)));
   *token += i;
   len = get_str_len(*token);
   if (len > 0)
-    append_token(tmp_tokens, new_token(ft_substr(*token, 0, len)));
+    append_token(expanded_tokens, new_token(ft_substr(*token, 0, len)));
   if ((*token)[len])
     len++;
   *token += len;
 }
 
-char *eliminate_quote(char *token)
+int get_env_len(char *token)
 {
-  t_token *tmp_tokens;
-  char *new_token;
+  int len;
 
-  tmp_tokens = NULL;
-  while (*token)
-    get_tmp_token(&token, &tmp_tokens);
-  new_token = join_tmp_tokens(tmp_tokens);
-  free_tokens(&tmp_tokens);
-  return (new_token);
+  len = 0;
+  while (!is_env_end(token[len]))
+    len++;
+  return (len);
 }
 
-void expand_tokens(t_token *head)
+void expand_env(t_request *request, char **token, t_token **expanded_tokens)
+{
+  int i;
+  char *key;
+  char *value;
+
+  i = -1;
+  while ((*token)[++i] && (*token)[i] != DLL)
+    if ((*token)[i] == SGL_QT)
+      find_closing_qt(*token, &i);
+  if (i > 0)
+    append_token(expanded_tokens, new_token(ft_strndup(*token, i)));
+  if ((*token)[i])
+    i++;
+  *token += i;
+  key = get_env_key(*token);
+  value = ft_strdup(get_env_value(request, key));
+  free(key);
+  if (value)
+    append_token(expanded_tokens, new_token(value));
+  *token += get_env_len(*token);
+}
+
+char *expand_token(t_expand_func expand_func, t_request *request, char *token)
+{
+  char *expanded_token;
+  t_token *expanded_tokens;
+
+  if (!token)
+    return (NULL);
+  expanded_tokens = NULL;
+  while (*token)
+    expand_func(request, &token, &expanded_tokens);
+  expanded_token = join_expanded_tokens(expanded_tokens);
+  free_tokens(&expanded_tokens);
+  return (expanded_token);
+}
+
+void insert_token(t_token **head, t_token *new_token, t_token *target_token)
+{
+  t_token *prev;
+
+  if (!head)
+    return (free_tokens(&new_token));
+  if (!*head)
+    return (append_token(head, new_token));
+  if (!target_token)
+    return (free_tokens(&new_token));
+  prev = target_token->prev;
+  target_token->prev = new_token;
+  new_token->next = target_token;
+  new_token->prev = prev;
+  if (prev)
+    prev->next = new_token;
+  else
+    *head = new_token;
+}
+
+void insert_tokens(t_token **head, t_token *new_tokens, t_token *target_token)
+{
+  t_token *new_token;
+  t_token *next;
+
+  new_token = new_tokens;
+  while (new_token)
+  {
+    next = new_token->next;
+    insert_token(head, new_token, target_token);
+    new_token = next;
+  }
+}
+
+void move_head(t_token **head, t_token *token)
+{
+  *head = token->next;
+  if (token->next)
+    token->next->prev = NULL;
+  token->next = NULL;
+  token->prev = NULL;
+  free_tokens(&token);
+}
+
+void delete_token(t_token **head, t_token *target_token)
+{
+  if (!head || !*head || !target_token)
+    return ;
+  if (*head == target_token)
+    return (move_head(head, target_token));
+  target_token->prev->next = target_token->next;
+  if (target_token->next)
+    target_token->next->prev = target_token->prev;
+  target_token->next = NULL;
+  free_tokens(&target_token);
+}
+
+t_token *re_tokenize(t_token **head, t_token *token)
+{
+  t_token *new_tokens;
+  t_token *prev;
+
+  new_tokens = NULL;
+  tokenize(&new_tokens, token->token);
+  insert_tokens(head, new_tokens, token);
+  prev = token->prev;
+  delete_token(head, token);
+  return (prev);
+}
+
+void expand_tokens(t_request *request, t_token **head)
 {
   t_token *token;
 
-  token = head;
+  token = *head;
   while (token)
   {
     if (token->type == TYPE_EXPDBL)
-      replace_token(token, eliminate_quote(token->token));
+    {
+      replace_token(token, expand_token(expand_env, request, token->token));
+      token = re_tokenize(head, token);
+      if (!token)
+        continue ;
+      replace_token(token, expand_token(expand_quote, request, token->token));
+    }
     token = token->next;
   }
 }
 
-void expand_environment_variable(t_request *request, char *s)
+void test_token(t_request *request)
 {
-  char *key;
-  char *value;
+  t_token *token;
 
-  key = get_environment_key(s);
-  printf("key :%s\n", key);
-  value = get_environ_value(request, key);
-  printf("environ :%s\n", value);
+  token = request->cmds->args;
+  while (token)
+  {
+    printf("forward :%s\n", token->token);
+    token = token->next;
+  }
+  token = request->cmds->args;
+  while (token && token->next)
+    token = token->next;
+  while (token)
+  {
+    printf("back :%s\n", token->token);
+    token = token->prev;
+  }
 }
 
 void expand(t_request *request)
@@ -141,11 +269,10 @@ void expand(t_request *request)
   cmd = request->cmds;
   while (cmd)
   {
-    expand_tokens(cmd->args);
-    expand_tokens(cmd->rds);
+    expand_tokens(request, &cmd->args);
+    expand_tokens(request, &cmd->rds);
     cmd = cmd->next;
   }
-  expand_environment_variable(request, "$USER tt est sts e");
   print_cmds(request->cmds);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/15 22:51:46 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/26 14:31:20 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/27 17:03:46 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,11 @@ typedef struct s_redirection_list
 
 typedef struct s_pipe_list
 {
-	t_redirection_list *output_rd;
-	t_redirection_list *input_rd;
+	t_redirection_list	*output_rd;
+	t_redirection_list	*input_rd;
+	const char			**cmd_argv;
+	struct s_pipe_list	next;
+	pid_t				pid;
 } t_pipe_list;
 
 /*

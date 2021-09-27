@@ -29,4 +29,7 @@ clean:
 fclean: clean
 	$(RM) $(MINISHL)
 
+debug: $(LIBFT)
+	$(CC) -g -o $(MINISHL) $(INCLUDE) $(SRCS) $(LIBFT) $(RDLNFLG)
+
 re: fclean all

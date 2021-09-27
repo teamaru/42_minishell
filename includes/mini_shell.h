@@ -146,7 +146,7 @@ typedef struct s_request
 
 typedef t_bool (*t_cmd_func)(t_request*);
 typedef t_bool (*t_is_func)(char);
-
+typedef void (*t_expand_func)(t_request*, char**, t_token**);
 
 char *get_chunk(char **line);
 void parse_arguments(t_request *request, char **line);
@@ -284,8 +284,8 @@ t_token	*new_token(char *token);
 void	append_token(t_token **head, t_token *new);
 t_bool is_delimiter(int c);
 t_bool find_closing_qt(char *line, int *i);
-void get_token(t_request *request, char **line);
-void tokenize(t_request *request, char *line);
+void get_token(t_token **head, char **line);
+void tokenize(t_token **head, char *line);
 int token_listsize(t_token *tokens);
 void print_tokens(t_token *head);
 char **token_list_to_array(t_token *token);

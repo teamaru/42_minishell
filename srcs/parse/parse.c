@@ -113,7 +113,6 @@ void parse(t_request *request)
     if (token)
       token = token->next;
   }
-  //print_cmds(request);
 }
 
 

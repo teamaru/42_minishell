@@ -68,6 +68,7 @@ void shell_loop(t_request *request)
     if (ft_strlen(line) > 0)
       add_history(line);
     flg = process_request(request, line);
+    free_all(request);
     free(line);
   }
 }

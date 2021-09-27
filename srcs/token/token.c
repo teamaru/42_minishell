@@ -160,7 +160,7 @@ t_bool is_doble_redirect(char *line)
   return (is_redirect(line[0]) && line[0] == line[1]);
 }
 
-void get_delimiter(t_request *request, char **line)
+void get_delimiter(t_token **head, char **line)
 {
   int n;
 
@@ -170,11 +170,11 @@ void get_delimiter(t_request *request, char **line)
   n = 1;
   if (is_doble_redirect(*line))
     n++;
-  append_token(&request->tokens, new_token(ft_strndup(*line, n)));
+  append_token(head, new_token(ft_strndup(*line, n)));
   *line += n;
 }
 
-void get_token(t_request *request, char **line)
+void get_token(t_token **head, char **line)
 {
   int i;
 
@@ -184,7 +184,7 @@ void get_token(t_request *request, char **line)
     if (is_quote((*line)[i]))
       find_closing_qt(*line, &i);
   if (i != 0)
-    append_token(&request->tokens, new_token(ft_strndup(*line, i)));
+    append_token(head, new_token(ft_strndup(*line, i)));
   *line += i;
 }
 
@@ -196,16 +196,16 @@ void print_tokens(t_token *head)
   while (token)
   {
     printf("token token:%s\n", token->token);
-    printf("token type:%u\n", token->type);
+    //printf("token type:%u\n", token->type);
     token = token->next;
   }
 }
 
-void tokenize(t_request *request, char *line)
+void tokenize(t_token **head, char *line)
 {
   while (*line)
   {
-    get_token(request, &line);
-    get_delimiter(request, &line);
+    get_token(head, &line);
+    get_delimiter(head, &line);
   }
 }

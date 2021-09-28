@@ -116,7 +116,10 @@ void parse(t_request *request)
 }
 
 
-
+t_bool is_type_heredoc(t_token *token)
+{
+  return (token->type == TYPE_LL_RDRCT);
+}
 
 
 t_bool is_type_redirect(t_token *token)

@@ -19,7 +19,8 @@ t_bool process_request(t_request *request, char *line)
   if (!is_valid_syntax(request))
     return (TRUE);
   parse(request);
-  expand(request);
+  if (!expand(request))
+    return (TRUE);
   /*
   if (!exec_request(request))
     return (FALSE);

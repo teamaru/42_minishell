@@ -210,20 +210,63 @@ void delete_token(t_token **head, t_token *target_token)
   free_tokens(&target_token);
 }
 
-t_token *re_tokenize(t_token **head, t_token *token)
+void get_word(t_token **new_tokens, char **line)
+{
+  int i;
+
+  i = 0;
+  clear_white(line);
+  while ((*line)[i] && !is_white((*line)[i]))
+    i++;
+  if (i != 0)
+    append_token(new_tokens, new_token(ft_strndup(*line, i)));
+  *line += i;
+}
+
+void split_word(t_token **new_tokens, char *token)
+{
+  while (*token)
+    get_word(new_tokens, &token);
+}
+
+t_bool is_file_path(t_token *token)
+{
+  t_token *prev;
+
+  prev = token->prev;
+  if (!prev)
+    return (FALSE);
+  return (is_type_redirect(prev));
+}
+
+
+t_bool is_eos_token(t_token *token)
+{
+  t_token *prev;
+
+  prev = token->prev;
+  if (!prev)
+    return (FALSE);
+  return (is_type_heredoc(prev));
+}
+
+t_bool split_token(t_request *request, t_token **head, t_token **token)
 {
   t_token *new_tokens;
   t_token *prev;
 
   new_tokens = NULL;
-  tokenize(&new_tokens, token->token);
-  insert_tokens(head, new_tokens, token);
-  prev = token->prev;
-  delete_token(head, token);
-  return (prev);
+  split_word(&new_tokens, (*token)->token);
+  if (is_file_path(*token) && token_listsize(new_tokens) != 1)
+    return (print_err_msg(request, ERR_MSG_AMBGS_RDRCT));
+  insert_tokens(head, new_tokens, *token);
+  prev = (*token)->prev;
+  delete_token(head, *token);
+  *token = prev;
+  return (TRUE);
 }
 
-void expand_tokens(t_request *request, t_token **head)
+t_bool expand_tokens(t_request *request, t_token **head)
 {
   t_token *token;
 
@@ -232,14 +275,17 @@ void expand_tokens(t_request *request, t_token **head)
   {
     if (token->type == TYPE_EXPDBL)
     {
-      replace_token(token, expand_token(expand_env, request, token->token));
-      token = re_tokenize(head, token);
+      if (!is_eos_token(token))
+        replace_token(token, expand_token(expand_env, request, token->token));
+      if (!split_token(request, head, &token))
+        return (FALSE);
       if (!token)
         continue ;
       replace_token(token, expand_token(expand_quote, request, token->token));
     }
     token = token->next;
   }
+  return (TRUE);
 }
 
 void test_token(t_request *request)
@@ -262,7 +308,7 @@ void test_token(t_request *request)
   }
 }
 
-void expand(t_request *request)
+t_bool expand(t_request *request)
 {
   t_cmd *cmd;
 
@@ -270,10 +316,12 @@ void expand(t_request *request)
   while (cmd)
   {
     expand_tokens(request, &cmd->args);
-    expand_tokens(request, &cmd->rds);
+    if (!expand_tokens(request, &cmd->rds))
+      return (FALSE);
     cmd = cmd->next;
   }
   print_cmds(request->cmds);
+  return (TRUE);
 }
 
 

@@ -36,6 +36,7 @@
 #define ERR_MSG_TOO_MANY_ARGS "too many arguments\n"
 #define ERR_MSG_INVLD_SYNTX "syntax error near unexpected token \n"
 #define ERR_MSG_QT_NOT_CLSD "quote is not closed\n"
+#define ERR_MSG_AMBGS_RDRCT "ambiguous redirect\n"
 
 typedef enum e_bool
 {
@@ -303,6 +304,8 @@ t_cmd	*new_cmd();
 void	append_cmd(t_cmd **head, t_cmd *new);
 void print_cmds(t_cmd *head);
 void parse(t_request *request);
+t_bool is_type_redirect(t_token *token);
+t_bool is_type_heredoc(t_token *token);
 t_bool is_valid_syntax(t_request *request);
 
 /*
@@ -313,7 +316,7 @@ t_bool is_valid_syntax(t_request *request);
 /*
  ** expand.c **
  */
-void expand(t_request *request);
+t_bool expand(t_request *request);
 
 void free_environs(t_environ **head);
 void make_environ_hash(t_request *request);

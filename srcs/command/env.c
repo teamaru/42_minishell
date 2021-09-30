@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/mini_shell.h"
+#include <mini_shell.h>
 
 t_bool execute_env(t_request *request)
 {

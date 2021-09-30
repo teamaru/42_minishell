@@ -10,20 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/mini_shell.h"
+#include <mini_shell.h>
 
 t_bool process_request(t_request *request, char *line)
 {
   init_request(request);
-  tokenize(request, line);
+  tokenize(&request->tokens, line);
   if (!is_valid_syntax(request))
     return (TRUE);
   parse(request);
+  if (!expand(request))
+    return (TRUE);
   /*
   if (!exec_request(request))
     return (FALSE);
     */
-  free_all(request);
   return (TRUE);
 }
 
@@ -69,6 +70,7 @@ void init_request(t_request *request)
 {
   request->tokens = NULL;
   request->cmds = NULL;
+  make_environ_hash(request);
   request->cmd = NULL;
   request->cmd_id = INVLD_CMD;
   request->option = NON;

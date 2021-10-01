@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 16:54:04 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/27 16:55:04 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/01 15:26:03 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,43 @@ static void	free_set(void **dst, void *src)
 	*dst = src;
 }
 
-void	free_pipe_node(t_pipe_list **node)
+void	free_cmd_args(const char **args)
 {
-	const char	**args;
 	int			i;
 
-	args = (*node)->cmd_args;
 	i = -1;
+	if (!args)
+		return ;
 	while (args[++i])
 		free_set((void **)&args[i], NULL);
-	free(args);
-	args = NULL;
+}
+
+void	free_rd_list(t_redirection_list **rd_list)
+{
+	t_redirection_list	*tmp;
+	t_redirection_list	*next;
+
+	if (!(*rd_list))
+		return ;
+	tmp = (*rd_list);
+	next = tmp->next;
+	while (tmp)
+	{
+		free_set((void **)&tmp->file_path, NULL);
+		free_set((void **)&tmp, NULL);
+		tmp = next;
+		if (next || tmp)
+			next = tmp->next;
+	}
+}
+
+void	free_pipe_node(t_pipe_list **node)
+{
+	free_cmd_args((*node)->cmd_args);
+	free((*node)->cmd_args);
+	(*node)->cmd_args = NULL;
+	free_rd_list(&(*node)->output_rd);
+	free_rd_list(&(*node)->input_rd);
 }
 
 void	free_pipe_list(t_pipe_list *list)
@@ -40,7 +66,7 @@ void	free_pipe_list(t_pipe_list *list)
 	tmp = list;
 	next = list->next;
 	//free処理
-	while (!tmp)
+	while (tmp)
 	{
 		free_pipe_node(&tmp);
 		free_set((void **)&tmp, NULL);

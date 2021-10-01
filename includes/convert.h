@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 14:45:55 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/27 16:59:46 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/09/27 18:05:03 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef enum e_type_rd
 typedef struct s_redirection_list
 {
 	int							fd;
-	int							type;
+	t_type_rd					type;
 	char						*file_path;
 	struct s_redirection_list	*next;
 } t_redirection_list;
@@ -43,5 +43,6 @@ typedef struct s_pipe_list
 t_pipe_list	*create_pipe_list(t_request *request);
 void		free_pipe_list(t_pipe_list *list);
 const char	**create_cmd_args(t_token *args);
+t_bool	set_redirection_lists(t_pipe_list **node, t_token *rds);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/02 19:15:13 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/02 23:29:18 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <signal.h>
+#include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "../libft/includes/libft.h"
@@ -370,5 +371,15 @@ t_bool expand(t_request *request);
 
 void free_environs(t_environ **head);
 void make_environ_hash(t_request *request);
+
+/*
+ ******************
+ ** redirections **
+ ******************
+ */
+/*
+ ** change_reference.c
+ */
+int	change_multi_references(t_pipe_list *cmd);
 
 #endif

@@ -6,11 +6,11 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 22:08:39 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/26 14:30:21 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/02 23:26:53 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <redirect.h>
+#include <mini_shell.h>
 
 int	create_file_fd(char *file_path, int type)
 {

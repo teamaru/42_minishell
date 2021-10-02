@@ -6,12 +6,11 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 16:54:14 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/09/27 16:59:52 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/02 19:15:23 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-#include <convert.h>
 
 static int		counst_args(t_token *args)
 {

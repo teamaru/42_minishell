@@ -6,12 +6,11 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 14:45:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/09/27 15:44:30 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/02 19:15:55 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/mini_shell.h"
-#include <convert.h>
 
 t_bool process_request(t_request *request, char *line)
 {
@@ -50,13 +49,14 @@ void execute_child_process(t_request *request)
 
 t_bool exec_request(t_request *request)
 {
-	t_pipe_list *list;
+	t_pipe_list	*pipe_list;
 	//   pid_t c_pid;
 
-	list = create_pipe_list(request);
-	if (!list)
+	pipe_list = create_pipe_list(request);
+	if (!pipe_list)
 		return (FALSE);
-	free_pipe_list(list);
+	exec_pipe_list(pipe_list);
+	free_pipe_list(pipe_list);
 //   if (request->cmd_id == EXIT)
 //     return (execute_exit(request));
 //   c_pid = fork();

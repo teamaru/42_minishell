@@ -6,12 +6,11 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 15:11:45 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/01 16:11:08 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/02 19:15:34 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-#include <convert.h>
 
 static char *test_get_rd(int type)
 {

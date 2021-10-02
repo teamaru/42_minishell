@@ -6,12 +6,11 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 17:26:45 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/01 12:45:44 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/02 19:15:32 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-#include <convert.h>
 
 void	set_rd_fd(t_redirection_list **node, t_token_type type)
 {

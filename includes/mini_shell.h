@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/09/26 15:23:08 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/02 19:15:13 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,31 @@ typedef struct s_request
   int exit_cd;
 } t_request;
 
+typedef enum e_type_rd
+{
+	INPUT,
+	OUTPUT,
+	APPEND,
+	HEREDOC,
+} t_type_rd;
+
+typedef struct s_redirection_list
+{
+	int							fd;
+	t_type_rd					type;
+	char						*file_path;
+	struct s_redirection_list	*next;
+} t_redirection_list;
+
+typedef struct s_pipe_list
+{
+	t_redirection_list			*output_rd;
+	t_redirection_list			*input_rd;
+	const char					**cmd_args;
+	struct s_pipe_list			*next;
+	pid_t						pid;
+} t_pipe_list;
+
 typedef t_bool (*t_cmd_func)(t_request*);
 typedef t_bool (*t_is_func)(char);
 
@@ -190,6 +215,27 @@ t_bool execute_export(t_request *request);
  */
 t_bool execute_pwd(t_request *request);
 /*
+ *************
+ ** convert **
+ *************
+ */
+/*
+** cmd_args.c
+*/
+const char	**create_cmd_args(t_token *args);
+/*
+** free_pipe_list.c
+*/
+void	free_pipe_list(t_pipe_list *list);
+/*
+** redirection_list.c
+*/
+t_bool	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds);
+/*
+** request_to_pipe_list.c
+*/
+t_pipe_list	*create_pipe_list(t_request *request);
+/*
  **************
  ** exection **
  **************
@@ -199,6 +245,10 @@ t_bool execute_pwd(t_request *request);
 */
 t_bool is_execution(t_request *request, char **line);
 t_bool execute_executable(t_request *request);
+/*
+** execution.c **
+*/
+void	exec_pipe_list(t_pipe_list *pipe_list);
 /*
  ************
  ** option **

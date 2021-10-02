@@ -36,6 +36,7 @@
 #define ERR_MSG_TOO_MANY_ARGS "too many arguments\n"
 #define ERR_MSG_INVLD_SYNTX "syntax error near unexpected token \n"
 #define ERR_MSG_QT_NOT_CLSD "quote is not closed\n"
+#define ERR_MSG_AMBGS_RDRCT "ambiguous redirect\n"
 
 typedef enum e_bool
 {
@@ -65,13 +66,16 @@ typedef enum e_option
 
 typedef enum e_meta_char
 {
-  SLASH = '/',
+  SLSH = '/',
+  B_SLSH = '\\',
   PERIOD = '.',
   SGL_QT = '\'',
   DBL_QT = '\"',
   HYPHEN = '-',
   R_RDRCT = '>',
   L_RDRCT = '<',
+  DLL = '$',
+  SPC = ' ',
 } t_meat_char;
 
 typedef enum e_cmd_id
@@ -94,6 +98,7 @@ typedef enum e_token_type
   TYPE_LL_RDRCT,
   TYPE_PIPE,
   TYPE_STR,
+  TYPE_EXPDBL,
 } t_token_type;
 
 typedef struct s_argument
@@ -118,10 +123,19 @@ typedef struct s_cmd
   t_token *rds;
 } t_cmd;
 
+typedef struct s_environ
+{
+  struct s_environ *next;
+  struct s_environ *prev;
+  char *key;
+  char *value;
+} t_environ;
+
 typedef struct s_request
 {
   t_token *tokens;
   t_cmd *cmds;
+  t_environ *environs;
 
   char *cmd;
   t_cmd_id cmd_id;
@@ -158,7 +172,7 @@ typedef struct s_pipe_list
 
 typedef t_bool (*t_cmd_func)(t_request*);
 typedef t_bool (*t_is_func)(char);
-
+typedef void (*t_expand_func)(t_request*, char**, t_token**);
 
 char *get_chunk(char **line);
 void parse_arguments(t_request *request, char **line);
@@ -321,18 +335,40 @@ t_token	*new_token(char *token);
 void	append_token(t_token **head, t_token *new);
 t_bool is_delimiter(int c);
 t_bool find_closing_qt(char *line, int *i);
-void get_token(t_request *request, char **line);
-void tokenize(t_request *request, char *line);
+void get_token(t_token **head, char **line);
+void tokenize(t_token **head, char *line);
 int token_listsize(t_token *tokens);
+void print_tokens(t_token *head);
 char **token_list_to_array(t_token *token);
 
-
+/*
+ ***********
+ ** parse **
+ ***********
+ */
+/*
+ ** parse.c **
+ */
 void free_cmd_list(t_cmd **head);
 t_cmd	*new_cmd();
 void	append_cmd(t_cmd **head, t_cmd *new);
-void print_cmds(t_request *request);
+void print_cmds(t_cmd *head);
 void parse(t_request *request);
-
+t_bool is_type_redirect(t_token *token);
+t_bool is_type_heredoc(t_token *token);
 t_bool is_valid_syntax(t_request *request);
+
+/*
+ ************
+ ** expand **
+ ************
+ */
+/*
+ ** expand.c **
+ */
+t_bool expand(t_request *request);
+
+void free_environs(t_environ **head);
+void make_environ_hash(t_request *request);
 
 #endif

@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/mini_shell.h"
-
+#include <mini_shell.h>
 
 t_bool is_all_digits(char *s)
 {

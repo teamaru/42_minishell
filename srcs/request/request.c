@@ -6,19 +6,21 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 14:45:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/02 19:15:55 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/02 19:24:58 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/mini_shell.h"
+#include <mini_shell.h>
 
 t_bool process_request(t_request *request, char *line)
 {
   init_request(request);
-  tokenize(request, line);
+  tokenize(&request->tokens, line);
   if (!is_valid_syntax(request))
     return (TRUE);
   parse(request);
+  if (!expand(request))
+    return (TRUE);
   if (!exec_request(request))
     return (FALSE);
   free_all(request);
@@ -73,6 +75,7 @@ void init_request(t_request *request)
 {
   request->tokens = NULL;
   request->cmds = NULL;
+  make_environ_hash(request);
   request->cmd = NULL;
   request->cmd_id = INVLD_CMD;
   request->option = NON;

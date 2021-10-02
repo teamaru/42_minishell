@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/mini_shell.h"
+#include <mini_shell.h>
 
 t_bool is_execution(t_request *request, char **line)
 {
-  if (**line == PERIOD || **line == SLASH)
+  if (**line == PERIOD || **line == SLSH)
   {
     request->excution = TRUE;
     return (TRUE);

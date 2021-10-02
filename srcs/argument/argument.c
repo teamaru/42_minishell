@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/mini_shell.h"
+#include <mini_shell.h>
 
 void free_arguments(t_argument **top)
 {

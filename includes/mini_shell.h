@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/02 23:29:18 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/03 22:49:19 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ t_bool execute_executable(t_request *request);
 /*
 ** execution.c **
 */
-void	exec_pipe_list(t_pipe_list *pipe_list);
+void	execution_part(t_pipe_list *pipe_list);
 /*
  ************
  ** option **

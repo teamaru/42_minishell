@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 14:45:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/02 19:24:58 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/03 22:49:12 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_bool exec_request(t_request *request)
 	pipe_list = create_pipe_list(request);
 	if (!pipe_list)
 		return (FALSE);
-	exec_pipe_list(pipe_list);
+	execution_part(pipe_list);
 	free_pipe_list(pipe_list);
 //   if (request->cmd_id == EXIT)
 //     return (execute_exit(request));

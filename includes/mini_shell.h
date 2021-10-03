@@ -317,8 +317,20 @@ t_bool is_valid_syntax(t_request *request);
  ** expand.c **
  */
 t_bool expand(t_request *request);
-
 void free_environs(t_environ **head);
 void make_environ_hash(t_request *request);
+
+
+/*
+ *************
+ ** signal **
+ *************
+ */
+/*
+ ** signal.c **
+ */
+void init_signal(void);
+void interrupt(int sig_id);
+
 
 #endif

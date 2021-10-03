@@ -1,6 +1,6 @@
 MINISHL  := minishell
 CC       := gcc
-CFLAGS   := -Wall -Wextra -Werror
+CFLAGS   := -Wall -Wextra -Werror -I $(shell brew --prefix readline)/include
 INCLUDE  := -I./includes
 SRCDIR   := ./srcs/
 SRCS     := $(wildcard $(SRCDIR)*.c) $(wildcard $(SRCDIR)*/*.c)
@@ -9,11 +9,12 @@ LIBFTDIR := ./libft/
 LIBFT    := $(LIBFTDIR)libft
 MAKEFLGS := -C
 RDLNFLG  := -lreadline
+LDFLAGS  := -lreadline -lhistory -L$(shell brew --prefix readline)/lib
 
 all: $(MINISHL)
 
 $(MINISHL): $(OBJS) $(LIBFT)
-	$(CC) -o $(MINISHL) $(INCLUDE) $(OBJS) $(LIBFT) $(RDLNFLG)
+	$(CC) -o $(MINISHL) $(INCLUDE) $(OBJS) $(LIBFT) $(RDLNFLG) $(LDFLAGS)
 
 $(LIBFT):
 	$(MAKE) $(MAKEFLGS) $(LIBFTDIR)

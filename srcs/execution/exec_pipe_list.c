@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/04 12:39:06 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/04 15:43:47 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ void	exec_simple_cmd(t_pipe_list *pipe_list)
 
 	pipe_list->pid = fork();
 	if (pipe_list->pid == -1)
+	{
 		perror("fork");
+		return ;
+	}
 	else if (pipe_list->pid == 0)
 		child_exec_cmd(pipe_list);
 	else
@@ -74,46 +77,105 @@ void	exec_simple_cmd(t_pipe_list *pipe_list)
 	}
 }
 
-void	handle_pipeline(t_pipe_list *pipe_list)
+void	init_pipe_fd(int pipe_fd[2])
 {
-	t_pipe_list	*first_node;
-	int			pipe_fd[2];
-	pid_t		first_child;
-	pid_t		last_child;
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
+}
 
-	first_node = pipe_list;
-	if (pipe(pipe_fd) < 0)
-	{
-		perror("pipe");
-		return;
-	}
+t_bool	is_pipe_open(int pipe_fd[2])
+{
+	if (pipe_fd[0] == -1 && pipe_fd[1] == -1)
+		return (FALSE);
+	return (TRUE);
+}
 
-	first_child = fork();
-	if (first_child == -1)
-		perror("fork");
-	else if (first_child == 0)
-	{
-		close(pipe_fd[0]);
-		dup2(pipe_fd[1], 1);
-		close(pipe_fd[1]);
-		child_exec_cmd(pipe_list);
-	}
-	pipe_list->pid = first_child;
-	pipe_list = pipe_list->next;
-
-	last_child = fork();
-	if (last_child == -1)
-		perror("fork");
-	else if (last_child == 0)
-	{
-		close(pipe_fd[1]);
-		dup2(pipe_fd[0], 0);
-		close(pipe_fd[0]);
-		child_exec_cmd(pipe_list);
-	}
-	pipe_list->pid = last_child;
+void	read_pipe(int pipe_fd[2])
+{
 	close(pipe_fd[1]);
+	dup2(pipe_fd[0], 0);
 	close(pipe_fd[0]);
+}
+
+void	write_pipe(int pipe_fd[2])
+{
+	close(pipe_fd[0]);
+	dup2(pipe_fd[1], 1);
+	close(pipe_fd[1]);
+}
+
+void	child_operate_pipe_fd(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2], int new_pipe_fd[2])
+{
+	if (!has_pipe(node))
+		read_pipe(last_pipe_fd);
+	else if (first == node)
+		write_pipe(new_pipe_fd);
+	else
+	{
+		read_pipe(last_pipe_fd);
+		write_pipe(new_pipe_fd);
+	}
+}
+
+void	parent_operate_pipe_fd(t_pipe_list *node, int last_pipe_fd[2], int new_pipe_fd[2])
+{
+	if (is_pipe_open(last_pipe_fd))
+	{
+		close(last_pipe_fd[0]);
+		close(last_pipe_fd[1]);
+	}
+	if (has_pipe(node))
+	{
+		last_pipe_fd[0] = new_pipe_fd[0];
+		last_pipe_fd[1] = new_pipe_fd[1];
+	}
+}
+
+pid_t do_pipe(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2])
+{
+	int	new_pipe_fd[2];
+	pid_t	child_pid;
+
+	if (has_pipe(node))
+	{
+		if (pipe(new_pipe_fd) < 0)
+			return (FAILURE);
+	}
+	child_pid = fork();
+	if (child_pid < 0)
+		return (child_pid);
+	/* 子プロセスで実行 */
+	if (child_pid == 0)
+	{
+		child_operate_pipe_fd(first, node, last_pipe_fd, new_pipe_fd);
+		child_exec_cmd(node);
+	}
+	/* 親プロセスで実行 */
+	else
+		parent_operate_pipe_fd(node, last_pipe_fd, new_pipe_fd);
+	return (child_pid);
+}
+
+void	handle_pipelines(t_pipe_list *pipe_list)
+{
+	t_pipe_list	*tmp_node;
+	int			last_pipe_fd[2];
+	pid_t		child_pid;
+
+	tmp_node = pipe_list;
+	init_pipe_fd(last_pipe_fd);
+	while (tmp_node)
+	{
+
+		child_pid = do_pipe(pipe_list, tmp_node, last_pipe_fd);
+		if (child_pid < 0)
+		{
+			perror("do_pipe");
+			return;
+		}
+		tmp_node->pid = child_pid;
+		tmp_node = tmp_node->next;
+	}
 }
 
 void	wait_processes(t_pipe_list *pipe_list)
@@ -148,7 +210,7 @@ void	execution_part(t_pipe_list *pipe_list)
 	}
 	else
 	{
-		handle_pipeline(pipe_list);
+		handle_pipelines(pipe_list);
 		wait_processes(pipe_list);
 	}
 }

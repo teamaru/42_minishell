@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 15:11:45 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/02 19:15:34 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/04 13:03:47 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ void	add_pipe_list(t_pipe_list **list, t_pipe_list *node)
 		*list = node;
 	else
 	{
-		tmp = (*list);
-		while (tmp)
+		tmp = *list;
+		while (tmp->next)
 			tmp = tmp->next;
-		tmp = node;
+		tmp->next = node;
 	}
 }
 

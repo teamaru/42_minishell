@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 15:11:45 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/04 13:03:47 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/04 15:53:19 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ t_pipe_list	*create_pipe_list(t_request *request)
 		init_pipe_list_node(&node);
 		node->cmd_args = create_cmd_args(cmd->args);
 		set_redirection_lists(&node, cmd->rds);
-		print_pipe_node_info(node);
+		// print_pipe_node_info(node);
 		add_pipe_list(&list, node);
 		cmd = cmd->next;
 	}

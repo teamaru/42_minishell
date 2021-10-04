@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/03 23:12:41 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/04 12:39:06 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 	}
 }
 
-t_bool	is_pipe(t_pipe_list *pipe_list)
+t_bool	has_pipe(t_pipe_list *pipe_list)
 {
-	if (!pipe_list->next)
-		return (FALSE);
-	return (TRUE);
+	if (pipe_list->next)
+		return (TRUE);
+	return (FALSE);
 }
 
 t_bool	is_buildin(const char *cmd)
@@ -74,9 +74,70 @@ void	exec_simple_cmd(t_pipe_list *pipe_list)
 	}
 }
 
+void	handle_pipeline(t_pipe_list *pipe_list)
+{
+	t_pipe_list	*first_node;
+	int			pipe_fd[2];
+	pid_t		first_child;
+	pid_t		last_child;
+
+	first_node = pipe_list;
+	if (pipe(pipe_fd) < 0)
+	{
+		perror("pipe");
+		return;
+	}
+
+	first_child = fork();
+	if (first_child == -1)
+		perror("fork");
+	else if (first_child == 0)
+	{
+		close(pipe_fd[0]);
+		dup2(pipe_fd[1], 1);
+		close(pipe_fd[1]);
+		child_exec_cmd(pipe_list);
+	}
+	pipe_list->pid = first_child;
+	pipe_list = pipe_list->next;
+
+	last_child = fork();
+	if (last_child == -1)
+		perror("fork");
+	else if (last_child == 0)
+	{
+		close(pipe_fd[1]);
+		dup2(pipe_fd[0], 0);
+		close(pipe_fd[0]);
+		child_exec_cmd(pipe_list);
+	}
+	pipe_list->pid = last_child;
+	close(pipe_fd[1]);
+	close(pipe_fd[0]);
+}
+
+void	wait_processes(t_pipe_list *pipe_list)
+{
+	pid_t		changed_pid;
+	t_pipe_list	*tmp_node;
+	int			status;
+
+	tmp_node = pipe_list;
+	while(tmp_node)
+	{
+		changed_pid = waitpid(tmp_node->pid, &status, 0);
+		if (changed_pid < 0)
+		{
+			perror("waitpid");
+			return;
+		}
+		tmp_node = tmp_node->next;
+	}
+}
+
 void	execution_part(t_pipe_list *pipe_list)
 {
-	if (!is_pipe(pipe_list))
+	if (!has_pipe(pipe_list))
 	{
 		/* buildinを親プロセスで実行 */
 		if (is_buildin(pipe_list->cmd_args[0]))
@@ -84,5 +145,10 @@ void	execution_part(t_pipe_list *pipe_list)
 		/* buildin以外は子プロセスで実行 */
 		else
 			exec_simple_cmd(pipe_list);
+	}
+	else
+	{
+		handle_pipeline(pipe_list);
+		wait_processes(pipe_list);
 	}
 }

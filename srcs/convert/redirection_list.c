@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 17:26:45 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/02 19:15:32 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/05 14:47:06 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_bool	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds)
 	{
 		token_type = tmp_token->type;
 		// new redirection_list_node作成
-		if (token_type == TYPE_R_RDRCT || token_type == TYPE_RR_RDRCT || token_type == TYPE_L_RDRCT || token_type == TYPE_LL_RDRCT)
+		if (is_type_redirect(tmp_token))
 		{
 			rd_node = new_rd_list_node(token_type);
 			if (!rd_node)
@@ -84,7 +84,7 @@ t_bool	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds)
 			else if (rd_node->type == OUTPUT || rd_node->type == APPEND)
 				add_node_to_rd_list(&(*pipe_node)->output_rd, rd_node);
 		}
-		else if (token_type == TYPE_STR)
+		else if (token_type == TYPE_STR || token_type == TYPE_EXPDBL)
 		{
 			rd_node->file_path = ft_strdup(tmp_token->token);
 			if (!rd_node->file_path)

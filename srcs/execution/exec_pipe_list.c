@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/04 15:43:47 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/05 14:48:08 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 static void	child_exec_cmd(t_pipe_list *pipe_list)
 {
 	const char	**cmd_args;
+	/* 環境変数追加 */
+	extern char	**environ;
 
 	//t_redirection_listがあれば参照先変更
 	if (change_multi_references(pipe_list) < 0)
@@ -23,7 +25,7 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 		exit(1);
 	}
 	cmd_args = pipe_list->cmd_args;
-	if (execve(cmd_args[0], (char *const *)cmd_args, NULL) < 0)
+	if (execve(cmd_args[0], (char *const *)cmd_args, environ) < 0)
 	{
 		perror("execve");
 		exit(1);
@@ -197,7 +199,7 @@ void	wait_processes(t_pipe_list *pipe_list)
 	}
 }
 
-void	execution_part(t_pipe_list *pipe_list)
+void	execute_cmds(t_pipe_list *pipe_list)
 {
 	if (!has_pipe(pipe_list))
 	{

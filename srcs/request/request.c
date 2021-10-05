@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 14:45:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/06/08 14:45:50 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/05 14:47:54 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,9 @@ t_bool process_request(t_request *request, char *line)
   parse(request);
   if (!expand(request))
     return (TRUE);
-  /*
   if (!exec_request(request))
     return (FALSE);
-    */
+  free_all(request);
   return (TRUE);
 }
 
@@ -51,17 +50,23 @@ void execute_child_process(t_request *request)
 
 t_bool exec_request(t_request *request)
 {
-  pid_t c_pid;
+	t_pipe_list	*pipe_list;
+	//   pid_t c_pid;
 
-  if (request->cmd_id == EXIT)
-    return (execute_exit(request));
-  c_pid = fork();
-  if (c_pid == -1)
-    print_err_msg(request, strerror(errno));
-  if (c_pid == 0)
-    execute_child_process(request);
-  if (c_pid > 0)
-    wait(NULL);
+	pipe_list = create_pipe_list(request);
+	if (!pipe_list)
+		return (FALSE);
+	execute_cmds(pipe_list);
+	free_pipe_list(pipe_list);
+//   if (request->cmd_id == EXIT)
+//     return (execute_exit(request));
+//   c_pid = fork();
+//   if (c_pid == -1)
+//     print_err_msg(request, strerror(errno));
+//   if (c_pid == 0)
+//     execute_child_process(request);
+//   if (c_pid > 0)
+//     wait(NULL);
   return (TRUE);
 }
 

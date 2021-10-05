@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/05/25 21:58:55 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/05 14:48:29 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <signal.h>
+#include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "../libft/includes/libft.h"
@@ -145,6 +146,31 @@ typedef struct s_request
   int exit_cd;
 } t_request;
 
+typedef enum e_type_rd
+{
+	INPUT,
+	OUTPUT,
+	APPEND,
+	HEREDOC,
+} t_type_rd;
+
+typedef struct s_redirection_list
+{
+	int							fd;
+	t_type_rd					type;
+	char						*file_path;
+	struct s_redirection_list	*next;
+} t_redirection_list;
+
+typedef struct s_pipe_list
+{
+	t_redirection_list			*output_rd;
+	t_redirection_list			*input_rd;
+	const char					**cmd_args;
+	struct s_pipe_list			*next;
+	pid_t						pid;
+} t_pipe_list;
+
 typedef t_bool (*t_cmd_func)(t_request*);
 typedef t_bool (*t_is_func)(char);
 typedef void (*t_expand_func)(t_request*, char**, t_token**);
@@ -204,6 +230,27 @@ t_bool execute_export(t_request *request);
  */
 t_bool execute_pwd(t_request *request);
 /*
+ *************
+ ** convert **
+ *************
+ */
+/*
+** cmd_args.c
+*/
+const char	**create_cmd_args(t_token *args);
+/*
+** free_pipe_list.c
+*/
+void	free_pipe_list(t_pipe_list *list);
+/*
+** redirection_list.c
+*/
+t_bool	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds);
+/*
+** request_to_pipe_list.c
+*/
+t_pipe_list	*create_pipe_list(t_request *request);
+/*
  **************
  ** exection **
  **************
@@ -213,6 +260,10 @@ t_bool execute_pwd(t_request *request);
 */
 t_bool is_execution(t_request *request, char **line);
 t_bool execute_executable(t_request *request);
+/*
+** execution.c **
+*/
+void	execute_cmds(t_pipe_list *pipe_list);
 /*
  ************
  ** option **
@@ -320,7 +371,6 @@ t_bool expand(t_request *request);
 void free_environs(t_environ **head);
 void make_environ_hash(t_request *request);
 
-
 /*
  *************
  ** signal **
@@ -332,5 +382,14 @@ void make_environ_hash(t_request *request);
 void init_signal(void);
 void interrupt(int sig_id);
 
+/*
+ ******************
+ ** redirections **
+ ******************
+ */
+/*
+ ** change_reference.c
+ */
+int	change_multi_references(t_pipe_list *cmd);
 
 #endif

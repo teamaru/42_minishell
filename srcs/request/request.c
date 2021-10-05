@@ -14,7 +14,6 @@
 
 t_bool process_request(t_request *request, char *line)
 {
-  init_request(request);
   tokenize(&request->tokens, line);
   if (!is_valid_syntax(request))
     return (TRUE);

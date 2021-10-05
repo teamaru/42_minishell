@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+extern t_request g_request;
+
 t_bool is_all_digits(char *s)
 {
   if (!s)
@@ -25,22 +27,22 @@ t_bool is_all_digits(char *s)
   return (TRUE);
 }
 
-t_bool execute_exit(t_request *request)
+t_bool execute_exit(void)
 {
   printf(MSG_EXIT);
-  if (!request->arguments)
-    request->exit_cd = 0;
-  else if (listsize(request->arguments) > 1)
+  if (!g_request.arguments)
+    g_request.exit_cd = 0;
+  else if (listsize(g_request.arguments) > 1)
   {
-    request->exit_cd = 1;
-    print_err_msg(request, ERR_MSG_TOO_MANY_ARGS);
+    g_request.exit_cd = 1;
+    print_err_msg(ERR_MSG_TOO_MANY_ARGS);
     return (TRUE);
   }
-  else if (!is_all_digits(request->arguments->arg))
+  else if (!is_all_digits(g_request.arguments->arg))
   {
-    request->exit_cd = 1;
-    print_err_msg(request, ERR_MSG_INVLD_EXIT_CD);
+    g_request.exit_cd = 1;
+    print_err_msg(ERR_MSG_INVLD_EXIT_CD);
   }
-  free_all(request);
+  free_all();
   return (FALSE);
 }

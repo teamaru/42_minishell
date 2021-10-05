@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+extern t_request g_request;
+
 void free_cmd_list(t_cmd **head)
 {
   t_cmd	*cmd;
@@ -88,12 +90,12 @@ void print_cmds(t_cmd *head)
   }
 }
 
-void parse(t_request *request)
+void parse()
 {
   t_token *token;
   t_cmd *cmd;
 
-  token = request->tokens;
+  token = g_request.tokens;
   while (token)
   {
     cmd = new_cmd();
@@ -109,7 +111,7 @@ void parse(t_request *request)
       }
       token = token->next;
     }
-    append_cmd(&request->cmds, cmd);
+    append_cmd(&g_request.cmds, cmd);
     if (token)
       token = token->next;
   }
@@ -155,26 +157,26 @@ t_bool is_valid_token_pair(t_token *token)
       || (is_type_redirect(token) && is_type_redirect(token->next))));
 }
 
-t_bool is_valid_syntax(t_request *request)
+t_bool is_valid_syntax()
 {
   t_token *token;
 
-  token = request->tokens;
+  token = g_request.tokens;
   if (!token)
     return (TRUE);
   if (is_type_meta(token))
-    return (print_err_msg(request, ERR_MSG_INVLD_SYNTX));
+    return (print_err_msg(ERR_MSG_INVLD_SYNTX));
   while (token)
   {
     if (!is_quote_closed(token))
-      return (print_err_msg(request, ERR_MSG_QT_NOT_CLSD));
+      return (print_err_msg(ERR_MSG_QT_NOT_CLSD));
     if (!token->next)
       break ;
     if (!is_valid_token_pair(token))
-      return (print_err_msg(request, ERR_MSG_INVLD_SYNTX));
+      return (print_err_msg(ERR_MSG_INVLD_SYNTX));
     token = token->next;
   }
   if (is_type_redirect(token) || is_type_meta(token))
-    return (print_err_msg(request, ERR_MSG_INVLD_SYNTX));
+    return (print_err_msg(ERR_MSG_INVLD_SYNTX));
   return (TRUE);
 }

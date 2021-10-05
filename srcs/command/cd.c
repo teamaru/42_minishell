@@ -12,14 +12,16 @@
 
 #include <mini_shell.h>
 
-t_bool execute_cd(t_request *request)
+extern t_request g_request;
+
+t_bool execute_cd(void)
 {
   char *path;
 
-  path = request->arguments->arg;
+  path = g_request.arguments->arg;
   if (!*path)
     path = ROOT;
   if (chdir(path) == -1)
-    print_err_msg(request, strerror(errno));
+    print_err_msg(strerror(errno));
   return (TRUE);
 }

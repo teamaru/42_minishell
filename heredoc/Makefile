@@ -1,7 +1,7 @@
 HEREDOC  := heredoc
 CC       := gcc
 CFLAGS   := -Wall -Wextra -Werror
-INCLUDE  := -I./includes
+INCLUDE  := -I./includes -I/usr/local/opt/readline/include
 SRCDIR   := ./srcs/
 SRCS     := $(wildcard $(SRCDIR)*.c) $(wildcard $(SRCDIR)*/*.c)
 OBJS     := $(SRCS:.c=.o)
@@ -9,7 +9,7 @@ DEPS     := $(SRCS:%.c=%.d)
 LIBFTDIR := ../libft/
 LIBFT    := $(LIBFTDIR)libft
 MAKEFLGS := -C
-RDLNFLG  := -lreadline
+RDLNFLG  := -lreadline -L/usr/local/opt/readline/lib
 
 all: $(HEREDOC)
 

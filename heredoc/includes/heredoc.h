@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 23:21:49 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/07 16:18:49 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/07 17:46:55 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,17 @@
 #include <errno.h>
 #include <signal.h>
 #include <fcntl.h>
+
+typedef enum e_bool
+{
+  FALSE,
+  TRUE,
+} t_bool;
+
+typedef enum e_result
+{
+  SUCCESS,
+  FAILURE,
+} t_result;
 
 #endif

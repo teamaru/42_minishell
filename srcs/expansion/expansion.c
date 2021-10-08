@@ -16,7 +16,7 @@ extern t_request g_request;
 
 t_bool is_env_end(char c)
 {
-  return (c == '\0' || c == DLL || c == SPC || is_quote(c));
+  return (c == '\0' || c == DLL || c == SPC || c == SLSH || c == QSTN || is_quote(c));
 }
 
 char *get_env_key(char *token)
@@ -30,7 +30,9 @@ char *get_env_key(char *token)
   key = NULL;
   while (!is_env_end(token[i]))
     i++;
-  if (i > 1)
+  if (token[i] == QSTN)
+    i++;
+  if (i > 0)
     key = ft_strndup(token, i);
   return (key);
 }
@@ -41,11 +43,13 @@ char *get_env_value(char *key)
 
   if (!key)
     return (NULL);
+  if (*key == QSTN)
+    return (ft_itoa(errno));
   environ = g_request.environs;
   while (environ)
   {
     if (!ft_strcmp(environ->key, key))
-      return (environ->value);
+      return (ft_strdup(environ->value));
     environ = environ->next;
   }
   return (NULL);
@@ -115,6 +119,8 @@ int get_env_len(char *token)
   len = 0;
   while (!is_env_end(token[len]))
     len++;
+  if (token[len] == QSTN)
+    len++;
   return (len);
 }
 
@@ -137,7 +143,7 @@ void expand_env(char **token, t_token **expanded_tokens)
   value = get_env_value(key);
   free(key);
   if (value)
-    append_token(expanded_tokens, new_token(ft_strdup(value)));
+    append_token(expanded_tokens, new_token(value));
   *token += get_env_len(*token);
 }
 

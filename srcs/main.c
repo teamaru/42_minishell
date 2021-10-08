@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+t_request g_request;
+
 char *delete_qt()
 {
   return (NULL);
@@ -56,7 +58,7 @@ char *get_chunk(char **line)
   return (chunk);
 }
 
-void shell_loop(t_request *request)
+void shell_loop()
 {
   char *line;
   t_bool flg;
@@ -69,18 +71,16 @@ void shell_loop(t_request *request)
       exit(0);
     if (ft_strlen(line) > 0)
       add_history(line);
-    init_request(request);
-    flg = process_request(request, line);
-    free_all(request);
+    init_request();
+    flg = process_request(line);
+    free_all();
     free(line);
   }
 }
 
 int main()
 {
-  t_request request;
-
   init_signal();
-  shell_loop(&request);
-  return (request.exit_cd);
+  shell_loop();
+  return (g_request.exit_cd);
 }

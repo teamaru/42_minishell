@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+extern t_request g_request;
+
 void	init_cmds(char **cmds)
 {
 	cmds[ECHO] = ft_strdup("echo");
@@ -32,16 +34,16 @@ void free_cmds(char **cmds)
     free(cmds[i]);
 }
 
-void parse_cmd(t_request *request, char **line)
+void parse_cmd(char **line)
 {
   char *cmds[CMD_NUM];
 
   clear_white(line);
-  if (is_execution(request, line))
+  if (is_execution(line))
     return ;
   init_cmds(cmds);
-  request->cmd = get_chunk(line);
-  request->cmd_id = get_cmd_id(cmds, request->cmd);
+  g_request.cmd = get_chunk(line);
+  g_request.cmd_id = get_cmd_id(cmds, g_request.cmd);
   free_cmds(cmds);
 }
 

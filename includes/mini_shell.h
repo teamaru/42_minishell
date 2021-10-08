@@ -171,12 +171,12 @@ typedef struct s_pipe_list
 	pid_t						pid;
 } t_pipe_list;
 
-typedef t_bool (*t_cmd_func)(t_request*);
+typedef t_bool (*t_cmd_func)(void);
 typedef t_bool (*t_is_func)(char);
-typedef void (*t_expand_func)(t_request*, char**, t_token**);
+typedef void (*t_expand_func)(char**, t_token**);
 
 char *get_chunk(char **line);
-void parse_arguments(t_request *request, char **line);
+void parse_arguments(char **line);
 
 
 /*
@@ -187,10 +187,10 @@ void parse_arguments(t_request *request, char **line);
 /*
  ** request.c **
  */
- t_bool process_request(t_request *request, char *line);
- t_bool is_valid_request(t_request *request);
- t_bool exec_request(t_request *request);
- void init_request(t_request *request);
+ t_bool process_request(char *line);
+ t_bool is_valid_request(void);
+ t_bool exec_request(void);
+ void init_request(void);
 
 /*
  *************
@@ -202,33 +202,33 @@ void parse_arguments(t_request *request, char **line);
 */
 void	init_cmds(char **cmds);
 void free_cmds(char **cmds);
-void parse_cmd(t_request *request, char **line);
+void parse_cmd(char **line);
 void init_cmd_funcs(t_cmd_func *cmd_funcs);
 t_cmd_id get_cmd_id(char **cmds, char *cmd);
 /*
 ** cd.c **
 */
-t_bool execute_cd(t_request *request);
+t_bool execute_cd(void);
 /*
  ** echo.c **
  */
-t_bool execute_echo(t_request *request);
+t_bool execute_echo(void);
 /*
  ** env.c **
  */
-t_bool execute_env(t_request *request);
+t_bool execute_env(void);
 /*
  ** exit.c **
  */
-t_bool execute_exit(t_request *request);
+t_bool execute_exit(void);
 /*
  ** export.c **
  */
-t_bool execute_export(t_request *request);
+t_bool execute_export(void);
 /*
  ** pwd.c **
  */
-t_bool execute_pwd(t_request *request);
+t_bool execute_pwd(void);
 /*
  *************
  ** convert **
@@ -249,7 +249,7 @@ t_bool	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds);
 /*
 ** request_to_pipe_list.c
 */
-t_pipe_list	*create_pipe_list(t_request *request);
+t_pipe_list	*create_pipe_list(void);
 /*
  **************
  ** exection **
@@ -258,8 +258,8 @@ t_pipe_list	*create_pipe_list(t_request *request);
 /*
 ** execution.c **
 */
-t_bool is_execution(t_request *request, char **line);
-t_bool execute_executable(t_request *request);
+t_bool is_execution(char **line);
+t_bool execute_executable(void);
 /*
 ** execution.c **
 */
@@ -273,7 +273,7 @@ void	execute_cmds(t_pipe_list *pipe_list);
 ** option.c **
 */
 t_bool is_valid_option(char *option);
-void parse_option(t_request *request, char **line);
+void parse_option(char **line);
 /*
  **************
  ** argument **
@@ -282,7 +282,7 @@ void parse_option(t_request *request, char **line);
 /*
  ** argument.c **
  */
- void parse_arguments(t_request *request, char **line);
+ void parse_arguments(char **line);
  void free_arguments(t_argument **top);
 /*
  ** list.c **
@@ -299,8 +299,8 @@ void	append_argument(t_argument **top, t_argument *new);
 /*
  ** error.c **
  */
-t_bool print_err_msg(t_request *request, char *msg);
-void my_exit(t_request *request, int exit_cd);
+t_bool print_err_msg(char *msg);
+void my_exit(int exit_cd);
 /*
  ***********
  ** utils **
@@ -313,7 +313,7 @@ t_bool is_white(int c);
 void clear_char(char **line, int c);
 void clear_white(char **line);
 void multi_free(char **target);
-void free_all(t_request *request);
+void free_all(void);
 /*
 ** utils2.c **
 */
@@ -351,13 +351,13 @@ char **token_list_to_array(t_token *token);
  ** parse.c **
  */
 void free_cmd_list(t_cmd **head);
-t_cmd	*new_cmd();
+t_cmd	*new_cmd(void);
 void	append_cmd(t_cmd **head, t_cmd *new);
 void print_cmds(t_cmd *head);
-void parse(t_request *request);
+void parse(void);
 t_bool is_type_redirect(t_token *token);
 t_bool is_type_heredoc(t_token *token);
-t_bool is_valid_syntax(t_request *request);
+t_bool is_valid_syntax(void);
 
 /*
  ************
@@ -367,9 +367,9 @@ t_bool is_valid_syntax(t_request *request);
 /*
  ** expand.c **
  */
-t_bool expand(t_request *request);
+t_bool expand(void);
 void free_environs(t_environ **head);
-void make_environ_hash(t_request *request);
+void make_environ_hash(void);
 
 /*
  *************

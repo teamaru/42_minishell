@@ -12,24 +12,26 @@
 
 #include <mini_shell.h>
 
+extern t_request g_request;
+
 t_bool is_valid_option(char *option)
 {
   return (ft_strlen(option) == 2 && option[1] == N);
 }
 
-void parse_option(t_request *request, char **line)
+void parse_option(char **line)
 {
   char *option;
 
-  if (request->cmd_id != ECHO)
+  if (g_request.cmd_id != ECHO)
     return ;
   clear_white(line);
   if (**line != HYPHEN)
     return ;
   option = get_chunk(line);
   if (!is_valid_option(option))
-    request->option = INVLD_OPT;
+    g_request.option = INVLD_OPT;
   else
-    request->option = N;
+    g_request.option = N;
   free(option);
 }

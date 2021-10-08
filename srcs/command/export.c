@@ -12,12 +12,11 @@
 
 #include <mini_shell.h>
 
-t_bool execute_export(t_request *request)
+t_bool execute_export(void)
 {
   int i;
   extern char **environ;
 
-  (void)request;
   i = 0;
   while (environ[i])
     i++;

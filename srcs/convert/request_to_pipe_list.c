@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+extern t_request g_request;
+
 static char *test_get_rd(int type)
 {
 	if (type == INPUT)
@@ -90,13 +92,13 @@ void	init_pipe_list_node(t_pipe_list **node)
 	(*node)->next = NULL;
 }
 
-t_pipe_list	*create_pipe_list(t_request *request)
+t_pipe_list	*create_pipe_list()
 {
 	t_pipe_list	*node;
 	t_pipe_list	*list;
 	t_cmd		*cmd;
 
-	cmd = request->cmds;
+	cmd = g_request.cmds;
 	list = NULL;
 	while (cmd)
 	{

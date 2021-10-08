@@ -12,11 +12,13 @@
 
 #include <mini_shell.h>
 
-t_bool execute_echo(t_request *request)
+extern t_request g_request;
+
+t_bool execute_echo(void)
 {
   t_argument *argument;
 
-  argument = request->arguments;
+  argument = g_request.arguments;
   while (argument)
   {
     ft_putstr_fd(argument->arg, STDOUT);
@@ -24,7 +26,7 @@ t_bool execute_echo(t_request *request)
     if (argument)
       ft_putstr_fd(" ", STDOUT);
   }
-  if (request->option != N)
+  if (g_request.option != N)
     ft_putstr_fd("\n", STDOUT);
   return (TRUE);
 }

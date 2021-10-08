@@ -12,10 +12,11 @@
 
 #include <mini_shell.h>
 
-t_bool execute_pwd(void)
+t_bool execute_pwd(const char **cmd_args)
 {
   char path[BUFSIZ];
 
+  (void)cmd_args;
   path[0] = '0';
   getcwd(path, BUFSIZ);
   printf("%s\n", path);

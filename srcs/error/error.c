@@ -21,6 +21,6 @@ t_bool print_err_msg(char *msg)
 
 void my_exit(int exit_cd)
 {
-  free_all();
+  free_all(TRUE);
   exit(exit_cd);
 }

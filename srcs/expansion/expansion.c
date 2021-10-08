@@ -196,7 +196,7 @@ void insert_tokens(t_token **head, t_token *new_tokens, t_token *target_token)
   }
 }
 
-void move_head(t_token **head, t_token *token)
+void move_token_head(t_token **head, t_token *token)
 {
   *head = token->next;
   if (token->next)
@@ -211,7 +211,7 @@ void delete_token(t_token **head, t_token *target_token)
   if (!head || !*head || !target_token)
     return ;
   if (*head == target_token)
-    return (move_head(head, target_token));
+    return (move_token_head(head, target_token));
   target_token->prev->next = target_token->next;
   if (target_token->next)
     target_token->next->prev = target_token->prev;
@@ -335,7 +335,30 @@ t_bool expand()
 }
 
 
+void replace_env_value(char *target_key, char *new_value)
+{
+  t_environ *target_environ;
 
+  target_environ = get_target_environ(target_key);
+  if (!target_environ)
+    return ;
+  free(target_environ->value);
+  target_environ->value = ft_strdup(new_value);
+}
+
+t_environ *get_target_environ(const char *key)
+{
+  t_environ *environ;
+
+  environ = g_request.environs;
+  while (environ)
+  {
+    if (!ft_strcmp(environ->key, key))
+      return (environ);
+    environ = environ->next;
+  }
+  return (NULL);
+}
 
 
 void free_environs(t_environ **head)
@@ -390,6 +413,29 @@ void	append_environ(t_environ **head, t_environ *new)
   new->prev = environ;
 }
 
+void move_environ_head(t_environ **head, t_environ *environ)
+{
+  *head = environ->next;
+  if (environ->next)
+    environ->next->prev = NULL;
+  environ->next = NULL;
+  environ->prev = NULL;
+  free_environs(&environ);
+}
+
+void delete_environ(t_environ **head, t_environ *target_environ)
+{
+  if (!head || !*head || !target_environ)
+    return ;
+  if (*head == target_environ)
+    return (move_environ_head(head, target_environ));
+  target_environ->prev->next = target_environ->next;
+  if (target_environ->next)
+    target_environ->next->prev = target_environ->prev;
+  target_environ->next = NULL;
+  free_environs(&target_environ);
+}
+
 void print_environ(t_environ *head)
 {
   t_environ *environ;
@@ -403,7 +449,7 @@ void print_environ(t_environ *head)
   }
 }
 
-void make_environ_hash()
+void make_environ_hash(void)
 {
   extern char **environ;
   char **env;

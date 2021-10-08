@@ -19,11 +19,12 @@
 #include <errno.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "../libft/includes/libft.h"
 
-#define CMD_NUM 7
+#define BUILTIN_NUM 7
 #define PRMPT "$ "
 #define ROOT "/"
 #define META_CHARS ";\'\"<>|$?\\."
@@ -77,9 +78,10 @@ typedef enum e_meta_char
   L_RDRCT = '<',
   DLL = '$',
   SPC = ' ',
+  QSTN = '?',
 } t_meat_char;
 
-typedef enum e_cmd_id
+typedef enum e_builtin_id
 {
   ECHO,
   CD,
@@ -88,8 +90,8 @@ typedef enum e_cmd_id
   UNSET,
   ENV,
   EXIT,
-  INVLD_CMD,
-} t_cmd_id;
+  NON_BUILTIN,
+} t_builtin_id;
 
 typedef enum e_token_type
 {
@@ -139,7 +141,7 @@ typedef struct s_request
   t_environ *environs;
 
   char *cmd;
-  t_cmd_id cmd_id;
+  t_builtin_id builtin_id;
   t_option option;
   t_argument *arguments;
   t_bool excution;
@@ -171,7 +173,7 @@ typedef struct s_pipe_list
 	pid_t						pid;
 } t_pipe_list;
 
-typedef t_bool (*t_cmd_func)(void);
+typedef t_bool (*t_builtin_func)(const char **cmd_args);
 typedef t_bool (*t_is_func)(char);
 typedef void (*t_expand_func)(char**, t_token**);
 
@@ -194,7 +196,7 @@ void parse_arguments(char **line);
 
 /*
  *************
- ** command **
+ ** builtin **
  *************
  */
 /*
@@ -203,32 +205,36 @@ void parse_arguments(char **line);
 void	init_cmds(char **cmds);
 void free_cmds(char **cmds);
 void parse_cmd(char **line);
-void init_cmd_funcs(t_cmd_func *cmd_funcs);
-t_cmd_id get_cmd_id(char **cmds, char *cmd);
+void init_builtin_funcs(t_builtin_func *builtin_funcs);
+t_builtin_id get_builtin_id(const char *token);
 /*
 ** cd.c **
 */
-t_bool execute_cd(void);
+t_bool execute_cd(const char **cmd_args);
 /*
  ** echo.c **
  */
-t_bool execute_echo(void);
+t_bool execute_echo(const char **cmd_args);
 /*
  ** env.c **
  */
-t_bool execute_env(void);
+t_bool execute_env(const char **cmd_args);
 /*
  ** exit.c **
  */
-t_bool execute_exit(void);
+t_bool execute_exit(const char **cmd_args);
 /*
  ** export.c **
  */
-t_bool execute_export(void);
+t_bool execute_export(const char **cmd_args);
 /*
  ** pwd.c **
  */
-t_bool execute_pwd(void);
+t_bool execute_pwd(const char **cmd_args);
+/*
+ ** unset.c **
+ */
+t_bool execute_unset(const char **cmd_args);
 /*
  *************
  ** convert **
@@ -313,7 +319,7 @@ t_bool is_white(int c);
 void clear_char(char **line, int c);
 void clear_white(char **line);
 void multi_free(char **target);
-void free_all(void);
+void free_all(t_bool is_exit);
 /*
 ** utils2.c **
 */
@@ -360,16 +366,23 @@ t_bool is_type_heredoc(t_token *token);
 t_bool is_valid_syntax(void);
 
 /*
- ************
- ** expand **
- ************
+ ***************
+ ** expansion **
+ ***************
  */
 /*
- ** expand.c **
+ ** expansion.c **
  */
+ char *get_env_value(char *key);
 t_bool expand(void);
 void free_environs(t_environ **head);
 void make_environ_hash(void);
+void replace_env_value(char *target_key, char *new_value);
+t_environ *get_target_environ(const char *key);
+t_environ	*new_environ(char *key, char *value);
+void delete_environ(t_environ **head, t_environ *target_environ);
+void print_environ(t_environ *head);
+void	append_environ(t_environ **head, t_environ *new);
 
 /*
  *************

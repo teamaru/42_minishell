@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+extern t_request g_request;
+
 static void	child_exec_cmd(t_pipe_list *pipe_list)
 {
 	const char	**cmd_args;
@@ -52,10 +54,13 @@ t_bool	is_buildin(const char *cmd)
 	return (FALSE);
 }
 
-void	exec_buildin(t_pipe_list *pipe_list)
+void	exec_buildin(t_pipe_list *pipe_list, t_builtin_id builtin_id)
 {
+	t_builtin_func builtin_funcs[BUILTIN_NUM];
+
 	(void)pipe_list;
-	printf("exec_buildin\n");
+	init_builtin_funcs(builtin_funcs);
+  builtin_funcs[builtin_id](pipe_list->cmd_args);
 }
 
 void	exec_simple_cmd(t_pipe_list *pipe_list)
@@ -201,11 +206,14 @@ void	wait_processes(t_pipe_list *pipe_list)
 
 void	execute_cmds(t_pipe_list *pipe_list)
 {
+	t_builtin_id builtin_id;
+
 	if (!has_pipe(pipe_list))
 	{
 		/* buildinを親プロセスで実行 */
-		if (is_buildin(pipe_list->cmd_args[0]))
-			exec_buildin(pipe_list);
+		builtin_id = get_builtin_id(pipe_list->cmd_args[0]);
+		if (builtin_id != NON_BUILTIN)
+			exec_buildin(pipe_list, builtin_id);
 		/* buildin以外は子プロセスで実行 */
 		else
 			exec_simple_cmd(pipe_list);

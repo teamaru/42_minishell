@@ -10,4 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <mini_shell.h>
 
+extern t_request g_request;
+
+t_bool execute_unset(const char **cmd_args)
+{
+  if (cmd_args[1])
+    delete_environ(&g_request.environs, get_target_environ(cmd_args[1]));
+  return (TRUE);
+}

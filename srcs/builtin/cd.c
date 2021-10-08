@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/05 15:25:38 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/06/05 15:25:38 by tsugiyam         ###   ########.fr       */
+/*   Created: 2021/05/29 23:21:06 by tsugiyam          #+#    #+#             */
+/*   Updated: 2021/05/29 23:21:06 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-t_bool execute_export(void)
-{
-  int i;
-  extern char **environ;
+extern t_request g_request;
 
-  i = 0;
-  while (environ[i])
-    i++;
-//  environ[i] = ft_strdup("test=test");
-  setenv("test", "test", 0);
+t_bool execute_cd(const char **cmd_args)
+{
+  char pwd[BUFSIZ];
+  char* path;
+
+  pwd[0] = '0';
+  getcwd(pwd, BUFSIZ);
+  replace_env_value("OLDPWD", pwd);
+  path = (char *)cmd_args[1];
+  if (!path)
+    path = ROOT;
+  if (chdir(path) == -1)
+    print_err_msg(strerror(errno));
+  getcwd(pwd, BUFSIZ);
+  replace_env_value("PWD", pwd);
   return (TRUE);
 }

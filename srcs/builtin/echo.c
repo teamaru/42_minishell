@@ -14,19 +14,22 @@
 
 extern t_request g_request;
 
-t_bool execute_echo(void)
+t_bool execute_echo(const char **cmd_args)
 {
-  t_argument *argument;
+  int i;
+  t_bool has_opt;
 
-  argument = g_request.arguments;
-  while (argument)
+  i = 1;
+  has_opt = (cmd_args[i] && !ft_strcmp(cmd_args[i], "-n"));
+  if (has_opt)
+    i++;
+  while (cmd_args[i])
   {
-    ft_putstr_fd(argument->arg, STDOUT);
-    argument = argument->next;
-    if (argument)
+    ft_putstr_fd((char *)cmd_args[i++], STDOUT);
+    if (cmd_args[i])
       ft_putstr_fd(" ", STDOUT);
   }
-  if (g_request.option != N)
+  if (!has_opt)
     ft_putstr_fd("\n", STDOUT);
   return (TRUE);
 }

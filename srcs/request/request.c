@@ -23,14 +23,13 @@ t_bool process_request(char *line)
   if (!expand())
     return (TRUE);
   if (!exec_request())
-    return (FALSE);
-  free_all();
+    return (TRUE);
   return (TRUE);
 }
 
 t_bool is_valid_request()
 {
-  if (g_request.cmd_id == INVLD_CMD)
+  if (g_request.builtin_id == NON_BUILTIN)
     return (print_err_msg(ERR_MSG_INVLD_CMD));
   if (g_request.option == INVLD_OPT)
     return (print_err_msg(ERR_MSG_INVLD_OPT));
@@ -39,14 +38,11 @@ t_bool is_valid_request()
 
 void execute_child_process()
 {
-  t_cmd_func cmd_funcs[CMD_NUM];
 
   if (g_request.excution)
     execute_executable();
   if (!is_valid_request())
     my_exit(FAILURE);
-  init_cmd_funcs(cmd_funcs);
-  cmd_funcs[g_request.cmd_id]();
   my_exit(SUCCESS);
 }
 
@@ -76,9 +72,8 @@ void init_request()
 {
   g_request.tokens = NULL;
   g_request.cmds = NULL;
-  make_environ_hash();
   g_request.cmd = NULL;
-  g_request.cmd_id = INVLD_CMD;
+  g_request.builtin_id = NON_BUILTIN;
   g_request.option = NON;
   g_request.arguments = NULL;
   g_request.excution = FALSE;

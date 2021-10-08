@@ -65,8 +65,11 @@ void shell_loop(t_request *request)
   while (flg)
   {
     line = readline(PRMPT);
+    if (!line)
+      exit(0);
     if (ft_strlen(line) > 0)
       add_history(line);
+    init_request(request);
     flg = process_request(request, line);
     free_all(request);
     free(line);
@@ -77,6 +80,7 @@ int main()
 {
   t_request request;
 
+  init_signal();
   shell_loop(&request);
   return (request.exit_cd);
 }

@@ -78,11 +78,13 @@ int get_str_len(char *token)
   char qt;
   int len;
 
-  len = 0;
+  if (!token || !is_quote(*token))
+    return (0);
+  len = 1;
   qt = *token;
   while (token[len] && token[len] != qt)
     len++;
-  return (len);
+  return (len - 1);
 }
 
 void expand_quote(t_request *request, char **token, t_token **expanded_tokens)
@@ -99,7 +101,7 @@ void expand_quote(t_request *request, char **token, t_token **expanded_tokens)
   *token += i;
   len = get_str_len(*token);
   if (len > 0)
-    append_token(expanded_tokens, new_token(ft_substr(*token, 0, len)));
+    append_token(expanded_tokens, new_token(ft_substr(*token, 1, len)));
   if ((*token)[len])
     len++;
   *token += len;
@@ -131,10 +133,10 @@ void expand_env(t_request *request, char **token, t_token **expanded_tokens)
     i++;
   *token += i;
   key = get_env_key(*token);
-  value = ft_strdup(get_env_value(request, key));
+  value = get_env_value(request, key);
   free(key);
   if (value)
-    append_token(expanded_tokens, new_token(value));
+    append_token(expanded_tokens, new_token(ft_strdup(value)));
   *token += get_env_len(*token);
 }
 
@@ -214,10 +216,11 @@ void get_word(t_token **new_tokens, char **line)
 {
   int i;
 
-  i = 0;
+  i = -1;
   clear_white(line);
-  while ((*line)[i] && !is_white((*line)[i]))
-    i++;
+  while ((*line)[++i] && !is_white((*line)[i]))
+    if (is_quote((*line)[i]))
+      find_closing_qt(*line, &i);
   if (i != 0)
     append_token(new_tokens, new_token(ft_strndup(*line, i)));
   *line += i;
@@ -225,7 +228,7 @@ void get_word(t_token **new_tokens, char **line)
 
 void split_word(t_token **new_tokens, char *token)
 {
-  while (*token)
+  while (token && *token)
     get_word(new_tokens, &token);
 }
 

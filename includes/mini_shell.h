@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/08 17:15:59 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/08 23:14:31 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,11 +154,20 @@ typedef enum e_type_rd
 	HEREDOC,
 } t_type_rd;
 
+
+typedef struct s_heredocument
+{
+	char	*delimiter;
+	// t_bool	expantable;
+	t_bool	last_heredoc;
+} t_demi_for_heredoc;
+
 typedef struct s_redirection_list
 {
 	int							fd;
 	t_type_rd					type;
 	char						*file_path;
+	t_demi_for_heredoc			*demi_heredoc;
 	struct s_redirection_list	*next;
 } t_redirection_list;
 
@@ -166,6 +175,7 @@ typedef struct s_pipe_list
 {
 	t_redirection_list			*output_rd;
 	t_redirection_list			*input_rd;
+	char						*heredoc;
 	const char					**cmd_args;
 	struct s_pipe_list			*next;
 	pid_t						pid;
@@ -245,7 +255,7 @@ void	free_pipe_list(t_pipe_list *list);
 /*
 ** redirection_list.c
 */
-t_bool	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds);
+t_result	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds);
 /*
 ** request_to_pipe_list.c
 */

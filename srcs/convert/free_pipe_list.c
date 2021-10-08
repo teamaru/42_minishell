@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 16:54:04 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/02 19:15:30 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/08 22:59:25 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,15 @@ void	free_cmd_args(const char **args)
 		free_set((void **)&args[i], NULL);
 }
 
+void	free_demi_for_heredoc(t_demi_for_heredoc **demi_heredoc)
+{
+	if (*demi_heredoc)
+	{
+		free_set((void **)&(*demi_heredoc)->delimiter, NULL);
+		free_set((void **)demi_heredoc, NULL);
+	}
+}
+
 void	free_rd_list(t_redirection_list **rd_list)
 {
 	t_redirection_list	*tmp;
@@ -40,7 +49,10 @@ void	free_rd_list(t_redirection_list **rd_list)
 	next = tmp->next;
 	while (tmp)
 	{
-		free_set((void **)&tmp->file_path, NULL);
+		if (tmp->file_path)
+			free_set((void **)&tmp->file_path, NULL);
+		else
+			free_demi_for_heredoc(&tmp->demi_heredoc);
 		free_set((void **)&tmp, NULL);
 		tmp = next;
 		if (next || tmp)
@@ -64,7 +76,6 @@ void	free_pipe_list(t_pipe_list *list)
 
 	tmp = list;
 	next = list->next;
-	//free処理
 	while (tmp)
 	{
 		free_pipe_node(&tmp);

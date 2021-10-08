@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 15:11:45 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/04 15:53:19 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/08 22:30:03 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ void test_print_rd_info(t_pipe_list *cmd)
 	{
 		printf("fd       | %d\n", tmp->fd);
 		printf("type     | %s\n", test_get_rd(tmp->type));
-		printf("filepath | %s\n", tmp->file_path);
+		if (tmp->demi_heredoc)
+			printf("delimiler | %s\n", tmp->demi_heredoc->delimiter);
+		else
+			printf("filepath | %s\n", tmp->file_path);
 		printf("--------------\n");
 		tmp = tmp->next;
 	}
@@ -89,6 +92,7 @@ void	init_pipe_list_node(t_pipe_list **node)
 	(*node)->output_rd = NULL;
 	(*node)->input_rd = NULL;
 	(*node)->cmd_args = NULL;
+	(*node)->heredoc = NULL;
 	(*node)->next = NULL;
 }
 
@@ -108,7 +112,7 @@ t_pipe_list	*create_pipe_list()
 		init_pipe_list_node(&node);
 		node->cmd_args = create_cmd_args(cmd->args);
 		set_redirection_lists(&node, cmd->rds);
-		// print_pipe_node_info(node);
+		print_pipe_node_info(node);
 		add_pipe_list(&list, node);
 		cmd = cmd->next;
 	}

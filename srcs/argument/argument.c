@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+extern t_request g_request;
+
 void free_arguments(t_argument **top)
 {
   t_argument	*argument;
@@ -31,7 +33,7 @@ void free_arguments(t_argument **top)
 	*top = NULL;
 }
 
-void parse_arguments(t_request *request, char **line)
+void parse_arguments(char **line)
 {
   char *chunk;
 
@@ -39,7 +41,7 @@ void parse_arguments(t_request *request, char **line)
   {
     clear_white(line);
     chunk = get_chunk(line);
-    append_argument(&request->arguments, new_argument(chunk));
+    append_argument(&g_request.arguments, new_argument(chunk));
     free(chunk);
   }
 }

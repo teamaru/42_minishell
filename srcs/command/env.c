@@ -12,12 +12,11 @@
 
 #include <mini_shell.h>
 
-t_bool execute_env(t_request *request)
+t_bool execute_env(void)
 {
   extern char **environ;
   char **env;
 
-  (void)request;
   env = environ;
   while (*env)
     printf("%s\n", *env++);

@@ -12,48 +12,50 @@
 
 #include <mini_shell.h>
 
-t_bool process_request(t_request *request, char *line)
+extern t_request g_request;
+
+t_bool process_request(char *line)
 {
-  tokenize(&request->tokens, line);
-  if (!is_valid_syntax(request))
+  tokenize(&g_request.tokens, line);
+  if (!is_valid_syntax())
     return (TRUE);
-  parse(request);
-  if (!expand(request))
+  parse();
+  if (!expand())
     return (TRUE);
-  if (!exec_request(request))
+  if (!exec_request())
     return (FALSE);
-  free_all(request);
+  free_all();
   return (TRUE);
 }
 
-t_bool is_valid_request(t_request *request)
+t_bool is_valid_request()
 {
-  if (request->cmd_id == INVLD_CMD)
-    return (print_err_msg(request, ERR_MSG_INVLD_CMD));
-  if (request->option == INVLD_OPT)
-    return (print_err_msg(request, ERR_MSG_INVLD_OPT));
+  if (g_request.cmd_id == INVLD_CMD)
+    return (print_err_msg(ERR_MSG_INVLD_CMD));
+  if (g_request.option == INVLD_OPT)
+    return (print_err_msg(ERR_MSG_INVLD_OPT));
   return (TRUE);
 }
 
-void execute_child_process(t_request *request)
+void execute_child_process()
 {
   t_cmd_func cmd_funcs[CMD_NUM];
 
-  if (request->excution)
-    execute_executable(request);
-  if (!is_valid_request(request))
-    my_exit(request, FAILURE);
+  if (g_request.excution)
+    execute_executable();
+  if (!is_valid_request())
+    my_exit(FAILURE);
   init_cmd_funcs(cmd_funcs);
-  cmd_funcs[request->cmd_id](request);
-  my_exit(request, SUCCESS);
+  cmd_funcs[g_request.cmd_id]();
+  my_exit(SUCCESS);
 }
 
-t_bool exec_request(t_request *request)
+t_bool exec_request()
 {
 	t_pipe_list	*pipe_list;
 	//   pid_t c_pid;
 
-	pipe_list = create_pipe_list(request);
+	pipe_list = create_pipe_list();
 	if (!pipe_list)
 		return (FALSE);
 	execute_cmds(pipe_list);
@@ -70,15 +72,15 @@ t_bool exec_request(t_request *request)
   return (TRUE);
 }
 
-void init_request(t_request *request)
+void init_request()
 {
-  request->tokens = NULL;
-  request->cmds = NULL;
-  make_environ_hash(request);
-  request->cmd = NULL;
-  request->cmd_id = INVLD_CMD;
-  request->option = NON;
-  request->arguments = NULL;
-  request->excution = FALSE;
-  request->exit_cd = 0;
+  g_request.tokens = NULL;
+  g_request.cmds = NULL;
+  make_environ_hash();
+  g_request.cmd = NULL;
+  g_request.cmd_id = INVLD_CMD;
+  g_request.option = NON;
+  g_request.arguments = NULL;
+  g_request.excution = FALSE;
+  g_request.exit_cd = 0;
 }

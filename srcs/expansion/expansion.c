@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+extern t_request g_request;
+
 t_bool is_env_end(char c)
 {
   return (c == '\0' || c == DLL || c == SPC || is_quote(c));
@@ -33,13 +35,13 @@ char *get_env_key(char *token)
   return (key);
 }
 
-char *get_env_value(t_request *request, char *key)
+char *get_env_value(char *key)
 {
   t_environ *environ;
 
   if (!key)
     return (NULL);
-  environ = request->environs;
+  environ = g_request.environs;
   while (environ)
   {
     if (!ft_strcmp(environ->key, key))
@@ -87,12 +89,11 @@ int get_str_len(char *token)
   return (len - 1);
 }
 
-void expand_quote(t_request *request, char **token, t_token **expanded_tokens)
+void expand_quote(char **token, t_token **expanded_tokens)
 {
   int i;
   int len;
 
-  (void)request;
   i = 0;
   while ((*token)[i] && !is_quote((*token)[i]))
     i++;
@@ -117,7 +118,7 @@ int get_env_len(char *token)
   return (len);
 }
 
-void expand_env(t_request *request, char **token, t_token **expanded_tokens)
+void expand_env(char **token, t_token **expanded_tokens)
 {
   int i;
   char *key;
@@ -133,14 +134,14 @@ void expand_env(t_request *request, char **token, t_token **expanded_tokens)
     i++;
   *token += i;
   key = get_env_key(*token);
-  value = get_env_value(request, key);
+  value = get_env_value(key);
   free(key);
   if (value)
     append_token(expanded_tokens, new_token(ft_strdup(value)));
   *token += get_env_len(*token);
 }
 
-char *expand_token(t_expand_func expand_func, t_request *request, char *token)
+char *expand_token(t_expand_func expand_func, char *token)
 {
   char *expanded_token;
   t_token *expanded_tokens;
@@ -149,7 +150,7 @@ char *expand_token(t_expand_func expand_func, t_request *request, char *token)
     return (NULL);
   expanded_tokens = NULL;
   while (*token)
-    expand_func(request, &token, &expanded_tokens);
+    expand_func(&token, &expanded_tokens);
   expanded_token = join_expanded_tokens(expanded_tokens);
   free_tokens(&expanded_tokens);
   return (expanded_token);
@@ -253,7 +254,7 @@ t_bool is_eos_token(t_token *token)
   return (is_type_heredoc(prev));
 }
 
-t_bool split_token(t_request *request, t_token **head, t_token **token)
+t_bool split_token(t_token **head, t_token **token)
 {
   t_token *new_tokens;
   t_token *prev;
@@ -261,7 +262,7 @@ t_bool split_token(t_request *request, t_token **head, t_token **token)
   new_tokens = NULL;
   split_word(&new_tokens, (*token)->token);
   if (is_file_path(*token) && token_listsize(new_tokens) != 1)
-    return (print_err_msg(request, ERR_MSG_AMBGS_RDRCT));
+    return (print_err_msg(ERR_MSG_AMBGS_RDRCT));
   insert_tokens(head, new_tokens, *token);
   prev = (*token)->prev;
   delete_token(head, *token);
@@ -269,7 +270,7 @@ t_bool split_token(t_request *request, t_token **head, t_token **token)
   return (TRUE);
 }
 
-t_bool expand_tokens(t_request *request, t_token **head)
+t_bool expand_tokens(t_token **head)
 {
   t_token *token;
 
@@ -279,29 +280,29 @@ t_bool expand_tokens(t_request *request, t_token **head)
     if (token->type == TYPE_EXPDBL)
     {
       if (!is_eos_token(token))
-        replace_token(token, expand_token(expand_env, request, token->token));
-      if (!split_token(request, head, &token))
+        replace_token(token, expand_token(expand_env, token->token));
+      if (!split_token(head, &token))
         return (FALSE);
       if (!token)
         continue ;
-      replace_token(token, expand_token(expand_quote, request, token->token));
+      replace_token(token, expand_token(expand_quote, token->token));
     }
     token = token->next;
   }
   return (TRUE);
 }
 
-void test_token(t_request *request)
+void test_token()
 {
   t_token *token;
 
-  token = request->cmds->args;
+  token = g_request.cmds->args;
   while (token)
   {
     printf("forward :%s\n", token->token);
     token = token->next;
   }
-  token = request->cmds->args;
+  token = g_request.cmds->args;
   while (token && token->next)
     token = token->next;
   while (token)
@@ -311,19 +312,19 @@ void test_token(t_request *request)
   }
 }
 
-t_bool expand(t_request *request)
+t_bool expand()
 {
   t_cmd *cmd;
 
-  cmd = request->cmds;
+  cmd = g_request.cmds;
   while (cmd)
   {
-    expand_tokens(request, &cmd->args);
-    if (!expand_tokens(request, &cmd->rds))
+    expand_tokens(&cmd->args);
+    if (!expand_tokens(&cmd->rds))
       return (FALSE);
     cmd = cmd->next;
   }
-  print_cmds(request->cmds);
+  print_cmds(g_request.cmds);
   return (TRUE);
 }
 
@@ -396,18 +397,18 @@ void print_environ(t_environ *head)
   }
 }
 
-void make_environ_hash(t_request *request)
+void make_environ_hash()
 {
   extern char **environ;
   char **env;
   char **split;
 
   env = environ;
-  request->environs = NULL;
+  g_request.environs = NULL;
   while (*env)
   {
     split = ft_split(*env++, '=');
-    append_environ(&request->environs, new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
+    append_environ(&g_request.environs, new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
     multi_free(split);
   }
 }

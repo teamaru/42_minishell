@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+extern t_request g_request;
+
 t_bool	is_white(int c)
 {
 	return (c == ' ' || ('\t' <= c && c <= '\r'));
@@ -39,11 +41,11 @@ void multi_free(char **target)
 	free(target);
 }
 
-void free_all(t_request *request)
+void free_all()
 {
-	free_arguments(&request->arguments);
-	free_tokens(&request->tokens);
-  free_cmd_list(&request->cmds);
-  free_environs(&request->environs);
-	free(request->cmd);
+	free_arguments(&g_request.arguments);
+	free_tokens(&g_request.tokens);
+  free_cmd_list(&g_request.cmds);
+  free_environs(&g_request.environs);
+	free(g_request.cmd);
 }

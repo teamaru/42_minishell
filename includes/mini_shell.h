@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/05 14:48:29 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/08 17:15:59 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ void parse_arguments(char **line);
  */
  t_bool process_request(char *line);
  t_bool is_valid_request(void);
- t_bool exec_request(void);
+t_bool request_convert_to_pipe_list();
  void init_request(void);
 
 /*

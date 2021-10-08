@@ -34,6 +34,6 @@ fclean: clean
 	$(RM) $(MINISHL)
 
 debug: $(LIBFT)
-	$(CC) -g -o $(MINISHL) $(INCLUDE) $(SRCS) $(LIBFT) $(RDLNFLG)
+	$(CC) -g -o $(MINISHL) $(INCLUDE) -I $(shell brew --prefix readline)/include $(SRCS) $(LIBFT) $(RDLNFLG) $(LDFLAGS)
 
 re: fclean all

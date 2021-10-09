@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 16:54:04 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/08 22:59:25 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/09 17:39:32 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	free_pipe_node(t_pipe_list **node)
 	(*node)->cmd_args = NULL;
 	free_rd_list(&(*node)->output_rd);
 	free_rd_list(&(*node)->input_rd);
+	free_set((void**)&(*node)->heredoc, NULL);
 }
 
 void	free_pipe_list(t_pipe_list *list)

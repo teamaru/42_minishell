@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 23:50:02 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/09 14:28:28 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/09 15:33:25by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,19 +75,58 @@ char	**create_delimiters_array(t_redirection_list *rd_list, int size_array)
 	return (delimiters);
 }
 
+char	*update_heredoc(char **old, char *input)
+{
+	char	*joined_input;
+	char	*new_heredoc;
+
+	joined_input = NULL;
+	new_heredoc = NULL;
+	joined_input = ft_strjoin(*old, input);
+	free_set((void **)old, NULL);
+	if (!joined_input)
+		return (NULL);
+	new_heredoc = ft_strjoin(joined_input, "\n");
+	free_set((void **)&joined_input, NULL);
+	if (!new_heredoc)
+		return (NULL);
+	return (new_heredoc);
+}
+
+char	*readline_input_heredoc(char **delimiters)
+{
+	char	*heredoc;
+	char	*input;
+
+	heredoc = NULL;
+	input = NULL;
+	while (1)
+	{
+		input = readline("> ");
+		if (!input)
+			break;
+		heredoc = update_heredoc(&heredoc, input);
+		free_set((void **)&input, NULL);
+	}
+	return (heredoc);
+}
+
 void	set_heredocument(t_pipe_list **node)
 {
-	t_redirection_list	*tmp;
-	t_demi_for_heredoc	*last_demi_node;
+	t_demi_for_heredoc	*last_demi;
 	int					size_of_delimiters;
 	char				**delimiters;
+	// t_bool				expantable_heredoc;
 
+	if (!(*node))
+		return ;
 	size_of_delimiters = 0;
-	last_demi_node = NULL;
-	size_of_delimiters = count_size_of_delimiters((*node)->input_rd, &last_demi_node);
-	if (last_demi_node)
-		last_demi_node->last_heredoc = TRUE;
+	last_demi = NULL;
+	size_of_delimiters = count_size_of_delimiters((*node)->input_rd, &last_demi);
+	if (!size_of_delimiters)
+		return ;
+	// expantable_heredoc = is_last_delimiter_has_quarts(last_demi->delimiter);
 	delimiters = create_delimiters_array((*node)->input_rd, size_of_delimiters);
-	//readlineでheredoc作成
-	// return (SUCCESS);
+	(*node)->heredoc = readline_input_heredoc(delimiters);
+	free_delimiters(&delimiters, size_of_delimiters);
 }

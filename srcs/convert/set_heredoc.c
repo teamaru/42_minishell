@@ -34,6 +34,8 @@ int count_size_of_delimiters(t_redirection_list *node, t_demi_for_heredoc **last
 		}
 		tmp = tmp->next;
 	}
+	if (*last_demi_heredoc)
+		(*last_demi_heredoc)->last_heredoc = TRUE;
 	return (size_delimiters);
 }
 
@@ -93,21 +95,66 @@ char	*update_heredoc(char **old, char *input)
 	return (new_heredoc);
 }
 
-char	*readline_input_heredoc(char **delimiters)
+t_bool	is_match_delimiter(char *input, char *delimiter)
+{
+	if (!ft_strncmp(input, delimiter, ft_strlen(delimiter) + 1))
+		return (TRUE);
+	return (FALSE);
+}
+
+t_bool	can_update_heredoc(char *input, char **delimiters, int *i, int last_index)
+{
+	int	update_start_index;
+
+	update_start_index = last_index - 1;
+
+	if (last_index == 0)
+		return (TRUE);
+	else if (is_match_delimiter(input, delimiters[*i]))
+	{
+		if (*i == update_start_index)
+			return (TRUE);
+		(*i)++;
+	}
+	return (FALSE);
+}
+
+t_bool	can_exit_heredocument(char *input, t_bool updatable, char *last_delimiter)
+{
+	if (!input || (updatable && is_match_delimiter(input, last_delimiter)))
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
+char	*readline_input_heredoc(char **delimiters, int	size_of_array)
 {
 	char	*heredoc;
 	char	*input;
+	int		i;
+	int		last_index;
+	t_bool	updatable;
 
 	heredoc = NULL;
 	input = NULL;
-	while (1)
+	i = 0;
+	last_index = size_of_array - 1;
+	if (last_index == 0)
+		updatable = TRUE ;
+	else
+		updatable = FALSE;
+	while (TRUE)
 	{
 		input = readline("> ");
-		if (!input)
+		if (can_exit_heredocument(input, updatable, delimiters[last_index]))
 			break;
-		heredoc = update_heredoc(&heredoc, input);
+		if (updatable)
+			heredoc = update_heredoc(&heredoc, input);
+		else
+			updatable = can_update_heredoc(input, delimiters, &i, last_index);
 		free_set((void **)&input, NULL);
 	}
+	free_set((void **)&input, NULL);
 	return (heredoc);
 }
 
@@ -127,6 +174,7 @@ void	set_heredocument(t_pipe_list **node)
 		return ;
 	// expantable_heredoc = is_last_delimiter_has_quarts(last_demi->delimiter);
 	delimiters = create_delimiters_array((*node)->input_rd, size_of_delimiters);
-	(*node)->heredoc = readline_input_heredoc(delimiters);
+	(*node)->heredoc = readline_input_heredoc(delimiters, size_of_delimiters);
+	// expand_heredoc(&(*node)->heredoc);
 	free_delimiters(&delimiters, size_of_delimiters);
 }

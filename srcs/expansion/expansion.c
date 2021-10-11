@@ -291,7 +291,8 @@ t_bool expand_tokens(t_token **head)
         return (FALSE);
       if (!token)
         continue ;
-      replace_token(token, expand_token(expand_quote, token->token));
+      if (!is_eos_token(token))
+        replace_token(token, expand_token(expand_quote, token->token));
     }
     token = token->next;
   }

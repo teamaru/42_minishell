@@ -14,11 +14,11 @@
 
 t_bool execute_pwd(const char **cmd_args)
 {
-  char path[BUFSIZ];
+  char pwd[BUFSIZ];
 
   (void)cmd_args;
-  path[0] = '0';
-  getcwd(path, BUFSIZ);
-  printf("%s\n", path);
+  pwd[0] = '0';
+  getcwd(pwd, BUFSIZ);
+  ft_putendl_fd(pwd, STDOUT);
   return (TRUE);
 }

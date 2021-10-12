@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/29 23:21:06 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/05/29 23:21:06 by tsugiyam         ###   ########.fr       */
+/*   Created: 2021/06/05 11:50:33 by tsugiyam          #+#    #+#             */
+/*   Updated: 2021/06/05 11:50:33 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,21 @@
 
 extern t_request g_request;
 
-t_bool execute_cd(void)
+t_bool execute_env(const char **cmd_args, t_bool is_child_process)
 {
-  char *path;
+  t_environ *environ;
 
-  path = g_request.arguments->arg;
-  if (!*path)
-    path = ROOT;
-  if (chdir(path) == -1)
-    print_err_msg(strerror(errno));
+  (void)cmd_args;
+  environ = g_request.environs;
+  while (environ)
+  {
+    ft_putstr_fd(environ->key, STDOUT);
+    ft_putstr_fd("=", STDOUT);
+    ft_putstr_fd(environ->value, STDOUT);
+    ft_putstr_fd("\n", STDOUT);
+    environ = environ->next;
+  }
+  if (is_child_process)
+    exit(0);
   return (TRUE);
 }

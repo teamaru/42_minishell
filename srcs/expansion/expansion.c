@@ -16,7 +16,7 @@ extern t_request g_request;
 
 t_bool is_env_end(char c)
 {
-  return (c == '\0' || c == DLL || c == SPC || is_quote(c));
+  return (c == '\0' || c == DLL || c == SPC || c == SLSH || c == QSTN || is_quote(c));
 }
 
 char *get_env_key(char *token)
@@ -30,7 +30,9 @@ char *get_env_key(char *token)
   key = NULL;
   while (!is_env_end(token[i]))
     i++;
-  if (i > 1)
+  if (token[i] == QSTN)
+    i++;
+  if (i > 0)
     key = ft_strndup(token, i);
   return (key);
 }
@@ -41,11 +43,13 @@ char *get_env_value(char *key)
 
   if (!key)
     return (NULL);
+  if (*key == QSTN)
+    return (ft_itoa(errno));
   environ = g_request.environs;
   while (environ)
   {
     if (!ft_strcmp(environ->key, key))
-      return (environ->value);
+      return (ft_strdup(environ->value));
     environ = environ->next;
   }
   return (NULL);
@@ -115,6 +119,8 @@ int get_env_len(char *token)
   len = 0;
   while (!is_env_end(token[len]))
     len++;
+  if (token[len] == QSTN)
+    len++;
   return (len);
 }
 
@@ -137,7 +143,7 @@ void expand_env(char **token, t_token **expanded_tokens)
   value = get_env_value(key);
   free(key);
   if (value)
-    append_token(expanded_tokens, new_token(ft_strdup(value)));
+    append_token(expanded_tokens, new_token(value));
   *token += get_env_len(*token);
 }
 
@@ -190,7 +196,7 @@ void insert_tokens(t_token **head, t_token *new_tokens, t_token *target_token)
   }
 }
 
-void move_head(t_token **head, t_token *token)
+void move_token_head(t_token **head, t_token *token)
 {
   *head = token->next;
   if (token->next)
@@ -205,7 +211,7 @@ void delete_token(t_token **head, t_token *target_token)
   if (!head || !*head || !target_token)
     return ;
   if (*head == target_token)
-    return (move_head(head, target_token));
+    return (move_token_head(head, target_token));
   target_token->prev->next = target_token->next;
   if (target_token->next)
     target_token->next->prev = target_token->prev;
@@ -285,7 +291,8 @@ t_bool expand_tokens(t_token **head)
         return (FALSE);
       if (!token)
         continue ;
-      replace_token(token, expand_token(expand_quote, token->token));
+      if (!is_eos_token(token))
+        replace_token(token, expand_token(expand_quote, token->token));
     }
     token = token->next;
   }
@@ -329,7 +336,30 @@ t_bool expand()
 }
 
 
+void replace_env_value(char *target_key, char *new_value)
+{
+  t_environ *target_environ;
 
+  target_environ = get_target_environ(target_key);
+  if (!target_environ)
+    return ;
+  free(target_environ->value);
+  target_environ->value = ft_strdup(new_value);
+}
+
+t_environ *get_target_environ(const char *key)
+{
+  t_environ *environ;
+
+  environ = g_request.environs;
+  while (environ)
+  {
+    if (!ft_strcmp(environ->key, key))
+      return (environ);
+    environ = environ->next;
+  }
+  return (NULL);
+}
 
 
 void free_environs(t_environ **head)
@@ -384,6 +414,29 @@ void	append_environ(t_environ **head, t_environ *new)
   new->prev = environ;
 }
 
+void move_environ_head(t_environ **head, t_environ *environ)
+{
+  *head = environ->next;
+  if (environ->next)
+    environ->next->prev = NULL;
+  environ->next = NULL;
+  environ->prev = NULL;
+  free_environs(&environ);
+}
+
+void delete_environ(t_environ **head, t_environ *target_environ)
+{
+  if (!head || !*head || !target_environ)
+    return ;
+  if (*head == target_environ)
+    return (move_environ_head(head, target_environ));
+  target_environ->prev->next = target_environ->next;
+  if (target_environ->next)
+    target_environ->next->prev = target_environ->prev;
+  target_environ->next = NULL;
+  free_environs(&target_environ);
+}
+
 void print_environ(t_environ *head)
 {
   t_environ *environ;
@@ -397,7 +450,7 @@ void print_environ(t_environ *head)
   }
 }
 
-void make_environ_hash()
+void make_environ_hash(void)
 {
   extern char **environ;
   char **env;

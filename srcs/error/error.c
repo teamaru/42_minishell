@@ -15,12 +15,12 @@
 t_bool print_err_msg(char *msg)
 {
   printf(MSG_HEADER);
-  printf("%s", msg);
+  printf("%s\n", msg);
   return (FALSE);
 }
 
 void my_exit(int exit_cd)
 {
-  free_all();
+  free_all(TRUE);
   exit(exit_cd);
 }

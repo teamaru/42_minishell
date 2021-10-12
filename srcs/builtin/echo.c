@@ -1,26 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/05 15:25:38 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/06/05 15:25:38 by tsugiyam         ###   ########.fr       */
+/*   Created: 2021/05/30 19:12:21 by tsugiyam          #+#    #+#             */
+/*   Updated: 2021/05/30 19:12:21 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-t_bool execute_export(void)
+extern t_request g_request;
+
+t_bool execute_echo(const char **cmd_args, t_bool is_child_process)
 {
   int i;
-  extern char **environ;
+  t_bool has_opt;
 
-  i = 0;
-  while (environ[i])
+  i = 1;
+  has_opt = (cmd_args[i] && !ft_strcmp(cmd_args[i], "-n"));
+  if (has_opt)
     i++;
-//  environ[i] = ft_strdup("test=test");
-  setenv("test", "test", 0);
+  while (cmd_args[i])
+  {
+    ft_putstr_fd((char *)cmd_args[i++], STDOUT);
+    if (cmd_args[i])
+      ft_putstr_fd(" ", STDOUT);
+  }
+  if (!has_opt)
+    ft_putstr_fd("\n", STDOUT);
+  if (is_child_process)
+    exit(0);
   return (TRUE);
 }

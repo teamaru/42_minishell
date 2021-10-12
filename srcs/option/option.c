@@ -23,7 +23,7 @@ void parse_option(char **line)
 {
   char *option;
 
-  if (g_request.cmd_id != ECHO)
+  if (g_request.builtin_id != ECHO)
     return ;
   clear_white(line);
   if (**line != HYPHEN)

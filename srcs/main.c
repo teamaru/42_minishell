@@ -64,16 +64,17 @@ void shell_loop()
   t_bool flg;
 
   flg = TRUE;
+  make_environ_hash();
   while (flg)
   {
     line = readline(PRMPT);
     if (!line)
-      exit(0);
+      my_exit(0);
     if (ft_strlen(line) > 0)
       add_history(line);
     init_request();
     flg = process_request(line);
-    free_all();
+    free_all(FALSE);
     free(line);
   }
 }

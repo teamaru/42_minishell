@@ -19,18 +19,16 @@ t_bool is_all_digits(char *s)
   if (!s)
     return (FALSE);
   while (*s)
-  {
-    if (!ft_isdigit(*s))
+    if (!ft_isdigit(*s++))
       return (FALSE);
-    s++;
-  }
   return (TRUE);
 }
 
-t_bool execute_exit(void)
+t_bool execute_exit(const char **cmd_args, t_bool is_child_process)
 {
+  (void)is_child_process;
   printf(MSG_EXIT);
-  if (!g_request.arguments)
+  if (!cmd_args[1])
     g_request.exit_cd = 0;
   else if (listsize(g_request.arguments) > 1)
   {
@@ -43,6 +41,6 @@ t_bool execute_exit(void)
     g_request.exit_cd = 1;
     print_err_msg(ERR_MSG_INVLD_EXIT_CD);
   }
-  free_all();
-  return (FALSE);
+  free_all(TRUE);
+  exit(0);
 }

@@ -31,14 +31,14 @@
 #define DELIMITERS "|<> \t"
 #define TOKEN_TYPE_NUM 5
 #define MSG_HEADER "mini_shell: "
-#define MSG_EXIT "exit\n"
-#define ERR_MSG_INVLD_CMD "command not found\n"
-#define ERR_MSG_INVLD_OPT "invalid option\n"
-#define ERR_MSG_INVLD_EXIT_CD "numeric argument required\n"
-#define ERR_MSG_TOO_MANY_ARGS "too many arguments\n"
-#define ERR_MSG_INVLD_SYNTX "syntax error near unexpected token \n"
-#define ERR_MSG_QT_NOT_CLSD "quote is not closed\n"
-#define ERR_MSG_AMBGS_RDRCT "ambiguous redirect\n"
+#define MSG_EXIT "exit"
+#define ERR_MSG_INVLD_CMD "command not found"
+#define ERR_MSG_INVLD_OPT "invalid option"
+#define ERR_MSG_INVLD_EXIT_CD "numeric argument required"
+#define ERR_MSG_TOO_MANY_ARGS "too many arguments"
+#define ERR_MSG_INVLD_SYNTX "syntax error near unexpected token"
+#define ERR_MSG_QT_NOT_CLSD "quote is not closed"
+#define ERR_MSG_AMBGS_RDRCT "ambiguous redirect"
 
 typedef enum e_bool
 {

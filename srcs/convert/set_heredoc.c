@@ -158,6 +158,13 @@ char	*readline_input_heredoc(char **delimiters, int	size_of_array)
 	return (heredoc);
 }
 
+void	init_heredoc_to_fd(t_heredoc_to_fd *heredoc)
+{
+	heredoc->contents = NULL;
+	heredoc->tmp_fd = -1;
+	heredoc->tmp_file_path = NULL;
+}
+
 void	set_heredocument(t_pipe_list **node)
 {
 	t_demi_for_heredoc	*last_demi;
@@ -178,8 +185,8 @@ void	set_heredocument(t_pipe_list **node)
 	(*node)->heredoc = (t_heredoc_to_fd *)malloc(sizeof(t_heredoc_to_fd));
 	if (!(*node))
 		return ;
+	init_heredoc_to_fd((*node)->heredoc);
 	heredoc = (*node)->heredoc;
-	heredoc->tmp_fd = -1;
 	heredoc->contents = readline_input_heredoc(delimiters, size_of_delimiters);
 	// expand_heredoc(&(*node)->heredoc);
 	free_delimiters(&delimiters, size_of_delimiters);

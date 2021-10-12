@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 16:54:04 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/12 09:57:58 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/12 23:03:31 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	free_heredoc_to_fd(t_heredoc_to_fd **heredoc)
 	if (!*heredoc)
 		return ;
 	free_set((void **)&(*heredoc)->contents, NULL);
+	free_set((void **)&(*heredoc)->tmp_file_path, NULL);
 	free_set((void **)heredoc, NULL);
 }
 

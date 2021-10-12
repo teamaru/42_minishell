@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 17:26:45 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/05 14:47:06 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/08 23:13:50 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_redirection_list	*new_rd_list_node(t_token_type type)
 	set_rd_fd(&res, type);
 	set_rd_type(&res, type);
 	res->file_path = NULL;
+	res->demi_heredoc = NULL;
 	res->next = NULL;
 	return (res);
 }
@@ -61,24 +62,45 @@ void	add_node_to_rd_list(t_redirection_list **first, t_redirection_list *node)
 	}
 }
 
-t_bool	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds)
+t_result	set_demi_heredoc_or_file_path(t_redirection_list **node, char *token)
+{
+	t_demi_for_heredoc	*demi;
+
+	if ((*node)->type == HEREDOC)
+	{
+		(*node)->demi_heredoc = (t_demi_for_heredoc *)malloc(sizeof(t_demi_for_heredoc) * 1);
+		if (!(*node)->demi_heredoc)
+			return (FAILURE);
+		demi = (*node)->demi_heredoc;
+		demi->delimiter = ft_strdup(token);
+		if (!demi->delimiter)
+			return (FAILURE);
+		demi->last_heredoc = FALSE;
+	}
+	else
+	{
+		(*node)->file_path = ft_strdup(token);
+		if (!(*node)->file_path)
+			return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
+t_result	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds)
 {
 	t_token			*tmp_token;
 	t_token_type	token_type;
 	t_redirection_list	*rd_node;
 
 	tmp_token = rds;
-	//rdsがNULLになるまでループ
 	while(tmp_token)
 	{
 		token_type = tmp_token->type;
-		// new redirection_list_node作成
 		if (is_type_redirect(tmp_token))
 		{
 			rd_node = new_rd_list_node(token_type);
 			if (!rd_node)
-				return (FALSE);
-			//リストに追加
+				return (FAILURE);
 			if (rd_node->type == INPUT || rd_node->type == HEREDOC)
 				add_node_to_rd_list(&(*pipe_node)->input_rd, rd_node);
 			else if (rd_node->type == OUTPUT || rd_node->type == APPEND)
@@ -86,11 +108,10 @@ t_bool	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds)
 		}
 		else if (token_type == TYPE_STR || token_type == TYPE_EXPDBL)
 		{
-			rd_node->file_path = ft_strdup(tmp_token->token);
-			if (!rd_node->file_path)
-				return (FALSE);
+			if (set_demi_heredoc_or_file_path(&rd_node, tmp_token->token))
+				return (FAILURE);
 		}
 		tmp_token = tmp_token->next;
 	}
-	return (TRUE);
+	return (SUCCESS);
 }

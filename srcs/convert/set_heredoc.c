@@ -163,6 +163,7 @@ void	set_heredocument(t_pipe_list **node)
 	t_demi_for_heredoc	*last_demi;
 	int					size_of_delimiters;
 	char				**delimiters;
+	t_heredoc_to_fd		*heredoc;
 	// t_bool				expantable_heredoc;
 
 	if (!(*node))
@@ -174,7 +175,12 @@ void	set_heredocument(t_pipe_list **node)
 		return ;
 	// expantable_heredoc = is_last_delimiter_has_quarts(last_demi->delimiter);
 	delimiters = create_delimiters_array((*node)->input_rd, size_of_delimiters);
-	(*node)->heredoc = readline_input_heredoc(delimiters, size_of_delimiters);
+	(*node)->heredoc = (t_heredoc_to_fd *)malloc(sizeof(t_heredoc_to_fd));
+	if (!(*node))
+		return ;
+	heredoc = (*node)->heredoc;
+	heredoc->tmp_fd = -1;
+	heredoc->contents = readline_input_heredoc(delimiters, size_of_delimiters);
 	// expand_heredoc(&(*node)->heredoc);
 	free_delimiters(&delimiters, size_of_delimiters);
 }

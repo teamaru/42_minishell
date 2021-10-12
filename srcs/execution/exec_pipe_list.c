@@ -58,9 +58,8 @@ void	exec_buildin(t_pipe_list *pipe_list, t_builtin_id builtin_id)
 {
 	t_builtin_func builtin_funcs[BUILTIN_NUM];
 
-	(void)pipe_list;
 	init_builtin_funcs(builtin_funcs);
-  builtin_funcs[builtin_id](pipe_list->cmd_args);
+  builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
 }
 
 void	exec_simple_cmd(t_pipe_list *pipe_list)
@@ -213,7 +212,7 @@ void	execute_cmds(t_pipe_list *pipe_list)
 		/* buildinを親プロセスで実行 */
 		builtin_id = get_builtin_id(pipe_list->cmd_args[0]);
 		if (builtin_id != NON_BUILTIN)
-			g_request.builtin_funcs[builtin_id](pipe_list->cmd_args);
+			g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
 		/* buildin以外は子プロセスで実行 */
 		else
 			exec_simple_cmd(pipe_list);

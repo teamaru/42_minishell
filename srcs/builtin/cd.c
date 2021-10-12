@@ -63,7 +63,7 @@ t_bool search_cdpath(char *path)
   return (FALSE);
 }
 
-t_bool execute_cd(const char **cmd_args)
+t_bool execute_cd(const char **cmd_args, t_bool is_child_process)
 {
   char pwd[BUFSIZ];
   char *path;
@@ -83,5 +83,7 @@ t_bool execute_cd(const char **cmd_args)
       print_err_msg(strerror(errno));
   getcwd(pwd, BUFSIZ);
   replace_env_value("PWD", pwd);
+  if (is_child_process)
+    exit(0);
   return (TRUE);
 }

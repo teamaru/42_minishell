@@ -46,7 +46,7 @@ t_bool replace_duplicated_environ(char *key, char *value)
   return (FALSE);
 }
 
-t_bool execute_export(const char **cmd_args)
+t_bool execute_export(const char **cmd_args, t_bool is_child_process)
 {
   char **split;
 
@@ -56,5 +56,7 @@ t_bool execute_export(const char **cmd_args)
   if (!replace_duplicated_environ(split[0], split[1]))
     append_environ(&g_request.environs, new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
   multi_free(split);
+  if (is_child_process)
+    exit(0);
   return (TRUE);
 }

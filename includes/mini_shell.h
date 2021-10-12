@@ -135,7 +135,7 @@ typedef struct s_environ
 } t_environ;
 
 
-typedef t_bool (*t_builtin_func)(const char **cmd_args);
+typedef t_bool (*t_builtin_func)(const char **cmd_args, t_bool is_child_process);
 typedef t_bool (*t_is_func)(char);
 typedef void (*t_expand_func)(char**, t_token**);
 
@@ -213,31 +213,31 @@ t_builtin_id get_builtin_id(const char *token);
 /*
 ** cd.c **
 */
-t_bool execute_cd(const char **cmd_args);
+t_bool execute_cd(const char **cmd_args, t_bool is_child_process);
 /*
  ** echo.c **
  */
-t_bool execute_echo(const char **cmd_args);
+t_bool execute_echo(const char **cmd_args, t_bool is_child_process);
 /*
  ** env.c **
  */
-t_bool execute_env(const char **cmd_args);
+t_bool execute_env(const char **cmd_args, t_bool is_child_process);
 /*
  ** exit.c **
  */
-t_bool execute_exit(const char **cmd_args);
+t_bool execute_exit(const char **cmd_args, t_bool is_child_process);
 /*
  ** export.c **
  */
-t_bool execute_export(const char **cmd_args);
+t_bool execute_export(const char **cmd_args, t_bool is_child_process);
 /*
  ** pwd.c **
  */
-t_bool execute_pwd(const char **cmd_args);
+t_bool execute_pwd(const char **cmd_args, t_bool is_child_process);
 /*
  ** unset.c **
  */
-t_bool execute_unset(const char **cmd_args);
+t_bool execute_unset(const char **cmd_args, t_bool is_child_process);
 /*
  *************
  ** convert **

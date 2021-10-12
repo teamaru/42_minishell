@@ -24,8 +24,9 @@ t_bool is_all_digits(char *s)
   return (TRUE);
 }
 
-t_bool execute_exit(const char **cmd_args)
+t_bool execute_exit(const char **cmd_args, t_bool is_child_process)
 {
+  (void)is_child_process;
   printf(MSG_EXIT);
   if (!cmd_args[1])
     g_request.exit_cd = 0;
@@ -41,5 +42,5 @@ t_bool execute_exit(const char **cmd_args)
     print_err_msg(ERR_MSG_INVLD_EXIT_CD);
   }
   free_all(TRUE);
-  return (FALSE);
+  exit(0);
 }

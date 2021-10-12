@@ -14,7 +14,7 @@
 
 extern t_request g_request;
 
-t_bool execute_env(const char **cmd_args)
+t_bool execute_env(const char **cmd_args, t_bool is_child_process)
 {
   t_environ *environ;
 
@@ -28,5 +28,7 @@ t_bool execute_env(const char **cmd_args)
     ft_putstr_fd("\n", STDOUT);
     environ = environ->next;
   }
+  if (is_child_process)
+    exit(0);
   return (TRUE);
 }

@@ -22,14 +22,8 @@ t_bool process_request(char *line)
   parse();
   if (!expand())
     return (TRUE);
-<<<<<<< HEAD
-  if (!exec_request())
-    return (TRUE);
-=======
   if (!request_convert_to_pipe_list())
-    return (FALSE);
-  free_all();
->>>>>>> a63135bc02518c11f756c4aafb74211f9bda61de
+    return (TRUE);
   return (TRUE);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 14:45:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/05 14:47:54 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/12 10:02:51 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,14 @@ t_bool process_request(char *line)
   parse();
   if (!expand())
     return (TRUE);
+<<<<<<< HEAD
   if (!exec_request())
     return (TRUE);
+=======
+  if (!request_convert_to_pipe_list())
+    return (FALSE);
+  free_all();
+>>>>>>> a63135bc02518c11f756c4aafb74211f9bda61de
   return (TRUE);
 }
 
@@ -46,25 +52,15 @@ void execute_child_process()
   my_exit(SUCCESS);
 }
 
-t_bool exec_request()
+t_bool	request_convert_to_pipe_list()
 {
 	t_pipe_list	*pipe_list;
-	//   pid_t c_pid;
 
 	pipe_list = create_pipe_list();
 	if (!pipe_list)
 		return (FALSE);
 	execute_cmds(pipe_list);
 	free_pipe_list(pipe_list);
-//   if (request->cmd_id == EXIT)
-//     return (execute_exit(request));
-//   c_pid = fork();
-//   if (c_pid == -1)
-//     print_err_msg(request, strerror(errno));
-//   if (c_pid == 0)
-//     execute_child_process(request);
-//   if (c_pid > 0)
-//     wait(NULL);
   return (TRUE);
 }
 

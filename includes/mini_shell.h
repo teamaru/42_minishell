@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/05 14:48:29 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/12 14:31:56 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@
 #include <readline/history.h>
 #include "../libft/includes/libft.h"
 
+
 #define BUILTIN_NUM 7
+#define TMPFILE "/tmp/my_tmp_file"
+#define CMD_NUM 7
 #define PRMPT "$ "
 #define ROOT "/"
 #define META_CHARS ";\'\"<>|$?\\."
@@ -162,18 +165,33 @@ typedef enum e_type_rd
 	HEREDOC,
 } t_type_rd;
 
+typedef struct s_heredocument
+{
+	char	*delimiter;
+	t_bool	last_heredoc;
+} t_demi_for_heredoc;
+
 typedef struct s_redirection_list
 {
 	int							fd;
 	t_type_rd					type;
 	char						*file_path;
+	t_demi_for_heredoc			*demi_heredoc;
 	struct s_redirection_list	*next;
 } t_redirection_list;
+
+typedef struct s_heredoc_to_fd
+{
+	char	*contents;
+	int		tmp_fd;
+	// char	*tmp_file_path;
+} t_heredoc_to_fd;
 
 typedef struct s_pipe_list
 {
 	t_redirection_list			*output_rd;
 	t_redirection_list			*input_rd;
+	t_heredoc_to_fd				*heredoc;
 	const char					**cmd_args;
 	struct s_pipe_list			*next;
 	pid_t						pid;
@@ -194,7 +212,7 @@ void parse_arguments(char **line);
  */
  t_bool process_request(char *line);
  t_bool is_valid_request(void);
- t_bool exec_request(void);
+t_bool request_convert_to_pipe_list();
  void init_request(void);
 
 /*
@@ -254,11 +272,16 @@ void	free_pipe_list(t_pipe_list *list);
 /*
 ** redirection_list.c
 */
-t_bool	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds);
+t_result	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds);
 /*
 ** request_to_pipe_list.c
 */
 t_pipe_list	*create_pipe_list(void);
+/*
+** set_heredoc.c
+*/
+void	set_heredocument(t_pipe_list **node);
+
 /*
  **************
  ** exection **

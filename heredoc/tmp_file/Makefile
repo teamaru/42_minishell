@@ -6,7 +6,7 @@ SRCDIR   := ./srcs/
 SRCS     := $(wildcard $(SRCDIR)*.c) $(wildcard $(SRCDIR)*/*.c)
 OBJS     := $(SRCS:.c=.o)
 DEPS     := $(SRCS:%.c=%.d)
-LIBFTDIR := ../libft/
+LIBFTDIR := ../../libft/
 LIBFT    := $(LIBFTDIR)libft
 MAKEFLGS := -C
 RDLNFLG  := -lreadline -L/usr/local/opt/readline/lib

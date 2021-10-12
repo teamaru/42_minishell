@@ -6,13 +6,13 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 22:08:39 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/02 23:26:53 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/12 11:47:03by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-int	create_file_fd(char *file_path, int type)
+int	create_file_fd(char *file_path, int type, t_heredoc_to_fd *heredoc)
 {
 	int	file_fd;
 
@@ -22,11 +22,15 @@ int	create_file_fd(char *file_path, int type)
 		file_fd = open(file_path, O_RDWR | O_CREAT | O_TRUNC, 0666);
 	else if (type == APPEND)
 		file_fd = open(file_path, O_RDWR | O_CREAT | O_APPEND, 0666);
+	else if (type == HEREDOC)
+	{
+		close(heredoc->tmp_fd);
+		file_fd = open(TMPFILE, O_RDWR, 0666);
+	}
 	else
 		file_fd = -1;
-	// else if (type == HEREDOC)
 	if (file_fd < 0)
-		perror(file_path);
+		perror("file_fd");
 	return (file_fd);
 }
 
@@ -51,6 +55,20 @@ int	change_reference(int std_fd, int file_fd)
 	return (0);
 }
 
+t_bool	is_last_heredoc(t_redirection_list *node)
+{
+	if (node->type == HEREDOC && node->demi_heredoc->last_heredoc)
+		return (TRUE);
+	return (FALSE);
+}
+
+t_bool	is_heredoc(t_redirection_list *node)
+{
+	if (node->type == HEREDOC)
+		return (TRUE);
+	return (FALSE);
+}
+
 int	change_multi_references(t_pipe_list *cmd)
 {
 	int					file_fd;
@@ -59,7 +77,7 @@ int	change_multi_references(t_pipe_list *cmd)
 	tmp = cmd->output_rd;
 	while (tmp)
 	{
-		file_fd = create_file_fd(tmp->file_path, tmp->type);
+		file_fd = create_file_fd(tmp->file_path, tmp->type, NULL);
 		if (file_fd < 0)
 			return (-1);
 		if (change_reference(tmp->fd, file_fd) < 0)
@@ -69,11 +87,16 @@ int	change_multi_references(t_pipe_list *cmd)
 	tmp = cmd->input_rd;
 	while (tmp)
 	{
-		file_fd = create_file_fd(tmp->file_path, tmp->type);
-		if (file_fd < 0)
-			return (-1);
-		if (change_reference(tmp->fd, file_fd) < 0)
-			return (-1);
+		if (!is_heredoc(tmp) || is_last_heredoc(tmp))
+		{
+			file_fd = create_file_fd(tmp->file_path, tmp->type, cmd->heredoc);
+			if (file_fd < 0)
+				return (-1);
+			if (change_reference(tmp->fd, file_fd) < 0)
+				return (-1);
+			if (!access(TMPFILE, F_OK))
+				unlink(TMPFILE);
+		}
 		tmp = tmp->next;
 	}
 	return (0);

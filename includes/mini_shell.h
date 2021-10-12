@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/12 09:34:52 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/12 11:29:15 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "../libft/includes/libft.h"
+
+#define TMPFILE "/tmp/my_tmp_file"
 
 #define CMD_NUM 7
 #define PRMPT "$ "

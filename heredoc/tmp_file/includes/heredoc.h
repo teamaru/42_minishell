@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 23:21:49 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/07 17:46:55 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/12 13:20:53 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "../../libft/includes/libft.h"
+#include "../../../libft/includes/libft.h"
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>

@@ -134,11 +134,17 @@ typedef struct s_environ
   char *value;
 } t_environ;
 
+
+typedef t_bool (*t_builtin_func)(const char **cmd_args);
+typedef t_bool (*t_is_func)(char);
+typedef void (*t_expand_func)(char**, t_token**);
+
 typedef struct s_request
 {
   t_token *tokens;
   t_cmd *cmds;
   t_environ *environs;
+  t_builtin_func builtin_funcs[BUILTIN_NUM];
 
   char *cmd;
   t_builtin_id builtin_id;
@@ -173,9 +179,6 @@ typedef struct s_pipe_list
 	pid_t						pid;
 } t_pipe_list;
 
-typedef t_bool (*t_builtin_func)(const char **cmd_args);
-typedef t_bool (*t_is_func)(char);
-typedef void (*t_expand_func)(char**, t_token**);
 
 char *get_chunk(char **line);
 void parse_arguments(char **line);
@@ -205,7 +208,7 @@ void parse_arguments(char **line);
 void	init_cmds(char **cmds);
 void free_cmds(char **cmds);
 void parse_cmd(char **line);
-void init_builtin_funcs(t_builtin_func *builtin_funcs);
+void init_builtin_funcs();
 t_builtin_id get_builtin_id(const char *token);
 /*
 ** cd.c **

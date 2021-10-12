@@ -34,15 +34,15 @@ void free_builtins(char **builtins)
     free(builtins[i]);
 }
 
-void init_builtin_funcs(t_builtin_func *builtin_funcs)
+void init_builtin_funcs()
 {
-  builtin_funcs[ECHO] = execute_echo;
-  builtin_funcs[CD] = execute_cd;
-  builtin_funcs[PWD] = execute_pwd;
-  builtin_funcs[EXPORT] = execute_export;
-  builtin_funcs[UNSET] = execute_unset;
-  builtin_funcs[ENV] = execute_env;
-  builtin_funcs[EXIT] = execute_exit;
+  g_request.builtin_funcs[ECHO] = execute_echo;
+  g_request.builtin_funcs[CD] = execute_cd;
+  g_request.builtin_funcs[PWD] = execute_pwd;
+  g_request.builtin_funcs[EXPORT] = execute_export;
+  g_request.builtin_funcs[UNSET] = execute_unset;
+  g_request.builtin_funcs[ENV] = execute_env;
+  g_request.builtin_funcs[EXIT] = execute_exit;
 }
 
 t_builtin_id get_builtin_id(const char *token)

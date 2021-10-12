@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/12 12:02:42 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/12 14:31:37 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 		exit(1);
 	}
 	cmd_args = pipe_list->cmd_args;
+	/* access関数でチェック */
 	if (execve(cmd_args[0], (char *const *)cmd_args, environ) < 0)
 	{
 		perror("execve");
@@ -185,11 +186,20 @@ pid_t do_pipe(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2])
 	if (has_pipe(node))
 	{
 		if (pipe(new_pipe_fd) < 0)
-			return (FAILURE);
+			return (-1);
 	}
+	if (write_heredoc(node->heredoc) == FAILURE)
+		return (-1);
 	child_pid = fork();
 	if (child_pid < 0)
+	{
+		if (has_heredoc(node->heredoc))
+		{
+			close(node->heredoc->tmp_fd);
+			unlink(TMPFILE);
+		}
 		return (child_pid);
+	}
 	/* 子プロセスで実行 */
 	if (child_pid == 0)
 	{
@@ -198,7 +208,11 @@ pid_t do_pipe(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2])
 	}
 	/* 親プロセスで実行 */
 	else
+	{
+		if (has_heredoc(node->heredoc))
+			close(node->heredoc->tmp_fd);
 		parent_operate_pipe_fd(node, last_pipe_fd, new_pipe_fd);
+	}
 	return (child_pid);
 }
 

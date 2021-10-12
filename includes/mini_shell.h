@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/12 11:29:15 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/12 14:31:56 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,7 @@ typedef struct s_heredoc_to_fd
 {
 	char	*contents;
 	int		tmp_fd;
+	// char	*tmp_file_path;
 } t_heredoc_to_fd;
 
 typedef struct s_pipe_list

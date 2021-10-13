@@ -165,13 +165,27 @@ void	init_heredoc_to_fd(t_heredoc_to_fd *heredoc)
 	heredoc->tmp_file_path = NULL;
 }
 
+t_bool	is_last_delimiter_has_quarts(char *str)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == SGL_QT || str[i] == DBL_QT)
+			if (find_closing_qt(str, &i))
+				return(TRUE);
+	}
+	return (FALSE);
+}
+
 void	set_heredocument(t_pipe_list **node)
 {
 	t_demi_for_heredoc	*last_demi;
 	int					size_of_delimiters;
 	char				**delimiters;
 	t_heredoc_to_fd		*heredoc;
-	// t_bool				expantable_heredoc;
+	t_bool				expantable_heredoc;
 
 	if (!(*node))
 		return ;
@@ -180,7 +194,7 @@ void	set_heredocument(t_pipe_list **node)
 	size_of_delimiters = count_size_of_delimiters((*node)->input_rd, &last_demi);
 	if (!size_of_delimiters)
 		return ;
-	// expantable_heredoc = is_last_delimiter_has_quarts(last_demi->delimiter);
+	expantable_heredoc = is_last_delimiter_has_quarts(last_demi->delimiter);
 	delimiters = create_delimiters_array((*node)->input_rd, size_of_delimiters);
 	(*node)->heredoc = (t_heredoc_to_fd *)malloc(sizeof(t_heredoc_to_fd));
 	if (!(*node))

@@ -192,7 +192,7 @@ t_bool is_env_end_in_heredoc(char c)
   return (c == '\0' || c == '\n' || c == DLL || c == SPC || c == SLSH || c == QSTN || is_quote(c));
 }
 
-char	*get_env_key_in_heredoc(char **heredoc, int *i)
+char	*get_env_key_in_heredoc(char **heredoc)
 {
 	int		env_index;
 	char	*key;
@@ -233,7 +233,7 @@ t_result	expand_heredoc(char **contents)
 			i++;
 			heredoc += i;
 			/* $以降からkey作成 */
-			key = get_env_key_in_heredoc(&heredoc, &i);
+			key = get_env_key_in_heredoc(&heredoc);
 			/* keyからvalue生成 */
 			value = get_env_value(key);
 			/* $までとvalueをjoin */

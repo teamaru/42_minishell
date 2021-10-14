@@ -51,6 +51,43 @@ void	*free_delimiters(char ***delimiters, int size)
 	return (NULL);
 }
 
+size_t	count_non_quotes(char *str)
+{
+	size_t	size;
+	int		i;
+
+	size = 0;
+	i = -1;
+	while (str[++i])
+		if(!is_quote(str[i]))
+			size += 1;
+	return (size);
+}
+
+void	rm_quote(char **str)
+{
+	char	*str_without_quots;
+	int		i;
+	int		index;
+	size_t	len;
+
+	len = count_non_quotes(*str);
+	if (!len)
+		return ;
+	else
+	{
+		i = -1;
+		index = -1;
+		str_without_quots = (char *)ft_calloc(len + 1, sizeof(char));
+		while ((*str)[++i])
+		{
+			if (!is_quote((*str)[i]))
+				str_without_quots[++index] = (*str)[i];
+		}
+		free_set((void **)str, (void *)str_without_quots);
+	}
+}
+
 char	**create_delimiters_array(t_redirection_list *rd_list, int size_array)
 {
 	char				**delimiters;
@@ -67,6 +104,8 @@ char	**create_delimiters_array(t_redirection_list *rd_list, int size_array)
 		if (tmp->type == HEREDOC)
 		{
 			delimiters[i] = ft_strdup(tmp->demi_heredoc->delimiter);
+			/* delimiiterからquouts削除 */
+			rm_quote(&delimiters[i]);
 			if (!delimiters[i])
 				return (free_delimiters(&delimiters, i));
 			i++;

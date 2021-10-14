@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/12 18:43:37 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/14 14:38:50 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -399,7 +399,8 @@ t_bool is_valid_syntax(void);
 /*
  ** expansion.c **
  */
- char *get_env_value(char *key);
+t_bool is_env_end(char c);
+char *get_env_value(char *key);
 t_bool expand(void);
 void free_environs(t_environ **head);
 void make_environ_hash(void);

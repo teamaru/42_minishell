@@ -18,39 +18,6 @@ static void	free_set(void **dst, void *src)
 	*dst = src;
 }
 
-int count_size_of_delimiters(t_redirection_list *node, t_demi_for_heredoc **last_demi_heredoc)
-{
-	t_redirection_list *tmp;
-	int					size_delimiters;
-
-	tmp = node;
-	size_delimiters = 0;
-	while (tmp)
-	{
-		if (tmp->type == HEREDOC)
-		{
-			size_delimiters++;
-			*last_demi_heredoc = tmp->demi_heredoc;
-		}
-		tmp = tmp->next;
-	}
-	if (*last_demi_heredoc)
-		(*last_demi_heredoc)->last_heredoc = TRUE;
-	return (size_delimiters);
-}
-
-void	*free_delimiters(char ***delimiters, int size)
-{
-	int	i;
-
-	i = -1;
-	while (++i < size)
-		free_set((void **)&(*delimiters)[i], NULL);
-	free(*delimiters);
-	*delimiters = NULL;
-	return (NULL);
-}
-
 size_t	count_non_quotes(char *str)
 {
 	size_t	size;
@@ -88,34 +55,6 @@ void	rm_quote(char **str)
 	}
 }
 
-char	**create_delimiters_array(t_redirection_list *rd_list, int size_array)
-{
-	char				**delimiters;
-	int					i;
-	t_redirection_list	*tmp;
-
-	delimiters = (char **)malloc(sizeof(char *) * (size_array + 1));
-	if (!delimiters)
-		return (NULL);
-	tmp = rd_list;
-	i = 0;
-	while (tmp)
-	{
-		if (tmp->type == HEREDOC)
-		{
-			delimiters[i] = ft_strdup(tmp->demi_heredoc->delimiter);
-			/* delimiiterからquouts削除 */
-			rm_quote(&delimiters[i]);
-			if (!delimiters[i])
-				return (free_delimiters(&delimiters, i));
-			i++;
-		}
-		tmp = tmp->next;
-	}
-	delimiters[i] = NULL;
-	return (delimiters);
-}
-
 char	*update_heredoc(char **old, char *input)
 {
 	char	*joined_input;
@@ -139,69 +78,6 @@ t_bool	is_match_delimiter(char *input, char *delimiter)
 	if (!ft_strncmp(input, delimiter, ft_strlen(delimiter) + 1))
 		return (TRUE);
 	return (FALSE);
-}
-
-t_bool	can_update_heredoc(char *input, char **delimiters, int *i, int last_index)
-{
-	int	update_start_index;
-
-	update_start_index = last_index - 1;
-
-	if (last_index == 0)
-		return (TRUE);
-	else if (is_match_delimiter(input, delimiters[*i]))
-	{
-		if (*i == update_start_index)
-			return (TRUE);
-		(*i)++;
-	}
-	return (FALSE);
-}
-
-t_bool	can_exit_heredocument(char *input, t_bool updatable, char *last_delimiter)
-{
-	if (!input || (updatable && is_match_delimiter(input, last_delimiter)))
-		return (TRUE);
-	else
-		return (FALSE);
-}
-
-char	*readline_input_heredoc(char **delimiters, int	size_of_array)
-{
-	char	*heredoc;
-	char	*input;
-	int		i;
-	int		last_index;
-	t_bool	updatable;
-
-	heredoc = NULL;
-	input = NULL;
-	i = 0;
-	last_index = size_of_array - 1;
-	if (last_index == 0)
-		updatable = TRUE ;
-	else
-		updatable = FALSE;
-	while (TRUE)
-	{
-		input = readline("> ");
-		if (can_exit_heredocument(input, updatable, delimiters[last_index]))
-			break;
-		if (updatable)
-			heredoc = update_heredoc(&heredoc, input);
-		else
-			updatable = can_update_heredoc(input, delimiters, &i, last_index);
-		free_set((void **)&input, NULL);
-	}
-	free_set((void **)&input, NULL);
-	return (heredoc);
-}
-
-void	init_heredoc_to_fd(t_heredoc_to_fd *heredoc)
-{
-	heredoc->contents = NULL;
-	heredoc->tmp_fd = -1;
-	heredoc->tmp_file_path = NULL;
 }
 
 t_bool is_str_has_closed_quarts(char *str)
@@ -259,6 +135,8 @@ t_result	expand_heredoc(char **contents)
 	char	*heredoc;
 	char	*expanded_heredoc;
 
+	if (!*contents)
+		return (SUCCESS);
 	i = 0;
 	heredoc = *contents;
 	expanded_heredoc = NULL;
@@ -295,7 +173,7 @@ t_result	expand_heredoc(char **contents)
 	return (SUCCESS);
 }
 
-t_bool	can_expantable_heredoc(char *delimiter)
+t_bool	can_expand_heredoc(char *delimiter)
 {
 	if (is_str_has_closed_quarts(delimiter))
 		return (FALSE);
@@ -303,30 +181,92 @@ t_bool	can_expantable_heredoc(char *delimiter)
 		return (TRUE);
 }
 
+char	*rm_quotes(char *str)
+{
+	char *str_without_quots;
+	int	i;
+	int	index;
+	size_t	len;
+
+	len = count_non_quotes(str);
+	if (!len)
+		return (ft_strdup(str));
+	else
+	{
+		i = -1;
+		index = -1;
+		str_without_quots = (char *)ft_calloc(len + 1, sizeof(char));
+		while (str[++i])
+		{
+			if (!is_quote(str[i]))
+				str_without_quots[++index] = str[i];
+		}
+	}
+	return (str_without_quots);
+}
+
+void	init_heredoc(t_heredoc_to_fd **heredoc)
+{
+	*heredoc = (t_heredoc_to_fd *)ft_calloc(1, sizeof(t_heredoc_to_fd));
+	(*heredoc)->contents = NULL;
+	(*heredoc)->tmp_fd = -1;
+	(*heredoc)->tmp_file_path = NULL;
+}
+
+t_bool	can_exit_heredocument(char *input, char *delimiter)
+{
+	if (!input || is_match_delimiter(input, delimiter))
+		return (TRUE);
+	else
+		return (FALSE);
+
+}
+
+t_result	readline_input_heredoc(char **heredoc, char *delimiter)
+{
+	char	*input;
+
+	input = NULL;
+	free_set((void **)heredoc, NULL);
+	while (TRUE)
+	{
+		input = readline("> ");
+		if (can_exit_heredocument(input, delimiter))
+			break ;
+		*heredoc = update_heredoc(heredoc, input);
+		free_set((void **)&input, NULL);
+	}
+	free_set((void **)&input, NULL);
+	return (SUCCESS);
+}
+
 void	set_heredocument(t_pipe_list **node)
 {
-	t_demi_for_heredoc	*last_demi;
-	int					size_of_delimiters;
-	char				**delimiters;
-	t_heredoc_to_fd		*heredoc;
+	t_redirection_list	*tmp_input;
+	t_demi_for_heredoc	*tmp_demi;
 	t_bool				expantable_heredoc;
+	t_heredoc_to_fd		**heredoc;
+	char				*delimiter;
 
 	if (!(*node))
 		return ;
-	size_of_delimiters = 0;
-	last_demi = NULL;
-	size_of_delimiters = count_size_of_delimiters((*node)->input_rd, &last_demi);
-	if (!size_of_delimiters)
-		return ;
-	expantable_heredoc = can_expantable_heredoc(last_demi->delimiter);
-	delimiters = create_delimiters_array((*node)->input_rd, size_of_delimiters);
-	(*node)->heredoc = (t_heredoc_to_fd *)malloc(sizeof(t_heredoc_to_fd));
-	if (!(*node))
-		return ;
-	init_heredoc_to_fd((*node)->heredoc);
-	heredoc = (*node)->heredoc;
-	heredoc->contents = readline_input_heredoc(delimiters, size_of_delimiters);
-	if (expantable_heredoc)
-		expand_heredoc(&(*node)->heredoc->contents);
-	free_delimiters(&delimiters, size_of_delimiters);
+	tmp_input = (*node)->input_rd;
+	heredoc = &(*node)->heredoc;
+	while (tmp_input)
+	{
+		if (tmp_input->type == HEREDOC)
+		{
+			if (!(*heredoc))
+				init_heredoc(heredoc);
+			tmp_demi = tmp_input->demi_heredoc;
+			expantable_heredoc = can_expand_heredoc(tmp_demi->delimiter);
+			delimiter = rm_quotes(tmp_demi->delimiter);
+			readline_input_heredoc(&(*heredoc)->contents, delimiter);
+			if (expantable_heredoc)
+				expand_heredoc(&(*heredoc)->contents);
+			free_set((void **)&delimiter, NULL);
+		}
+		tmp_input = tmp_input->next;
+	}
+	tmp_demi->last_heredoc = TRUE;
 }

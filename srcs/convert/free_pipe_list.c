@@ -6,17 +6,11 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 16:54:04 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/12 23:03:31 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/16 10:25:22 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-
-static void	free_set(void **dst, void *src)
-{
-	free(*dst);
-	*dst = src;
-}
 
 void	free_cmd_args(const char **args)
 {

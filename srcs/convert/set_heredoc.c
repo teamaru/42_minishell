@@ -12,12 +12,6 @@
 
 #include <mini_shell.h>
 
-static void	free_set(void **dst, void *src)
-{
-	free(*dst);
-	*dst = src;
-}
-
 size_t	count_non_quotes(char *str)
 {
 	size_t	size;
@@ -250,6 +244,7 @@ void	set_heredocument(t_pipe_list **node)
 
 	if (!(*node))
 		return ;
+	tmp_demi = NULL;
 	tmp_input = (*node)->input_rd;
 	heredoc = &(*node)->heredoc;
 	while (tmp_input)
@@ -268,5 +263,6 @@ void	set_heredocument(t_pipe_list **node)
 		}
 		tmp_input = tmp_input->next;
 	}
-	tmp_demi->last_heredoc = TRUE;
+	if (tmp_demi)
+		tmp_demi->last_heredoc = TRUE;
 }

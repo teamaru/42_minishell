@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/14 14:38:50 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/16 10:24:52 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,6 +354,12 @@ t_bool is_sgl_qt(char c);
 t_bool is_quote(char c);
 t_bool is_dbl_qt(char c);
 t_bool is_end(char *line);
+
+/*
+** free.c **
+*/
+void	free_set(void **dst, void *src);
+
 
 /*
  ***********

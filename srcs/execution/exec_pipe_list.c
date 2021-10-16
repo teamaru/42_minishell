@@ -111,7 +111,7 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 	if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)
 	{
 		perror("execve");
-		exit(CMD_NOT_FND);
+		exit(GNRL_ERR);
 	}
 }
 

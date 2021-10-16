@@ -349,6 +349,8 @@ void	execute_cmds(t_pipe_list *pipe_list)
 	if (!has_pipe(pipe_list))
 	{
 		/* buildinを親プロセスで実行 */
+		if (!pipe_list->cmd_args[0])
+			return ;
 		builtin_id = get_builtin_id(pipe_list->cmd_args[0]);
 		if (builtin_id != NON_BUILTIN)
 			g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);

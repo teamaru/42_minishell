@@ -50,6 +50,8 @@ t_builtin_id get_builtin_id(const char *token)
   t_builtin_id builtin_id;
 	char *builtins[BUILTIN_NUM];
 
+	if (!token)
+		return (NON_BUILTIN);
   builtin_id = -1;
 	init_builtins(builtins);
   while (++builtin_id < BUILTIN_NUM)

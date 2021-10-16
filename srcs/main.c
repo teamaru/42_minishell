@@ -65,11 +65,12 @@ void shell_loop()
 
   flg = TRUE;
   make_environ_hash();
+  g_request.exit_cd = 0;
   while (flg)
   {
     line = readline(PRMPT);
     if (!line)
-      my_exit(0);
+      my_exit(SCCSS);
     if (ft_strlen(line) > 0)
       add_history(line);
     init_request();

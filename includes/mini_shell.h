@@ -55,6 +55,14 @@ typedef enum e_result
   FAILURE,
 } t_result;
 
+typedef enum e_exit_cd {
+  SCCSS = 0,
+  GNRL_ERR = 1,
+  CMD_NOT_FND = 127,
+  INVLD_EXT_ARG = 128,
+  OUT_OF_EXT_STS = 255,
+} t_exit_cd;
+
 typedef enum e_f_dscrpt
 {
   STDIN,
@@ -154,7 +162,7 @@ typedef struct s_request
   t_option option;
   t_argument *arguments;
   t_bool excution;
-  int exit_cd;
+  t_exit_cd exit_cd;
 } t_request;
 
 typedef enum e_type_rd
@@ -332,7 +340,7 @@ void	append_argument(t_argument **top, t_argument *new);
  ** error.c **
  */
 t_bool print_err_msg(char *msg);
-void my_exit(int exit_cd);
+void my_exit(t_exit_cd exit_cd);
 /*
  ***********
  ** utils **
@@ -430,5 +438,9 @@ void interrupt(int sig_id);
  ** change_reference.c
  */
 int	change_multi_references(t_pipe_list *cmd);
+
+
+char *join_path(char *cdpath, char *path);
+char *add_slash(char *cdpath);
 
 #endif

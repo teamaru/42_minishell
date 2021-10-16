@@ -36,16 +36,6 @@ t_bool is_valid_request()
   return (TRUE);
 }
 
-void execute_child_process()
-{
-
-  if (g_request.excution)
-    execute_executable();
-  if (!is_valid_request())
-    my_exit(FAILURE);
-  my_exit(SUCCESS);
-}
-
 t_bool	request_convert_to_pipe_list()
 {
 	t_pipe_list	*pipe_list;
@@ -68,5 +58,4 @@ void init_request()
   g_request.option = NON;
   g_request.arguments = NULL;
   g_request.excution = FALSE;
-  g_request.exit_cd = 0;
 }

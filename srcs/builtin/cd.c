@@ -30,7 +30,7 @@ t_bool is_cdpath_part(char *path)
   return (*path != PERIOD && *path != SLSH);
 }
 
-char *join_cdpath(char *cdpath, char *path)
+char *join_path(char *cdpath, char *path)
 {
   char *tmp;
 
@@ -52,7 +52,7 @@ t_bool search_cdpath(char *path)
   while (cdpaths[++i])
   {
     cdpaths[i] = add_slash(cdpaths[i]);
-    cdpaths[i] = join_cdpath(cdpaths[i], path);
+    cdpaths[i] = join_path(cdpaths[i], path);
     if (chdir(cdpaths[i]) == -1)
       continue ;
     ft_putendl_fd(cdpaths[i], STDOUT);

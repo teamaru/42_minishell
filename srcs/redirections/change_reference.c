@@ -25,7 +25,7 @@ int	create_file_fd(char *file_path, int type, t_heredoc_to_fd *heredoc)
 	else if (type == HEREDOC)
 	{
 		close(heredoc->tmp_fd);
-		file_fd = open(TMPFILE, O_RDWR, 0666);
+		file_fd = open(heredoc->tmp_file_path, O_RDWR, 0666);
 	}
 	else
 		file_fd = -1;
@@ -94,8 +94,8 @@ int	change_multi_references(t_pipe_list *cmd)
 				return (-1);
 			if (change_reference(tmp->fd, file_fd) < 0)
 				return (-1);
-			if (!access(TMPFILE, F_OK))
-				unlink(TMPFILE);
+			if (!access(cmd->heredoc->tmp_file_path, F_OK))
+				unlink(cmd->heredoc->tmp_file_path);
 		}
 		tmp = tmp->next;
 	}

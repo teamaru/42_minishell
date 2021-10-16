@@ -27,15 +27,6 @@ t_bool process_request(char *line)
   return (TRUE);
 }
 
-t_bool is_valid_request()
-{
-  if (g_request.builtin_id == NON_BUILTIN)
-    return (print_err_msg(ERR_MSG_INVLD_CMD));
-  if (g_request.option == INVLD_OPT)
-    return (print_err_msg(ERR_MSG_INVLD_OPT));
-  return (TRUE);
-}
-
 t_bool	request_convert_to_pipe_list()
 {
 	t_pipe_list	*pipe_list;

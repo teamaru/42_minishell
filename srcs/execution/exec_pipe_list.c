@@ -33,7 +33,7 @@ t_bool search_path(char **cmd)
   {
     paths[i] = add_slash(paths[i]);
     paths[i] = join_path(paths[i], cmd[0]);
-		if (access(paths[i], F_OK) == -1)
+		if (access(paths[i], 0) == -1)
 			continue;
 		replace_path(cmd, paths[i]);
 		multi_free(paths);
@@ -99,7 +99,7 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 	if (change_multi_references(pipe_list) < 0)
 	{
 		perror("in change_multi_references");
-		exit(1);
+		exit(GNRL_ERR);
 	}
 	environs = env_list_to_array(g_request.environs);
 	cmd_args = pipe_list->cmd_args;
@@ -107,8 +107,8 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 	{
 		if (!search_path((char **)cmd_args))
 		{
-			perror("execve");
-			exit(CMD_NOT_FND);
+			print_err_msg(ERR_MSG_INVLD_CMD, CMD_NOT_FND);
+			exit(g_request.exit_cd);
 		}
 	}
 	if (access(cmd_args[0], X_OK) == -1)
@@ -294,6 +294,7 @@ pid_t do_pipe(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2])
 {
 	int	new_pipe_fd[2];
 	pid_t	child_pid;
+	t_builtin_id builtin_id;
 
 	if (has_pipe(node))
 	{
@@ -316,7 +317,11 @@ pid_t do_pipe(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2])
 	if (child_pid == 0)
 	{
 		child_operate_pipe_fd(first, node, last_pipe_fd, new_pipe_fd);
-		child_exec_cmd(node);
+		builtin_id = get_builtin_id(node->cmd_args[0]);
+		if (builtin_id != NON_BUILTIN)
+			g_request.builtin_funcs[builtin_id](node->cmd_args, TRUE);
+		else
+			child_exec_cmd(node);
 	}
 	/* 親プロセスで実行 */
 	else
@@ -360,6 +365,7 @@ void	wait_processes(t_pipe_list *pipe_list)
 	while(tmp_node)
 	{
 		changed_pid = waitpid(tmp_node->pid, &status, 0);
+		g_request.exit_cd = WEXITSTATUS(status);
 		if (changed_pid < 0)
 		{
 			perror("waitpid");
@@ -373,11 +379,11 @@ void	execute_cmds(t_pipe_list *pipe_list)
 {
 	t_builtin_id builtin_id;
 
+	if (!pipe_list || !pipe_list->cmd_args[0])
+		return ;
 	if (!has_pipe(pipe_list))
 	{
 		/* buildinを親プロセスで実行 */
-		if (!pipe_list->cmd_args[0])
-			return ;
 		builtin_id = get_builtin_id(pipe_list->cmd_args[0]);
 		if (builtin_id != NON_BUILTIN)
 			g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);

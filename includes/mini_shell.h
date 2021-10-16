@@ -20,6 +20,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <sys/stat.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "../libft/includes/libft.h"
@@ -42,6 +43,7 @@
 #define ERR_MSG_INVLD_SYNTX "syntax error near unexpected token"
 #define ERR_MSG_QT_NOT_CLSD "quote is not closed"
 #define ERR_MSG_AMBGS_RDRCT "ambiguous redirect"
+#define ERR_MSG_NO_FILE "No such file or director"
 
 typedef enum e_bool
 {
@@ -221,7 +223,6 @@ void parse_arguments(char **line);
  ** request.c **
  */
  t_bool process_request(char *line);
- t_bool is_valid_request(void);
 t_bool request_convert_to_pipe_list();
  void init_request(void);
 
@@ -301,7 +302,6 @@ void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc);
 ** execution.c **
 */
 t_bool is_execution(char **line);
-t_bool execute_executable(void);
 /*
 ** execution.c **
 */
@@ -341,7 +341,7 @@ void	append_argument(t_argument **top, t_argument *new);
 /*
  ** error.c **
  */
-t_bool print_err_msg(char *msg);
+t_bool print_err_msg(char *msg, t_exit_cd exit_cd);
 void my_exit(t_exit_cd exit_cd);
 /*
  ***********
@@ -422,6 +422,7 @@ t_bool is_valid_syntax(void);
  ** expansion.c **
  */
 t_bool is_env_end(char c);
+char *get_env_key(char *token);
 char *get_env_value(char *key);
 t_bool expand(void);
 void free_environs(t_environ **head);

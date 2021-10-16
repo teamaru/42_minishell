@@ -14,10 +14,11 @@
 
 extern t_request g_request;
 
-t_bool print_err_msg(char *msg)
+t_bool print_err_msg(char *msg, t_exit_cd exit_cd)
 {
-  printf(MSG_HEADER);
-  printf("%s\n", msg);
+  g_request.exit_cd = exit_cd;
+  ft_putstr_fd(MSG_HEADER, STDERR);
+  ft_putendl_fd(msg, STDERR);
   return (FALSE);
 }
 

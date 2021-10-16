@@ -58,9 +58,11 @@ typedef enum e_result
 typedef enum e_exit_cd {
   SCCSS = 0,
   GNRL_ERR = 1,
+  DENIED = 126,
   CMD_NOT_FND = 127,
   INVLD_EXT_ARG = 128,
   OUT_OF_EXT_STS = 255,
+  INVLD_SYNTX = 258,
 } t_exit_cd;
 
 typedef enum e_f_dscrpt
@@ -477,4 +479,8 @@ t_result	readline_input_heredoc(char **heredoc, char *delimiter);
 ** expand_heredoc.c **
 */
 t_result	expand_heredoc(char **contents);
+
+
+
+t_bool is_path_part(char *path);
 #endif

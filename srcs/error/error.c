@@ -16,7 +16,6 @@ extern t_request g_request;
 
 t_bool print_err_msg(char *msg)
 {
-  g_request.exit_cd = GNRL_ERR;
   printf(MSG_HEADER);
   printf("%s\n", msg);
   return (FALSE);

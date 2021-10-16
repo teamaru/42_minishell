@@ -33,7 +33,7 @@ t_bool search_path(char **cmd)
   {
     paths[i] = add_slash(paths[i]);
     paths[i] = join_path(paths[i], cmd[0]);
-		if (access(paths[i], 0) == -1)
+		if (access(paths[i], F_OK) == -1)
 			continue;
 		replace_path(cmd, paths[i]);
 		multi_free(paths);
@@ -103,10 +103,18 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 	}
 	environs = env_list_to_array(g_request.environs);
 	cmd_args = pipe_list->cmd_args;
-	if (!search_path((char **)cmd_args))
+	if (is_path_part((char *)cmd_args[0]))
+	{
+		if (!search_path((char **)cmd_args))
+		{
+			perror("execve");
+			exit(CMD_NOT_FND);
+		}
+	}
+	if (access(cmd_args[0], X_OK) == -1)
 	{
 		perror("execve");
-		exit(CMD_NOT_FND);
+		exit(DENIED);
 	}
 	if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)
 	{

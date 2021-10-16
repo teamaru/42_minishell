@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/16 10:24:52 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/16 12:44:32 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,7 +280,7 @@ t_pipe_list	*create_pipe_list(void);
 /*
 ** set_heredoc.c
 */
-void	set_heredocument(t_pipe_list **node);
+void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc);
 
 /*
  **************
@@ -354,6 +354,12 @@ t_bool is_sgl_qt(char c);
 t_bool is_quote(char c);
 t_bool is_dbl_qt(char c);
 t_bool is_end(char *line);
+/*
+** utils3.c **
+*/
+t_bool is_match_str(char *input, char *delimiter);
+t_bool	is_dollar(char c);
+
 
 /*
 ** free.c **
@@ -434,8 +440,29 @@ void interrupt(int sig_id);
  ******************
  */
 /*
- ** change_reference.c
+ ** change_reference.c **
  */
 int	change_multi_references(t_pipe_list *cmd);
 
+/*
+ ******************
+ ** heredocument **
+ ******************
+ */
+/*
+** form_heredocumet.c **
+*/
+void	form_heredocument(char *delimiter, char **heredoc);
+/*
+** delimiter_rm_quotes.c **
+*/
+char	*rm_quotes(char *str);
+/*
+** readline_heredoc.c **
+*/
+t_result	readline_input_heredoc(char **heredoc, char *delimiter);
+/*
+** expand_heredoc.c **
+*/
+t_result	expand_heredoc(char **contents);
 #endif

@@ -25,7 +25,7 @@ char *add_slash(char *cdpath)
   return (cdpath);
 }
 
-t_bool is_cdpath_part(char *path)
+t_bool is_path_part(char *path)
 {
   return (*path != PERIOD && *path != SLSH);
 }
@@ -76,7 +76,7 @@ t_bool execute_cd(const char **cmd_args, t_bool is_child_process)
   path = (char *)cmd_args[1];
   if (!path)
     path = ROOT;
-  if (is_cdpath_part(path))
+  if (is_path_part(path))
     is_changed = search_cdpath(path);
   if (!is_changed)
     if (chdir(path) == -1)

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/12 14:31:56 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/16 13:50:37 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ typedef struct s_heredoc_to_fd
 {
 	char	*contents;
 	int		tmp_fd;
-	// char	*tmp_file_path;
+	char	*tmp_file_path;
 } t_heredoc_to_fd;
 
 typedef struct s_pipe_list
@@ -278,7 +278,7 @@ const char	**create_cmd_args(t_token *args);
 */
 void	free_pipe_list(t_pipe_list *list);
 /*
-** redirection_list.c
+** set_redirection_list.c
 */
 t_result	set_redirection_lists(t_pipe_list **pipe_node, t_token *rds);
 /*
@@ -288,7 +288,7 @@ t_pipe_list	*create_pipe_list(void);
 /*
 ** set_heredoc.c
 */
-void	set_heredocument(t_pipe_list **node);
+void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc);
 
 /*
  **************
@@ -362,6 +362,18 @@ t_bool is_sgl_qt(char c);
 t_bool is_quote(char c);
 t_bool is_dbl_qt(char c);
 t_bool is_end(char *line);
+/*
+** utils3.c **
+*/
+t_bool is_match_str(char *input, char *delimiter);
+t_bool	is_dollar(char c);
+
+
+/*
+** free.c **
+*/
+void	free_set(void **dst, void *src);
+
 
 /*
  ***********
@@ -407,7 +419,8 @@ t_bool is_valid_syntax(void);
 /*
  ** expansion.c **
  */
- char *get_env_value(char *key);
+t_bool is_env_end(char c);
+char *get_env_value(char *key);
 t_bool expand(void);
 void free_environs(t_environ **head);
 void make_environ_hash(void);
@@ -429,18 +442,39 @@ void	append_environ(t_environ **head, t_environ *new);
 void init_signal(void);
 void interrupt(int sig_id);
 
+
+
+char *join_path(char *cdpath, char *path);
+char *add_slash(char *cdpath);
+
 /*
  ******************
  ** redirections **
  ******************
  */
 /*
- ** change_reference.c
+ ** change_reference.c **
  */
 int	change_multi_references(t_pipe_list *cmd);
-
-
-char *join_path(char *cdpath, char *path);
-char *add_slash(char *cdpath);
-
+/*
+ ******************
+ ** heredocument **
+ ******************
+ */
+/*
+** form_heredocumet.c **
+*/
+void	form_heredocument(char *delimiter, char **heredoc);
+/*
+** delimiter_rm_quotes.c **
+*/
+char	*rm_quotes(char *str);
+/*
+** readline_heredoc.c **
+*/
+t_result	readline_input_heredoc(char **heredoc, char *delimiter);
+/*
+** expand_heredoc.c **
+*/
+t_result	expand_heredoc(char **contents);
 #endif

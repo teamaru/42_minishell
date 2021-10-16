@@ -44,7 +44,7 @@ char *get_env_value(char *key)
   if (!key)
     return (NULL);
   if (*key == QSTN)
-    return (ft_itoa(errno));
+    return (ft_itoa(g_request.exit_cd));
   environ = g_request.environs;
   while (environ)
   {

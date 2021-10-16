@@ -14,11 +14,86 @@
 
 extern t_request g_request;
 
+void replace_path(char **cmd, char *path)
+{
+	free(cmd[0]);
+	cmd[0] = ft_strdup(path);
+}
+
+t_bool search_path(char **cmd)
+{
+  t_environ *path;
+  char **paths;
+  int i;
+
+  path = get_target_environ("PATH");
+  paths = ft_split(path->value, ':');
+  i = -1;
+  while (paths[++i])
+  {
+    paths[i] = add_slash(paths[i]);
+    paths[i] = join_path(paths[i], cmd[0]);
+		if (access(paths[i], 0) == -1)
+			continue;
+		replace_path(cmd, paths[i]);
+		multi_free(paths);
+		return (TRUE);
+  }
+  multi_free(paths);
+	return (FALSE);
+}
+
+int env_listsize(t_environ *environs)
+{
+  int size;
+  t_environ *environ;
+
+  environ = environs;
+  size = 0;
+  while (environ)
+  {
+    size++;
+    environ = environ->next;
+  }
+  return (size);
+}
+
+char *join_env(t_environ *environ)
+{
+	char *env;
+	char *tmp;
+
+	tmp = ft_strjoin(environ->key, "=");
+	env = ft_strjoin(tmp, environ->value);
+	free(tmp);
+	return (env);
+}
+
+char **env_list_to_array(t_environ *environs)
+{
+  int i;
+  char **array;
+  t_environ *environ;
+
+  array = malloc(sizeof(char*) * (env_listsize(environs) + 1));
+  if (!array)
+    return (NULL);
+  environ = environs;
+  i = -1;
+  while (environ)
+  {
+		array[++i] = join_env(environ);
+    environ = environ->next;
+  }
+  array[i + 1] = NULL;
+  return (array);
+}
+
 static void	child_exec_cmd(t_pipe_list *pipe_list)
 {
 	const char	**cmd_args;
 	/* 環境変数追加 */
-	extern char	**environ;
+	char **environs;
 
 	//t_redirection_listがあれば参照先変更
 	if (change_multi_references(pipe_list) < 0)
@@ -26,12 +101,17 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 		perror("in change_multi_references");
 		exit(1);
 	}
+	environs = env_list_to_array(g_request.environs);
 	cmd_args = pipe_list->cmd_args;
-	/* access関数でチェック */
-	if (execve(cmd_args[0], (char *const *)cmd_args, environ) < 0)
+	if (!search_path((char **)cmd_args))
 	{
 		perror("execve");
-		exit(1);
+		exit(CMD_NOT_FND);
+	}
+	if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)
+	{
+		perror("execve");
+		exit(GNRL_ERR);
 	}
 }
 
@@ -142,6 +222,7 @@ void	exec_simple_cmd(t_pipe_list *pipe_list)
 		if (has_heredoc(pipe_list->heredoc))
 			close(pipe_list->heredoc->tmp_fd);
 		changed_pid = waitpid(pipe_list->pid, &status, 0);
+		g_request.exit_cd = WEXITSTATUS(status);
 		if (changed_pid == -1)
 			perror("waitpid");
 	}
@@ -287,6 +368,8 @@ void	execute_cmds(t_pipe_list *pipe_list)
 	if (!has_pipe(pipe_list))
 	{
 		/* buildinを親プロセスで実行 */
+		if (!pipe_list->cmd_args[0])
+			return ;
 		builtin_id = get_builtin_id(pipe_list->cmd_args[0]);
 		if (builtin_id != NON_BUILTIN)
 			g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/16 13:50:37 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/17 15:33:27 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,11 +297,6 @@ void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc);
  ** exection **
  **************
  */
-/*
-** execution.c **
-*/
-t_bool is_execution(char **line);
-t_bool execute_executable(void);
 /*
 ** execution.c **
 */

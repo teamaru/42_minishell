@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/16 10:30:32 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/17 18:17:01 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,52 +41,6 @@ t_bool search_path(char **cmd)
   }
   multi_free(paths);
 	return (FALSE);
-}
-
-int env_listsize(t_environ *environs)
-{
-  int size;
-  t_environ *environ;
-
-  environ = environs;
-  size = 0;
-  while (environ)
-  {
-    size++;
-    environ = environ->next;
-  }
-  return (size);
-}
-
-char *join_env(t_environ *environ)
-{
-	char *env;
-	char *tmp;
-
-	tmp = ft_strjoin(environ->key, "=");
-	env = ft_strjoin(tmp, environ->value);
-	free(tmp);
-	return (env);
-}
-
-char **env_list_to_array(t_environ *environs)
-{
-  int i;
-  char **array;
-  t_environ *environ;
-
-  array = malloc(sizeof(char*) * (env_listsize(environs) + 1));
-  if (!array)
-    return (NULL);
-  environ = environs;
-  i = -1;
-  while (environ)
-  {
-		array[++i] = join_env(environ);
-    environ = environ->next;
-  }
-  array[i + 1] = NULL;
-  return (array);
 }
 
 static void	child_exec_cmd(t_pipe_list *pipe_list)

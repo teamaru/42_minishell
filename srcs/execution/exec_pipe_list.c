@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/18 14:27:42 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/18 14:45:45 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,19 +75,14 @@ void	exec_simple_cmd(t_pipe_list *pipe_list)
 	if (pipe_list->pid == -1)
 	{
 		perror("fork");
-		if (has_heredoc(pipe_list->heredoc))
-		{
-			close(pipe_list->heredoc->tmp_fd);
-			unlink(pipe_list->heredoc->tmp_file_path);
-		}
+		close_and_unlink(&pipe_list->heredoc, TRUE);
 		return ;
 	}
 	else if (pipe_list->pid == 0)
 		child_exec_cmd(pipe_list);
 	else
 	{
-		if (has_heredoc(pipe_list->heredoc))
-			close(pipe_list->heredoc->tmp_fd);
+		close_and_unlink(&pipe_list->heredoc, FALSE);
 		changed_pid = waitpid(pipe_list->pid, &status, 0);
 		g_request.exit_cd = WEXITSTATUS(status);
 		if (changed_pid == -1)
@@ -164,11 +159,7 @@ pid_t do_pipe(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2])
 	child_pid = fork();
 	if (child_pid < 0)
 	{
-		if (has_heredoc(node->heredoc))
-		{
-			close(node->heredoc->tmp_fd);
-			unlink(node->heredoc->tmp_file_path);
-		}
+		close_and_unlink(&node->heredoc, TRUE);
 		return (child_pid);
 	}
 	/* 子プロセスで実行 */
@@ -180,8 +171,7 @@ pid_t do_pipe(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2])
 	/* 親プロセスで実行 */
 	else
 	{
-		if (has_heredoc(node->heredoc))
-			close(node->heredoc->tmp_fd);
+		close_and_unlink(&node->heredoc, FALSE);
 		parent_operate_pipe_fd(node, last_pipe_fd, new_pipe_fd);
 	}
 	return (child_pid);

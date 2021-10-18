@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/18 14:27:20 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/18 14:41:07 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -468,6 +468,10 @@ int	change_multi_references(t_pipe_list *cmd);
  ** heredocument **
  ******************
  */
+/*
+** close_and_unlink.c **
+*/
+void	close_and_unlink(t_heredoc_to_fd **heredoc, t_bool linkable);
 /*
 ** form_heredocumet.c **
 */

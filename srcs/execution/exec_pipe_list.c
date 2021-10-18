@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/18 14:45:45 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/18 18:56:46 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ extern t_request g_request;
 static void	child_exec_cmd(t_pipe_list *pipe_list)
 {
 	const char	**cmd_args;
-	/* 環境変数追加 */
 	char **environs;
+	t_builtin_id builtin_id;
 
-	//t_redirection_listがあれば参照先変更
 	if (change_multi_references(pipe_list) < 0)
 		print_err_and_exit(NULL, GNRL_ERR);
+	builtin_id = get_builtin_id(pipe_list->cmd_args[0]);
+	if (builtin_id != NON_BUILTIN)
+		g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
 	environs = env_list_to_array(g_request.environs);
 	cmd_args = pipe_list->cmd_args;
 	if (is_path_part((char *)cmd_args[0]))
@@ -41,27 +43,6 @@ t_bool	has_pipe(t_pipe_list *pipe_list)
 	if (pipe_list->next)
 		return (TRUE);
 	return (FALSE);
-}
-
-t_bool	is_buildin(const char *cmd)
-{
-	if (!ft_strncmp(cmd, "echo", 5)
-		|| !ft_strncmp(cmd, "cd", 3)
-		|| !ft_strncmp(cmd, "pwd", 4)
-		|| !ft_strncmp(cmd, "export", 7)
-		|| !ft_strncmp(cmd, "unset", 6)
-		|| !ft_strncmp(cmd, "env", 3)
-		|| !ft_strncmp(cmd, "exit", 5))
-		return (TRUE);
-	return (FALSE);
-}
-
-void	exec_buildin(t_pipe_list *pipe_list, t_builtin_id builtin_id)
-{
-	t_builtin_func builtin_funcs[BUILTIN_NUM];
-
-	init_builtin_funcs(builtin_funcs);
-  builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
 }
 
 void	exec_simple_cmd(t_pipe_list *pipe_list)
@@ -162,13 +143,11 @@ pid_t do_pipe(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2])
 		close_and_unlink(&node->heredoc, TRUE);
 		return (child_pid);
 	}
-	/* 子プロセスで実行 */
 	if (child_pid == 0)
 	{
 		child_operate_pipe_fd(first, node, last_pipe_fd, new_pipe_fd);
 		child_exec_cmd(node);
 	}
-	/* 親プロセスで実行 */
 	else
 	{
 		close_and_unlink(&node->heredoc, FALSE);
@@ -209,6 +188,7 @@ void	wait_processes(t_pipe_list *pipe_list)
 	while(tmp_node)
 	{
 		changed_pid = waitpid(tmp_node->pid, &status, 0);
+		g_request.exit_cd = WEXITSTATUS(status);
 		if (changed_pid < 0)
 		{
 			perror("waitpid");
@@ -218,22 +198,34 @@ void	wait_processes(t_pipe_list *pipe_list)
 	}
 }
 
+t_result	exec_simple_buitin(t_pipe_list *pipe_list, t_builtin_id builtin_id)
+{
+	int	backup_stdin;
+	int	backup_stdout;
+
+	if (write_heredoc(pipe_list->heredoc) == FAILURE)
+		return (FAILURE);
+	backup_stdin = dup(0);
+	backup_stdout = dup(1);
+	if (change_multi_references(pipe_list) < 0)
+		print_err_and_exit(NULL, GNRL_ERR);
+	g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
+	dup2(backup_stdin, 0);
+	close(backup_stdin);
+	dup2(backup_stdout, 1);
+	close(backup_stdout);
+	return (SUCCESS);
+}
+
 void	execute_cmds(t_pipe_list *pipe_list)
 {
 	t_builtin_id builtin_id;
 
-	if (!has_pipe(pipe_list))
-	{
-		/* buildinを親プロセスで実行 */
-		if (!pipe_list->cmd_args[0])
-			return ;
-		builtin_id = get_builtin_id(pipe_list->cmd_args[0]);
-		if (builtin_id != NON_BUILTIN)
-			g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
-		/* buildin以外は子プロセスで実行 */
-		else
-			exec_simple_cmd(pipe_list);
-	}
+	builtin_id = get_builtin_id(pipe_list->cmd_args[0]);
+	if (!has_pipe(pipe_list) && builtin_id != NON_BUILTIN)
+		exec_simple_buitin(pipe_list, builtin_id);
+	else if (!has_pipe(pipe_list) && builtin_id == NON_BUILTIN)
+		exec_simple_cmd(pipe_list);
 	else
 	{
 		handle_pipelines(pipe_list);

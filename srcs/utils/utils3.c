@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 12:25:40 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/16 12:40:50 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/18 14:26:49 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@ t_bool is_match_str(char *input, char *delimiter)
 t_bool	is_dollar(char c)
 {
 	if (c == DLL)
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
+t_bool has_heredoc(t_heredoc_to_fd *heredoc)
+{
+	if (heredoc)
 		return (TRUE);
 	else
 		return (FALSE);

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/18 11:34:04 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/18 14:27:20 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -373,6 +373,7 @@ t_bool is_end(char *line);
 */
 t_bool is_match_str(char *input, char *delimiter);
 t_bool	is_dollar(char c);
+t_bool	has_heredoc(t_heredoc_to_fd *heredoc);
 
 
 /*
@@ -483,6 +484,10 @@ t_result	readline_input_heredoc(char **heredoc, char *delimiter);
 ** expand_heredoc.c **
 */
 t_result	expand_heredoc(char **contents);
+/*
+** write_tmp_file.c **
+*/
+t_result	write_heredoc(t_heredoc_to_fd *heredoc);
 
 
 

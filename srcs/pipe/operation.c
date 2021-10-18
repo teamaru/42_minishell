@@ -1,43 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils3.c                                           :+:      :+:    :+:   */
+/*   operation.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/16 12:25:40 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/18 20:04:30 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/10/18 19:58:13 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/10/18 20:00:31 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-t_bool is_match_str(char *input, char *delimiter)
+void init_pipe_fd(int pipe_fd[2])
 {
-	if (!ft_strncmp(input, delimiter, ft_strlen(delimiter) + 1))
-		return (TRUE);
-	return (FALSE);
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
 }
 
-t_bool	is_dollar(char c)
+t_bool is_pipe_open(int pipe_fd[2])
 {
-	if (c == DLL)
-		return (TRUE);
-	else
+	if (pipe_fd[0] == -1 && pipe_fd[1] == -1)
 		return (FALSE);
+	return (TRUE);
 }
 
-t_bool has_heredoc(t_heredoc_to_fd *heredoc)
+void read_pipe(int pipe_fd[2])
 {
-	if (heredoc)
-		return (TRUE);
-	else
-		return (FALSE);
+	close(pipe_fd[1]);
+	dup2(pipe_fd[0], 0);
+	close(pipe_fd[0]);
 }
 
-t_bool	has_pipe(t_pipe_list *pipe_list)
+void write_pipe(int pipe_fd[2])
 {
-	if (pipe_list->next)
-		return (TRUE);
-	return (FALSE);
+	close(pipe_fd[0]);
+	dup2(pipe_fd[1], 1);
+	close(pipe_fd[1]);
 }

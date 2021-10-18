@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/18 14:41:07 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/18 20:04:40 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -374,6 +374,7 @@ t_bool is_end(char *line);
 t_bool is_match_str(char *input, char *delimiter);
 t_bool	is_dollar(char c);
 t_bool	has_heredoc(t_heredoc_to_fd *heredoc);
+t_bool	has_pipe(t_pipe_list *pipe_list);
 
 
 /*
@@ -492,8 +493,27 @@ t_result	expand_heredoc(char **contents);
 ** write_tmp_file.c **
 */
 t_result	write_heredoc(t_heredoc_to_fd *heredoc);
-
-
-
 t_bool is_path_part(char *path);
+
+/*
+ ******************
+ ** pipe **
+ ******************
+ */
+/*
+** operation.c **
+*/
+void	init_pipe_fd(int pipe_fd[2]);
+t_bool	is_pipe_open(int pipe_fd[2]);
+void	read_pipe(int pipe_fd[2]);
+void	write_pipe(int pipe_fd[2]);
+/*
+** parent.c **
+*/
+void	parent_operate_pipe_fd(t_pipe_list *node, int last_pipe_fd[2], int new_pipe_fd[2]);
+/*
+** child.c **
+*/
+void	child_operate_pipe_fd(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2], int new_pipe_fd[2]);
+
 #endif

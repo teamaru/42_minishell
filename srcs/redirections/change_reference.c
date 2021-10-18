@@ -94,7 +94,7 @@ int	change_multi_references(t_pipe_list *cmd)
 				return (-1);
 			if (change_reference(tmp->fd, file_fd) < 0)
 				return (-1);
-			if (!access(cmd->heredoc->tmp_file_path, F_OK))
+			if (cmd->heredoc && !access(cmd->heredoc->tmp_file_path, F_OK))
 				unlink(cmd->heredoc->tmp_file_path);
 		}
 		tmp = tmp->next;

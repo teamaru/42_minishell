@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/17 18:17:01 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/18 10:40:57 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,18 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 
 	//t_redirection_listがあれば参照先変更
 	if (change_multi_references(pipe_list) < 0)
-	{
-		perror("in change_multi_references");
-		exit(1);
-	}
+		print_err_and_exit(NULL, GNRL_ERR);
 	environs = env_list_to_array(g_request.environs);
 	cmd_args = pipe_list->cmd_args;
 	if (is_path_part((char *)cmd_args[0]))
 	{
 		if (!search_path((char **)cmd_args))
-		{
-			perror("execve");
-			exit(CMD_NOT_FND);
-		}
+			print_err_and_exit(ERR_MSG_INVLD_CMD, CMD_NOT_FND);
 	}
 	if (access(cmd_args[0], X_OK) == -1)
-	{
-		perror("execve");
-		exit(DENIED);
-	}
+		print_err_and_exit(NULL, DENIED);
 	if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)
-	{
-		perror("execve");
-		exit(GNRL_ERR);
-	}
+		print_err_and_exit(NULL, GNRL_ERR);
 }
 
 t_bool	has_pipe(t_pipe_list *pipe_list)

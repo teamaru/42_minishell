@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/17 18:15:02 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/18 10:29:44 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,6 +342,7 @@ void	append_argument(t_argument **top, t_argument *new);
  */
 t_bool print_err_msg(char *msg);
 void my_exit(t_exit_cd exit_cd);
+void	print_err_and_exit(char *msg, t_exit_cd exit_cd);
 /*
  ***********
  ** utils **

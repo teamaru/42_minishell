@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 15:51:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/05/29 15:51:50 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/19 17:13:50 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,33 @@
 
 extern t_request g_request;
 
-t_bool print_err_msg(char *msg, t_exit_cd exit_cd)
+t_bool	print_err_msg(char *msg)
 {
-  g_request.exit_cd = exit_cd;
-  ft_putstr_fd(MSG_HEADER, STDERR);
-  ft_putendl_fd(msg, STDERR);
-  return (FALSE);
+	if (!msg)
+		perror(MSG_HEADER);
+	else
+	{
+		printf(MSG_HEADER);
+		printf(": %s\n", msg);
+	}
+	return (FALSE);
 }
 
-void my_exit(t_exit_cd exit_cd)
+void	my_exit(t_exit_cd exit_cd)
 {
-  free_all(TRUE);
-  exit(exit_cd);
+	free_all(TRUE);
+	exit(exit_cd);
+}
+
+void	print_err_and_exit(char *msg, t_exit_cd exit_cd)
+{
+	if (!msg)
+		perror(MSG_HEADER);
+	else
+	{
+		printf(MSG_HEADER);
+		printf("%s\n", msg);
+	}
+	free_all(TRUE);
+	exit(exit_cd);
 }

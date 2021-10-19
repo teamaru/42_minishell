@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution.c                                        :+:      :+:    :+:   */
+/*   close_and_unlink.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/08 14:48:24 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/06/08 14:48:24 by tsugiyam         ###   ########.fr       */
+/*   Created: 2021/10/18 14:34:52 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/10/18 14:42:41 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-extern t_request g_request;
-
-t_bool is_execution(char **line)
+void	close_and_unlink(t_heredoc_to_fd **heredoc, t_bool	unlinkable)
 {
-  if (**line == PERIOD || **line == SLSH)
-  {
-    g_request.excution = TRUE;
-    return (TRUE);
-  }
-  return (FALSE);
+	if (has_heredoc(*heredoc))
+	{
+		close((*heredoc)->tmp_fd);
+		if (unlinkable)
+			unlink((*heredoc)->tmp_file_path);
+	}
 }

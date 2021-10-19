@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/16 13:50:37 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/19 17:12:34 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 #define META_CHARS ";\'\"<>|$?\\."
 #define DELIMITERS "|<> \t"
 #define TOKEN_TYPE_NUM 5
-#define MSG_HEADER "mini_shell: "
+#define MSG_HEADER "mini_shell "
 #define MSG_EXIT "exit"
 #define ERR_MSG_INVLD_CMD "command not found"
 #define ERR_MSG_INVLD_OPT "invalid option"
@@ -273,9 +273,17 @@ t_exit_cd  execute_unset(const char **cmd_args, t_bool is_child_process);
  *************
  */
 /*
+** add_rd_node.c
+*/
+t_redirection_list	*add_new_rd_node(t_token_type token_type, t_redirection_list **input, t_redirection_list **output);
+/*
 ** cmd_args.c
 */
 const char	**create_cmd_args(t_token *args);
+/*
+** free_pipe_node.c
+*/
+void	free_pipe_node(t_pipe_list **node);
 /*
 ** free_pipe_list.c
 */
@@ -299,13 +307,32 @@ void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc);
  **************
  */
 /*
-** execution.c **
+** create_environ.c **
 */
 t_bool is_execution(char **line);
+char	**env_list_to_array(t_environ *environs);
 /*
-** execution.c **
+** exec_pipe_list.c **
 */
+void	child_exec_cmd(t_pipe_list *pipe_list);
 void	execute_cmds(t_pipe_list *pipe_list);
+/*
+** handle_pipe.c **
+*/
+void	handle_pipelines(t_pipe_list *pipe_list);
+/*
+** serch_cmd_path.c **
+*/
+t_bool	search_path(char **cmd);
+/*
+** simple_builtin.c **
+*/
+t_result exec_simple_buitin(t_pipe_list *pipe_list, t_builtin_id builtin_id);
+/*
+** simple_cmd.c **
+*/
+void	exec_simple_cmd(t_pipe_list *pipe_list);
+
 /*
  ************
  ** option **
@@ -341,8 +368,9 @@ void	append_argument(t_argument **top, t_argument *new);
 /*
  ** error.c **
  */
-t_bool print_err_msg(char *msg, t_exit_cd exit_cd);
+t_bool print_err_msg(char *msg);
 void my_exit(t_exit_cd exit_cd);
+void	print_err_and_exit(char *msg, t_exit_cd exit_cd);
 /*
  ***********
  ** utils **
@@ -369,6 +397,8 @@ t_bool is_end(char *line);
 */
 t_bool is_match_str(char *input, char *delimiter);
 t_bool	is_dollar(char c);
+t_bool	has_heredoc(t_heredoc_to_fd *heredoc);
+t_bool	has_pipe(t_pipe_list *pipe_list);
 
 
 /*
@@ -465,6 +495,10 @@ int	change_multi_references(t_pipe_list *cmd);
  ******************
  */
 /*
+** close_and_unlink.c **
+*/
+void	close_and_unlink(t_heredoc_to_fd **heredoc, t_bool linkable);
+/*
 ** form_heredocumet.c **
 */
 void	form_heredocument(char *delimiter, char **heredoc);
@@ -480,8 +514,31 @@ t_result	readline_input_heredoc(char **heredoc, char *delimiter);
 ** expand_heredoc.c **
 */
 t_result	expand_heredoc(char **contents);
-
-
-
+/*
+** write_tmp_file.c **
+*/
+t_result	write_heredoc(t_heredoc_to_fd *heredoc);
 t_bool is_path_part(char *path);
+
+/*
+ ******************
+ ** pipe **
+ ******************
+ */
+/*
+** operation.c **
+*/
+void	init_pipe_fd(int pipe_fd[2]);
+t_bool	is_pipe_open(int pipe_fd[2]);
+void	read_pipe(int pipe_fd[2]);
+void	write_pipe(int pipe_fd[2]);
+/*
+** parent.c **
+*/
+void	parent_operate_pipe_fd(t_pipe_list *node, int last_pipe_fd[2], int new_pipe_fd[2]);
+/*
+** child.c **
+*/
+void	child_operate_pipe_fd(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2], int new_pipe_fd[2]);
+
 #endif

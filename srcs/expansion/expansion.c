@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 12:28:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/10 12:59:50 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/18 21:03:49 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,7 +331,7 @@ t_bool expand()
       return (FALSE);
     cmd = cmd->next;
   }
-  print_cmds(g_request.cmds);
+//   print_cmds(g_request.cmds);
   return (TRUE);
 }
 

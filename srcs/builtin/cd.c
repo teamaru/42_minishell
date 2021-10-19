@@ -47,6 +47,8 @@ t_bool search_cdpath(char *path)
   int i;
 
   cdpath = get_target_environ("CDPATH");
+  if (!cdpath)
+    return (FALSE);
   cdpaths = ft_split(cdpath->value, ':');
   i = -1;
   while (cdpaths[++i])
@@ -63,7 +65,14 @@ t_bool search_cdpath(char *path)
   return (FALSE);
 }
 
-t_bool execute_cd(const char **cmd_args, t_bool is_child_process)
+t_bool is_current_dir_exist(char *pwd)
+{
+  struct stat stat_buf;
+
+  return(lstat(pwd, &stat_buf) == 0);
+}
+
+t_exit_cd execute_cd(const char **cmd_args, t_bool is_child_process)
 {
   char pwd[BUFSIZ];
   char *path;
@@ -76,6 +85,9 @@ t_bool execute_cd(const char **cmd_args, t_bool is_child_process)
   path = (char *)cmd_args[1];
   if (!path)
     path = ROOT;
+  if (*path == PERIOD)
+    if (!is_current_dir_exist(pwd))
+      print_err_msg(ERR_MSG_NO_FILE);
   if (is_path_part(path))
     is_changed = search_cdpath(path);
   if (!is_changed)
@@ -84,6 +96,6 @@ t_bool execute_cd(const char **cmd_args, t_bool is_child_process)
   getcwd(pwd, BUFSIZ);
   replace_env_value("PWD", pwd);
   if (is_child_process)
-    exit(0);
-  return (TRUE);
+    exit(SCCSS);
+  return (SCCSS);
 }

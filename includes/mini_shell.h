@@ -20,6 +20,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <sys/stat.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "../libft/includes/libft.h"
@@ -42,6 +43,7 @@
 #define ERR_MSG_INVLD_SYNTX "syntax error near unexpected token"
 #define ERR_MSG_QT_NOT_CLSD "quote is not closed"
 #define ERR_MSG_AMBGS_RDRCT "ambiguous redirect"
+#define ERR_MSG_NO_FILE "No such file or director"
 
 typedef enum e_bool
 {
@@ -148,7 +150,7 @@ typedef struct s_environ
 } t_environ;
 
 
-typedef t_bool (*t_builtin_func)(const char **cmd_args, t_bool is_child_process);
+typedef t_exit_cd (*t_builtin_func)(const char **cmd_args, t_bool is_child_process);
 typedef t_bool (*t_is_func)(char);
 typedef void (*t_expand_func)(char**, t_token**);
 
@@ -221,7 +223,6 @@ void parse_arguments(char **line);
  ** request.c **
  */
  t_bool process_request(char *line);
- t_bool is_valid_request(void);
 t_bool request_convert_to_pipe_list();
  void init_request(void);
 
@@ -241,31 +242,31 @@ t_builtin_id get_builtin_id(const char *token);
 /*
 ** cd.c **
 */
-t_bool execute_cd(const char **cmd_args, t_bool is_child_process);
+t_exit_cd execute_cd(const char **cmd_args, t_bool is_child_process);
 /*
  ** echo.c **
  */
-t_bool execute_echo(const char **cmd_args, t_bool is_child_process);
+t_exit_cd execute_echo(const char **cmd_args, t_bool is_child_process);
 /*
  ** env.c **
  */
-t_bool execute_env(const char **cmd_args, t_bool is_child_process);
+t_exit_cd execute_env(const char **cmd_args, t_bool is_child_process);
 /*
  ** exit.c **
  */
-t_bool execute_exit(const char **cmd_args, t_bool is_child_process);
+t_exit_cd execute_exit(const char **cmd_args, t_bool is_child_process);
 /*
  ** export.c **
  */
-t_bool execute_export(const char **cmd_args, t_bool is_child_process);
+t_exit_cd execute_export(const char **cmd_args, t_bool is_child_process);
 /*
  ** pwd.c **
  */
-t_bool execute_pwd(const char **cmd_args, t_bool is_child_process);
+t_exit_cd execute_pwd(const char **cmd_args, t_bool is_child_process);
 /*
  ** unset.c **
  */
-t_bool execute_unset(const char **cmd_args, t_bool is_child_process);
+t_exit_cd  execute_unset(const char **cmd_args, t_bool is_child_process);
 /*
  *************
  ** convert **
@@ -308,6 +309,7 @@ void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc);
 /*
 ** create_environ.c **
 */
+t_bool is_execution(char **line);
 char	**env_list_to_array(t_environ *environs);
 /*
 ** exec_pipe_list.c **
@@ -450,6 +452,7 @@ t_bool is_valid_syntax(void);
  ** expansion.c **
  */
 t_bool is_env_end(char c);
+char *get_env_key(char *token);
 char *get_env_value(char *key);
 t_bool expand(void);
 void free_environs(t_environ **head);

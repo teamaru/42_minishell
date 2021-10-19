@@ -14,7 +14,7 @@
 
 extern t_request g_request;
 
-t_bool execute_env(const char **cmd_args, t_bool is_child_process)
+t_exit_cd execute_env(const char **cmd_args, t_bool is_child_process)
 {
   t_environ *environ;
 
@@ -29,6 +29,6 @@ t_bool execute_env(const char **cmd_args, t_bool is_child_process)
     environ = environ->next;
   }
   if (is_child_process)
-    exit(0);
-  return (TRUE);
+    exit(SCCSS);
+  return (SCCSS);
 }

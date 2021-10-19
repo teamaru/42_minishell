@@ -65,7 +65,7 @@ void shell_loop()
 
   flg = TRUE;
   make_environ_hash();
-  g_request.exit_cd = 0;
+  g_request.exit_cd = SCCSS;
   while (flg)
   {
     line = readline(PRMPT);

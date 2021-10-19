@@ -46,17 +46,57 @@ t_bool replace_duplicated_environ(char *key, char *value)
   return (FALSE);
 }
 
-t_bool execute_export(const char **cmd_args, t_bool is_child_process)
+char **split_key_value(char *arg)
+{
+  int i;
+  char **split;
+
+  split = malloc(sizeof(char *) * 3);
+  i = 0;
+  while (arg[i] && arg[i] != '=')
+    i++;
+  split[0] = ft_strndup(arg, i);
+  if (ft_strlen(arg) == ft_strlen(split[0]))
+  {
+    free(split[0]);
+    free(split);
+    return (NULL);
+  }
+  split[1] = ft_strdup(arg + i + 1);
+  split[2] = NULL;
+  return (split);
+}
+
+t_exit_cd declare_env()
+{
+  t_environ *environ;
+
+  environ = g_request.environs;
+  while (environ)
+  {
+    ft_printf("declare -x ");
+    ft_putstr_fd(environ->key, STDOUT);
+    ft_putstr_fd("=", STDOUT);
+    ft_putstr_fd(environ->value, STDOUT);
+    ft_putstr_fd("\n", STDOUT);
+    environ = environ->next;
+  }
+  return (SCCSS);
+}
+
+t_exit_cd execute_export(const char **cmd_args, t_bool is_child_process)
 {
   char **split;
 
   if (!cmd_args[1])
-    return (TRUE);
-  split = ft_split(cmd_args[1], '=');
+    return (declare_env());
+  split = split_key_value((char *)cmd_args[1]);
+  if (!split)
+    return (SCCSS);
   if (!replace_duplicated_environ(split[0], split[1]))
     append_environ(&g_request.environs, new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
   multi_free(split);
   if (is_child_process)
-    exit(0);
-  return (TRUE);
+    exit(SCCSS);
+  return (SCCSS);
 }

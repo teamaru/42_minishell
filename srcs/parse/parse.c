@@ -165,18 +165,18 @@ t_bool is_valid_syntax()
   if (!token)
     return (TRUE);
   if (is_type_meta(token))
-    return (print_err_msg(ERR_MSG_INVLD_SYNTX, INVLD_SYNTX));
+    return (print_err_msg(ERR_MSG_INVLD_SYNTX));
   while (token)
   {
     if (!is_quote_closed(token))
-      return (print_err_msg(ERR_MSG_QT_NOT_CLSD, GNRL_ERR));
+      return (print_err_msg(ERR_MSG_QT_NOT_CLSD));
     if (!token->next)
       break ;
     if (!is_valid_token_pair(token))
-      return (print_err_msg(ERR_MSG_INVLD_SYNTX, INVLD_SYNTX));
+      return (print_err_msg(ERR_MSG_INVLD_SYNTX));
     token = token->next;
   }
   if (is_type_redirect(token) || is_type_meta(token))
-    return (print_err_msg(ERR_MSG_INVLD_SYNTX, INVLD_SYNTX));
+    return (print_err_msg(ERR_MSG_INVLD_SYNTX));
   return (TRUE);
 }

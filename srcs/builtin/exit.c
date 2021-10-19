@@ -42,13 +42,13 @@ t_exit_cd execute_exit(const char **cmd_args, t_bool is_child_process)
     g_request.exit_cd = SCCSS;
   else if (str_arr_size(cmd_args) > 2)
   {
-    print_err_msg(ERR_MSG_TOO_MANY_ARGS, GNRL_ERR);
+    print_err_msg(ERR_MSG_TOO_MANY_ARGS);
     return (GNRL_ERR);
   }
   else if (!is_all_digits(cmd_args[1]))
   {
     g_request.exit_cd = OUT_OF_EXT_STS;
-    print_err_msg(ERR_MSG_INVLD_EXIT_CD, INVLD_EXT_ARG);
+    print_err_msg(ERR_MSG_INVLD_EXIT_CD);
   }
   else
     g_request.exit_cd = ft_atoi((char *)cmd_args[1]);

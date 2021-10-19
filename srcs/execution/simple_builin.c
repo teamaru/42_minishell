@@ -37,7 +37,7 @@ t_result	exec_simple_buitin(t_pipe_list *pipe_list, t_builtin_id builtin_id)
 	builtin_backup_fd(backup_fd);
 	if (change_multi_references(pipe_list) < 0)
 		print_err_and_exit(NULL, GNRL_ERR);
-	g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
+	g_request.exit_cd = g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
 	builtin_restore_fd(backup_fd);
 	return (SUCCESS);
 }

@@ -6,13 +6,13 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 15:51:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/19 17:13:50 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/19 23:16:36 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-extern t_request g_request;
+extern t_request	g_request;
 
 t_bool	print_err_msg(char *msg)
 {

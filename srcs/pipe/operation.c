@@ -1,30 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_pipe_list.c                                   :+:      :+:    :+:   */
+/*   operation.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/27 16:54:04 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/19 15:33:07 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/10/18 19:58:13 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/10/19 16:10:53 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void	free_pipe_list(t_pipe_list *list)
+void	init_pipe_fd(int pipe_fd[2])
 {
-	t_pipe_list	*next;
-	t_pipe_list	*tmp;
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
+}
 
-	tmp = list;
-	next = list->next;
-	while (tmp)
-	{
-		free_pipe_node(&tmp);
-		free_set((void **)&tmp, NULL);
-		tmp = next;
-		if (next || tmp)
-			next = tmp->next;
-	}
+t_bool	is_pipe_open(int pipe_fd[2])
+{
+	if (pipe_fd[0] == -1 && pipe_fd[1] == -1)
+		return (FALSE);
+	return (TRUE);
+}
+
+void	read_pipe(int pipe_fd[2])
+{
+	close(pipe_fd[1]);
+	dup2(pipe_fd[0], 0);
+	close(pipe_fd[0]);
+}
+
+void	write_pipe(int pipe_fd[2])
+{
+	close(pipe_fd[0]);
+	dup2(pipe_fd[1], 1);
+	close(pipe_fd[1]);
 }

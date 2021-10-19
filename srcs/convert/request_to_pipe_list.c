@@ -6,13 +6,13 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 15:11:45 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/16 12:50:05 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/19 15:34:48 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-extern t_request g_request;
+extern t_request	g_request;
 
 void	add_pipe_list(t_pipe_list **list, t_pipe_list *node)
 {
@@ -38,7 +38,7 @@ void	init_pipe_list_node(t_pipe_list **node)
 	(*node)->next = NULL;
 }
 
-t_pipe_list	*create_pipe_list()
+t_pipe_list	*create_pipe_list(void)
 {
 	t_pipe_list	*node;
 	t_pipe_list	*list;

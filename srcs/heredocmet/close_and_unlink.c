@@ -1,30 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_pipe_list.c                                   :+:      :+:    :+:   */
+/*   close_and_unlink.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/27 16:54:04 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/19 15:33:07 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/10/18 14:34:52 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/10/18 14:42:41 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void	free_pipe_list(t_pipe_list *list)
+void	close_and_unlink(t_heredoc_to_fd **heredoc, t_bool	unlinkable)
 {
-	t_pipe_list	*next;
-	t_pipe_list	*tmp;
-
-	tmp = list;
-	next = list->next;
-	while (tmp)
+	if (has_heredoc(*heredoc))
 	{
-		free_pipe_node(&tmp);
-		free_set((void **)&tmp, NULL);
-		tmp = next;
-		if (next || tmp)
-			next = tmp->next;
+		close((*heredoc)->tmp_fd);
+		if (unlinkable)
+			unlink((*heredoc)->tmp_file_path);
 	}
 }

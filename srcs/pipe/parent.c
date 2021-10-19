@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_pipe_list.c                                   :+:      :+:    :+:   */
+/*   parent.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/27 16:54:04 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/19 15:33:07 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/10/18 20:02:01 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/10/19 16:11:04 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void	free_pipe_list(t_pipe_list *list)
+void	parent_operate_pipe_fd(t_pipe_list *node, int last_pipe_fd[2],
+	int new_pipe_fd[2])
 {
-	t_pipe_list	*next;
-	t_pipe_list	*tmp;
-
-	tmp = list;
-	next = list->next;
-	while (tmp)
+	if (is_pipe_open(last_pipe_fd))
 	{
-		free_pipe_node(&tmp);
-		free_set((void **)&tmp, NULL);
-		tmp = next;
-		if (next || tmp)
-			next = tmp->next;
+		close(last_pipe_fd[0]);
+		close(last_pipe_fd[1]);
+	}
+	if (has_pipe(node))
+	{
+		last_pipe_fd[0] = new_pipe_fd[0];
+		last_pipe_fd[1] = new_pipe_fd[1];
 	}
 }

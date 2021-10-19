@@ -141,22 +141,31 @@ void	wait_processes(t_pipe_list *pipe_list)
 	}
 }
 
+void	builtin_backup_fd(int backup_fd[3])
+{
+	backup_fd[0] = dup(STDIN);
+	backup_fd[1] = dup(STDOUT);
+	backup_fd[2] = dup(STDERR);
+}
+
+void	builtin_restore_fd(int backup_fd[3])
+{
+	dup2(backup_fd[0], STDIN);
+	dup2(backup_fd[1], STDOUT);
+	dup2(backup_fd[2], STDERR);
+}
+
 t_result	exec_simple_buitin(t_pipe_list *pipe_list, t_builtin_id builtin_id)
 {
-	int	backup_stdin;
-	int	backup_stdout;
+	int	backup_fd[3];
 
 	if (write_heredoc(pipe_list->heredoc) == FAILURE)
 		return (FAILURE);
-	backup_stdin = dup(0);
-	backup_stdout = dup(1);
+	builtin_backup_fd(backup_fd);
 	if (change_multi_references(pipe_list) < 0)
 		print_err_and_exit(NULL, GNRL_ERR);
 	g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
-	dup2(backup_stdin, 0);
-	close(backup_stdin);
-	dup2(backup_stdout, 1);
-	close(backup_stdout);
+	builtin_restore_fd(backup_fd);
 	return (SUCCESS);
 }
 

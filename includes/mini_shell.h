@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/19 13:39:13 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/19 16:02:40 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,9 +272,17 @@ t_bool execute_unset(const char **cmd_args, t_bool is_child_process);
  *************
  */
 /*
+** add_rd_node.c
+*/
+t_redirection_list	*add_new_rd_node(t_token_type token_type, t_redirection_list **input, t_redirection_list **output);
+/*
 ** cmd_args.c
 */
 const char	**create_cmd_args(t_token *args);
+/*
+** free_pipe_node.c
+*/
+void	free_pipe_node(t_pipe_list **node);
 /*
 ** free_pipe_list.c
 */

@@ -14,7 +14,7 @@
 
 extern t_request g_request;
 
-static void	child_exec_cmd(t_pipe_list *pipe_list)
+void	child_exec_cmd(t_pipe_list *pipe_list)
 {
 	const char	**cmd_args;
 	char **environs;
@@ -40,32 +40,6 @@ static void	child_exec_cmd(t_pipe_list *pipe_list)
 			print_err_and_exit(NULL, GNRL_ERR);
 	}
 	exit(0);
-}
-
-void	exec_simple_cmd(t_pipe_list *pipe_list)
-{
-	pid_t	changed_pid;
-	int		status;
-
-	if (write_heredoc(pipe_list->heredoc) == FAILURE)
-		return ;
-	pipe_list->pid = fork();
-	if (pipe_list->pid == -1)
-	{
-		perror("fork");
-		close_and_unlink(&pipe_list->heredoc, TRUE);
-		return ;
-	}
-	else if (pipe_list->pid == 0)
-		child_exec_cmd(pipe_list);
-	else
-	{
-		close_and_unlink(&pipe_list->heredoc, FALSE);
-		changed_pid = waitpid(pipe_list->pid, &status, 0);
-		g_request.exit_cd = WEXITSTATUS(status);
-		if (changed_pid == -1)
-			perror("waitpid");
-	}
 }
 
 pid_t do_pipe(t_pipe_list *first, t_pipe_list *node, int last_pipe_fd[2])
@@ -139,34 +113,6 @@ void	wait_processes(t_pipe_list *pipe_list)
 		}
 		tmp_node = tmp_node->next;
 	}
-}
-
-void	builtin_backup_fd(int backup_fd[3])
-{
-	backup_fd[0] = dup(STDIN);
-	backup_fd[1] = dup(STDOUT);
-	backup_fd[2] = dup(STDERR);
-}
-
-void	builtin_restore_fd(int backup_fd[3])
-{
-	dup2(backup_fd[0], STDIN);
-	dup2(backup_fd[1], STDOUT);
-	dup2(backup_fd[2], STDERR);
-}
-
-t_result	exec_simple_buitin(t_pipe_list *pipe_list, t_builtin_id builtin_id)
-{
-	int	backup_fd[3];
-
-	if (write_heredoc(pipe_list->heredoc) == FAILURE)
-		return (FAILURE);
-	builtin_backup_fd(backup_fd);
-	if (change_multi_references(pipe_list) < 0)
-		print_err_and_exit(NULL, GNRL_ERR);
-	g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
-	builtin_restore_fd(backup_fd);
-	return (SUCCESS);
 }
 
 void	execute_cmds(t_pipe_list *pipe_list)

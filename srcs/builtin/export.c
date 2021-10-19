@@ -67,7 +67,7 @@ char **split_key_value(char *arg)
   return (split);
 }
 
-t_bool declare_env()
+t_exit_cd declare_env()
 {
   t_environ *environ;
 
@@ -81,10 +81,10 @@ t_bool declare_env()
     ft_putstr_fd("\n", STDOUT);
     environ = environ->next;
   }
-  return (TRUE);
+  return (SCCSS);
 }
 
-t_bool execute_export(const char **cmd_args, t_bool is_child_process)
+t_exit_cd execute_export(const char **cmd_args, t_bool is_child_process)
 {
   char **split;
 
@@ -92,11 +92,11 @@ t_bool execute_export(const char **cmd_args, t_bool is_child_process)
     return (declare_env());
   split = split_key_value((char *)cmd_args[1]);
   if (!split)
-    return (TRUE);
+    return (SCCSS);
   if (!replace_duplicated_environ(split[0], split[1]))
     append_environ(&g_request.environs, new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
   multi_free(split);
   if (is_child_process)
-    exit(0);
-  return (TRUE);
+    exit(SCCSS);
+  return (SCCSS);
 }

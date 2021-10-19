@@ -12,7 +12,7 @@
 
 #include <mini_shell.h>
 
-t_bool execute_pwd(const char **cmd_args, t_bool is_child_process)
+t_exit_cd execute_pwd(const char **cmd_args, t_bool is_child_process)
 {
   char pwd[BUFSIZ];
 
@@ -21,6 +21,6 @@ t_bool execute_pwd(const char **cmd_args, t_bool is_child_process)
   getcwd(pwd, BUFSIZ);
   ft_putendl_fd(pwd, STDOUT);
   if (is_child_process)
-    exit(0);
-  return (TRUE);
+    exit(SCCSS);
+  return (SCCSS);
 }

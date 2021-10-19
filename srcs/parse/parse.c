@@ -173,7 +173,7 @@ t_bool is_valid_syntax()
     if (!token->next)
       break ;
     if (!is_valid_token_pair(token))
-      return (print_err_msg(ERR_MSG_INVLD_SYNTX, GNRL_ERR));
+      return (print_err_msg(ERR_MSG_INVLD_SYNTX, INVLD_SYNTX));
     token = token->next;
   }
   if (is_type_redirect(token) || is_type_meta(token))

@@ -14,7 +14,7 @@
 
 extern t_request g_request;
 
-t_bool execute_echo(const char **cmd_args, t_bool is_child_process)
+t_exit_cd execute_echo(const char **cmd_args, t_bool is_child_process)
 {
   int i;
   t_bool has_opt;
@@ -32,6 +32,6 @@ t_bool execute_echo(const char **cmd_args, t_bool is_child_process)
   if (!has_opt)
     ft_putstr_fd("\n", STDOUT);
   if (is_child_process)
-    exit(0);
-  return (TRUE);
+    exit(SCCSS);
+  return (SCCSS);
 }

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/19 12:09:34 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/19 13:39:13 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,6 +306,10 @@ char	**env_list_to_array(t_environ *environs);
 */
 void	child_exec_cmd(t_pipe_list *pipe_list);
 void	execute_cmds(t_pipe_list *pipe_list);
+/*
+** handle_pipe.c **
+*/
+void	handle_pipelines(t_pipe_list *pipe_list);
 /*
 ** serch_cmd_path.c **
 */

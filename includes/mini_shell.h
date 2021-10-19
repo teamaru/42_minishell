@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/19 16:02:40 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/19 17:12:34 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 #define META_CHARS ";\'\"<>|$?\\."
 #define DELIMITERS "|<> \t"
 #define TOKEN_TYPE_NUM 5
-#define MSG_HEADER "mini_shell: "
+#define MSG_HEADER "mini_shell "
 #define MSG_EXIT "exit"
 #define ERR_MSG_INVLD_CMD "command not found"
 #define ERR_MSG_INVLD_OPT "invalid option"

@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   signal_in_heredoc.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/03 12:38:09 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/20 21:53:41 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/10/20 10:25:10 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/10/20 18:51:11 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void	init_signal(void)
-{
-	struct sigaction	int_act;
+/* SIGINT(ctrl + C)
+** $ cat << 1
+** > ^C
+** $
+** 新しいpromptになる
+*/
 
-	ft_bzero(&int_act, sizeof(int_act));
-	int_act.sa_handler = interrupt;
-	if (sigaction(SIGINT, &int_act, NULL) != 0)
-		exit(FAILURE);
-	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-		exit(FAILURE);
-}
-
-void	interrupt(int sig_id)
-{
-	(void)sig_id;
-	rl_replace_line("", 0);
-	ft_putstr_fd("\n", 1);
-	rl_on_new_line();
-	rl_redisplay();
-}
+/* SIGQUIT(ctrl + \)
+** $ cat << 1
+** > 何もしない
+*/

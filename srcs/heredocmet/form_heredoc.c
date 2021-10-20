@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 12:20:29 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/16 12:57:28 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/20 19:14:54 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ void	form_heredocument(char *delimiter, char **heredoc)
 
 	expantable_heredoc = can_expand_heredoc(delimiter);
 	delimiter_without_quotes = rm_quotes(delimiter);
+	/*signal_in_heredoc*/
+	
 	readline_input_heredoc(heredoc, delimiter_without_quotes);
+	init_signal();
 	if (expantable_heredoc)
 		expand_heredoc(heredoc);
 	free_set((void **)&delimiter_without_quotes, NULL);

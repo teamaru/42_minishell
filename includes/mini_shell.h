@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/19 17:12:34 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/21 15:55:45 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ typedef struct s_request
   t_argument *arguments;
   t_bool excution;
   t_exit_cd exit_cd;
+  t_bool	interrupt_heredocument;
 } t_request;
 
 typedef enum e_type_rd
@@ -299,7 +300,7 @@ t_pipe_list	*create_pipe_list(void);
 /*
 ** set_heredoc.c
 */
-void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc);
+t_result	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc);
 
 /*
  **************
@@ -514,6 +515,10 @@ t_result	readline_input_heredoc(char **heredoc, char *delimiter);
 ** expand_heredoc.c **
 */
 t_result	expand_heredoc(char **contents);
+/*
+** signal_in_heredoc.c **
+*/
+t_result	set_signal_in_heredocument(void);
 /*
 ** write_tmp_file.c **
 */

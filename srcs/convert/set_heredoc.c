@@ -6,11 +6,13 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 23:50:02 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/19 15:35:08 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/21 16:34:22 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
+
+extern t_request	g_request;
 
 void	init_heredoc(t_heredoc_to_fd **heredoc)
 {
@@ -20,13 +22,13 @@ void	init_heredoc(t_heredoc_to_fd **heredoc)
 	(*heredoc)->tmp_file_path = NULL;
 }
 
-void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc)
+t_result	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc)
 {
 	t_redirection_list	*tmp_input;
 	t_demi_for_heredoc	*tmp_demi;
 
 	if (!(*node) || !(*node)->input_rd)
-		return ;
+		return (SUCCESS);
 	tmp_demi = NULL;
 	tmp_input = (*node)->input_rd;
 	while (tmp_input)
@@ -37,9 +39,12 @@ void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc)
 				init_heredoc(heredoc);
 			tmp_demi = tmp_input->demi_heredoc;
 			form_heredocument(tmp_demi->delimiter, &(*heredoc)->contents);
+			if (g_request.interrupt_heredocument == TRUE)
+				return (FAILURE);
 		}
 		tmp_input = tmp_input->next;
 	}
 	if (tmp_demi)
 		tmp_demi->last_heredoc = TRUE;
+	return (SUCCESS);
 }

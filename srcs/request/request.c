@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 14:45:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/20 19:18:44 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/21 16:30:56 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ t_bool	request_convert_to_pipe_list(void)
 	pipe_list = create_pipe_list();
 	if (!pipe_list)
 		return (FALSE);
-	/* signalキャッチ */
-	execute_cmds(pipe_list);
+	if (g_request.interrupt_heredocument == FALSE)
+		execute_cmds(pipe_list);
 	free_pipe_list(pipe_list);
 	return (TRUE);
 }
@@ -50,4 +50,5 @@ void	init_request(void)
 	g_request.option = NON;
 	g_request.arguments = NULL;
 	g_request.excution = FALSE;
+	g_request.interrupt_heredocument = FALSE;
 }

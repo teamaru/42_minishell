@@ -12,6 +12,8 @@
 
 #include <mini_shell.h>
 
+extern t_request	g_request;
+
 static pid_t	do_pipe(t_pipe_list *first,
 	t_pipe_list *node, int last_pipe_fd[2])
 {
@@ -35,9 +37,11 @@ static pid_t	do_pipe(t_pipe_list *first,
 	}
 	else
 	{
+		g_request.pid = child_pid;
 		close_and_unlink(&node->heredoc, FALSE);
 		parent_operate_pipe_fd(node, last_pipe_fd, new_pipe_fd);
 	}
+	g_request.pid = 0;
 	return (child_pid);
 }
 

@@ -43,10 +43,8 @@ void multi_free(char **target)
 
 void free_all(t_bool is_exit)
 {
-	free_arguments(&g_request.arguments);
 	free_tokens(&g_request.tokens);
   free_cmd_list(&g_request.cmds);
 	if (is_exit)
 	  free_environs(&g_request.environs);
-	free(g_request.cmd);
 }

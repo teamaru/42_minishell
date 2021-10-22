@@ -85,14 +85,12 @@ t_exit_cd execute_cd(const char **cmd_args, t_bool is_child_process)
   path = (char *)cmd_args[1];
   if (!path)
     path = ROOT;
-  if (*path == PERIOD)
-    if (!is_current_dir_exist(pwd))
-      print_err_msg(ERR_MSG_NO_FILE);
+  if (*path == PERIOD && !is_current_dir_exist(pwd))
+    return (builtin_err(ERR_MSG_NO_FILE, GNRL_ERR, is_child_process));
   if (is_path_part(path))
     is_changed = search_cdpath(path);
-  if (!is_changed)
-    if (chdir(path) == -1)
-      print_err_msg(strerror(errno));
+  if (!is_changed && chdir(path) == -1)
+    return (builtin_err(NULL, GNRL_ERR, is_child_process));
   getcwd(pwd, BUFSIZ);
   replace_env_value("PWD", pwd);
   if (is_child_process)

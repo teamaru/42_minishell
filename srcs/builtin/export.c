@@ -92,7 +92,7 @@ t_exit_cd execute_export(const char **cmd_args, t_bool is_child_process)
     return (declare_env());
   split = split_key_value((char *)cmd_args[1]);
   if (!split)
-    return (SCCSS);
+    return (builtin_err(NULL, GNRL_ERR, is_child_process));
   if (!replace_duplicated_environ(split[0], split[1]))
     append_environ(&g_request.environs, new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
   multi_free(split);

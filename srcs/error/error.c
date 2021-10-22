@@ -32,6 +32,14 @@ void	my_exit(t_exit_cd exit_cd)
 	exit(exit_cd);
 }
 
+t_exit_cd builtin_err(char *msg, t_exit_cd exit_cd, t_bool is_child_process)
+{
+	print_err_msg(msg);
+	if (is_child_process)
+		exit(exit_cd);
+	return (exit_cd);
+}
+
 void	print_err_and_exit(char *msg, t_exit_cd exit_cd)
 {
 	if (!msg)

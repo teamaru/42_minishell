@@ -43,7 +43,7 @@
 #define ERR_MSG_INVLD_SYNTX "syntax error near unexpected token"
 #define ERR_MSG_QT_NOT_CLSD "quote is not closed"
 #define ERR_MSG_AMBGS_RDRCT "ambiguous redirect"
-#define ERR_MSG_NO_FILE "No such file or director"
+#define ERR_MSG_NO_FILE "No such file or directory"
 
 typedef enum e_bool
 {
@@ -160,13 +160,10 @@ typedef struct s_request
   t_cmd *cmds;
   t_environ *environs;
   t_builtin_func builtin_funcs[BUILTIN_NUM];
-
-  char *cmd;
   t_builtin_id builtin_id;
-  t_option option;
-  t_argument *arguments;
   t_bool excution;
   t_exit_cd exit_cd;
+	pid_t						pid;
 } t_request;
 
 typedef enum e_type_rd
@@ -334,33 +331,6 @@ t_result exec_simple_buitin(t_pipe_list *pipe_list, t_builtin_id builtin_id);
 void	exec_simple_cmd(t_pipe_list *pipe_list);
 
 /*
- ************
- ** option **
- ************
- */
-/*
-** option.c **
-*/
-t_bool is_valid_option(char *option);
-void parse_option(char **line);
-/*
- **************
- ** argument **
- **************
- */
-/*
- ** argument.c **
- */
- void parse_arguments(char **line);
- void free_arguments(t_argument **top);
-/*
- ** list.c **
- */
-t_argument	*new_argument(char *arg);
-int listsize(t_argument *arguments);
-char **list_to_array(t_argument *arguments);
-void	append_argument(t_argument **top, t_argument *new);
-/*
  ***********
  ** error **
  ***********
@@ -370,6 +340,7 @@ void	append_argument(t_argument **top, t_argument *new);
  */
 t_bool print_err_msg(char *msg);
 void my_exit(t_exit_cd exit_cd);
+t_exit_cd builtin_err(char *msg, t_exit_cd exit_cd, t_bool is_child_process);
 void	print_err_and_exit(char *msg, t_exit_cd exit_cd);
 /*
  ***********
@@ -474,6 +445,7 @@ void	append_environ(t_environ **head, t_environ *new);
  */
 void init_signal(void);
 void interrupt(int sig_id);
+void quit(int sig_id);
 
 
 

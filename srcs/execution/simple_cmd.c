@@ -35,7 +35,9 @@ void	exec_simple_cmd(t_pipe_list *pipe_list)
 		close_and_unlink(&pipe_list->heredoc, FALSE);
 		if (kill(pipe_list->pid, 0) == -1)
 			print_err_msg(NULL);
+		g_request.pid = pipe_list->pid;
 		changed_pid = waitpid(pipe_list->pid, &status, 0);
 		g_request.exit_cd = WEXITSTATUS(status);
 	}
+	g_request.pid = 0;
 }

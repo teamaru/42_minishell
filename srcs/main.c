@@ -14,50 +14,6 @@
 
 t_request g_request;
 
-char *delete_qt()
-{
-  return (NULL);
-}
-
-char *extract_string(char **line)
-{
-  int i;
-  char *chunk;
-  char qt;
-
-  qt = **line;
-  i = 1;
-  while ((*line)[i] != qt)
-    i++;
-  chunk = ft_strndup(*line, ++i);
-  *line += i;
-  return (chunk);
-}
-
-char *extract_chunk(char **line)
-{
-  int i;
-  char *chunk;
-
-  i = 0;
-  while (is_chunk((*line)[i]))
-    i++;
-  chunk = ft_strndup(*line, i);
-  *line += i;
-  return (chunk);
-}
-
-char *get_chunk(char **line)
-{
-  char *chunk;
-
-  if (is_quote(**line))
-    chunk = extract_string(line);
-  else
-    chunk = extract_chunk(line);
-  return (chunk);
-}
-
 void shell_loop()
 {
   char *line;

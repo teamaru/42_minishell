@@ -14,58 +14,6 @@
 
 extern t_request	g_request;
 
-void	free_cmd_list(t_cmd **head)
-{
-	t_cmd	*cmd;
-	t_cmd	*next;
-
-	if (!head)
-		return ;
-	cmd = *head;
-	while (cmd)
-	{
-		next = cmd->next;
-		free_tokens(&cmd->args);
-		free_tokens(&cmd->rds);
-		free(cmd);
-		cmd = next;
-		next = NULL;
-	}
-	*head = NULL;
-}
-
-t_cmd	*new_cmd(void)
-{
-	t_cmd	*new;
-
-	new = malloc(sizeof(t_cmd));
-	if (!new)
-		return (NULL);
-	new->prev = NULL;
-	new->next = NULL;
-	new->args = NULL;
-	new->rds = NULL;
-	return (new);
-}
-
-void	append_cmd(t_cmd **head, t_cmd *new)
-{
-	t_cmd	*cmd;
-
-	if (!head || !new)
-		return ;
-	if (!*head)
-	{
-		*head = new;
-		return ;
-	}
-	cmd = *head;
-	while (cmd && cmd->next)
-		cmd = cmd->next;
-	cmd->next = new;
-	new->prev = cmd;
-}
-
 void	print_cmds(t_cmd *head)
 {
 	t_cmd	*cmd;
@@ -90,6 +38,30 @@ void	print_cmds(t_cmd *head)
 		}
 		cmd = cmd->next;
 	}
+}
+
+t_bool	is_valid_syntax(void)
+{
+	t_token	*token;
+
+	token = g_request.tokens;
+	if (!token)
+		return (TRUE);
+	if (is_type_meta(token))
+		return (print_err_msg(ERR_MSG_INVLD_SYNTX));
+	while (token)
+	{
+		if (!is_quote_closed(token))
+			return (print_err_msg(ERR_MSG_QT_NOT_CLSD));
+		if (!token->next)
+			break ;
+		if (!is_valid_token_pair(token))
+			return (print_err_msg(ERR_MSG_INVLD_SYNTX));
+		token = token->next;
+	}
+	if (is_type_redirect(token) || is_type_meta(token))
+		return (print_err_msg(ERR_MSG_INVLD_SYNTX));
+	return (TRUE);
 }
 
 void	parse(void)
@@ -117,66 +89,4 @@ void	parse(void)
 		if (token)
 			token = token->next;
 	}
-}
-
-t_bool	is_type_heredoc(t_token *token)
-{
-	return (token->type == TYPE_LL_RDRCT);
-}
-
-t_bool	is_type_redirect(t_token *token)
-{
-	return (token->type == TYPE_R_RDRCT
-		|| token->type == TYPE_RR_RDRCT
-		|| token->type == TYPE_L_RDRCT
-		|| token->type == TYPE_LL_RDRCT);
-}
-
-t_bool	is_type_meta(t_token *token)
-{
-	return (token->type == TYPE_PIPE);
-}
-
-t_bool	is_quote_closed(t_token *token)
-{
-	int		i;
-	t_bool	is_quote_closed;
-
-	i = -1;
-	is_quote_closed = TRUE;
-	while (token->token[++i])
-		if (is_quote(token->token[i]))
-			is_quote_closed = find_closing_qt(token->token, &i);
-	return (is_quote_closed);
-}
-
-t_bool	is_valid_token_pair(t_token *token)
-{
-	return (!((is_type_meta(token) && is_type_meta(token->next))
-			|| (is_type_redirect(token) && is_type_meta(token->next))
-			|| (is_type_redirect(token) && is_type_redirect(token->next))));
-}
-
-t_bool	is_valid_syntax(void)
-{
-	t_token	*token;
-
-	token = g_request.tokens;
-	if (!token)
-		return (TRUE);
-	if (is_type_meta(token))
-		return (print_err_msg(ERR_MSG_INVLD_SYNTX));
-	while (token)
-	{
-		if (!is_quote_closed(token))
-			return (print_err_msg(ERR_MSG_QT_NOT_CLSD));
-		if (!token->next)
-			break ;
-		if (!is_valid_token_pair(token))
-			return (print_err_msg(ERR_MSG_INVLD_SYNTX));
-		token = token->next;
-	}
-	if (is_type_redirect(token) || is_type_meta(token))
-		return (print_err_msg(ERR_MSG_INVLD_SYNTX));
-	return (TRUE);
 }

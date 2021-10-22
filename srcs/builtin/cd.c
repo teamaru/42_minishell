@@ -26,11 +26,6 @@ char	*add_slash(char *cdpath)
 	return (cdpath);
 }
 
-t_bool	is_path_part(char *path)
-{
-	return (*path != PERIOD && *path != SLSH);
-}
-
 char	*join_path(char *cdpath, char *path)
 {
 	char	*tmp;

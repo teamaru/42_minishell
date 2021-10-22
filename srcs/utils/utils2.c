@@ -29,3 +29,8 @@ t_bool is_end(char *line)
     return (TRUE);
   return (FALSE);
 }
+
+t_bool	is_path_part(char *path)
+{
+	return (*path != PERIOD && *path != SLSH);
+}

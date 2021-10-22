@@ -207,10 +207,6 @@ typedef struct s_pipe_list
 } t_pipe_list;
 
 
-char *get_chunk(char **line);
-void parse_arguments(char **line);
-
-
 /*
  *************
  ** request **
@@ -229,16 +225,19 @@ t_bool request_convert_to_pipe_list();
  *************
  */
 /*
-** command.c **
+** builtin.c **
 */
-void	init_cmds(char **cmds);
+void init_cmds(char **cmds);
 void free_cmds(char **cmds);
-void parse_cmd(char **line);
 void init_builtin_funcs();
 t_builtin_id get_builtin_id(const char *token);
 /*
 ** cd.c **
 */
+char	*add_slash(char *cdpath);
+char	*join_path(char *cdpath, char *path);
+t_bool	search_cdpath(char *path);
+t_bool	is_current_dir_exist(char *pwd);
 t_exit_cd execute_cd(const char **cmd_args, t_bool is_child_process);
 /*
  ** echo.c **
@@ -251,10 +250,16 @@ t_exit_cd execute_env(const char **cmd_args, t_bool is_child_process);
 /*
  ** exit.c **
  */
+int	str_arr_size(const char **strs);
+t_bool	is_all_digits(const char *s);
 t_exit_cd execute_exit(const char **cmd_args, t_bool is_child_process);
 /*
  ** export.c **
  */
+t_bool	is_key_exist(char *key);
+t_bool	replace_duplicated_environ(char *key, char *value);
+char	**split_key_value(char *arg);
+t_exit_cd	declare_env(void);
 t_exit_cd execute_export(const char **cmd_args, t_bool is_child_process);
 /*
  ** pwd.c **
@@ -297,6 +302,34 @@ t_pipe_list	*create_pipe_list(void);
 ** set_heredoc.c
 */
 void	set_heredocument(t_pipe_list **node, t_heredoc_to_fd **heredoc);
+
+/*
+ *************
+ ** environ **
+ *************
+ */
+/*
+** environ.c **
+*/
+void	replace_env_value(char *target_key, char *new_value);
+t_environ	*get_target_environ(const char *key);
+void	print_environ(t_environ *head);
+void	make_environ_hash(void);
+/*
+** list.c **
+*/
+void	move_environ_head(t_environ **head, t_environ *environ);
+void	delete_environ(t_environ **head, t_environ *target_environ);
+void	free_environs(t_environ **head);
+t_environ	*new_environ(char *key, char *value);
+void	append_environ(t_environ **head, t_environ *new);
+/*
+** utils.c **
+*/
+t_bool	is_env_end(char c);
+char	*get_env_key(char *token);
+char	*get_env_value(char *key);
+int	get_env_len(char *token);
 
 /*
  **************
@@ -384,35 +417,71 @@ void	free_set(void **dst, void *src);
  ***********
  */
 /*
- ** token.c **
- */
-void free_tokens(t_token **head);
+** token.c **
+*/
+void	get_delimiter(t_token **head, char **line);
+void	get_token(t_token **head, char **line);
+t_bool	split_token(t_token **head, t_token **token);
+void	insert_token(t_token **head, t_token *new_token, t_token *target_token);
+void	tokenize(t_token **head, char *line);
+/*
+** list1.c **
+*/
+void	move_token_head(t_token **head, t_token *token);
+void	delete_token(t_token **head, t_token *target_token);
+void	free_tokens(t_token **head);
 t_token	*new_token(char *token);
 void	append_token(t_token **head, t_token *new);
-t_bool is_delimiter(int c);
-t_bool find_closing_qt(char *line, int *i);
-void get_token(t_token **head, char **line);
-void tokenize(t_token **head, char *line);
-int token_listsize(t_token *tokens);
-void print_tokens(t_token *head);
-char **token_list_to_array(t_token *token);
-
 /*
- ***********
- ** parse **
- ***********
- */
+** list2.c **
+*/
+void	insert_tokens(t_token **head,
+  t_token *new_tokens, t_token *target_token);
+void	replace_token(t_token *token, char *new_token);
+int	token_listsize(t_token *tokens);
+char	**token_list_to_array(t_token *tokens);
+void	append_token(t_token **head, t_token *new);
 /*
- ** parse.c **
+** utils1.c **
+*/
+t_bool	is_redirect(char c);
+t_bool	is_doble_redirect(char *line);
+t_bool	is_eos_token(t_token *token);
+t_bool	is_delimiter(int c);
+void	print_tokens(t_token *head);
+/*
+** utils2.c **
+*/
+t_token_type	get_token_type(char *token);
+void	prepare_token_types(char **token_types);
+void	dispose_token_types(char **token_types);
+t_bool	find_closing_qt(char *line, int *i);
+void	test_token(void);
+/*
+***********
+** parse **
+***********
+*/
+/*
+** parse.c **
+*/
+void	print_cmds(t_cmd *head);
+t_bool	is_valid_syntax(void);
+void	parse(void);
+/*
+ ** list.c **
  */
-void free_cmd_list(t_cmd **head);
+void	free_cmd_list(t_cmd **head);
 t_cmd	*new_cmd(void);
 void	append_cmd(t_cmd **head, t_cmd *new);
-void print_cmds(t_cmd *head);
-void parse(void);
-t_bool is_type_redirect(t_token *token);
-t_bool is_type_heredoc(t_token *token);
-t_bool is_valid_syntax(void);
+/*
+ ** utils.c **
+ */
+t_bool	is_type_heredoc(t_token *token);
+t_bool	is_type_redirect(t_token *token);
+t_bool	is_type_meta(t_token *token);
+t_bool	is_quote_closed(t_token *token);
+t_bool	is_valid_token_pair(t_token *token);
 
 /*
  ***************
@@ -422,18 +491,19 @@ t_bool is_valid_syntax(void);
 /*
  ** expansion.c **
  */
-t_bool is_env_end(char c);
-char *get_env_key(char *token);
-char *get_env_value(char *key);
-t_bool expand(void);
-void free_environs(t_environ **head);
-void make_environ_hash(void);
-void replace_env_value(char *target_key, char *new_value);
-t_environ *get_target_environ(const char *key);
-t_environ	*new_environ(char *key, char *value);
-void delete_environ(t_environ **head, t_environ *target_environ);
-void print_environ(t_environ *head);
-void	append_environ(t_environ **head, t_environ *new);
+t_bool	expand_tokens(t_token **head);
+void	expand_quote(char **token, t_token **expanded_tokens);
+void	expand_env(char **token, t_token **expanded_tokens);
+char	*expand_token(t_expand_func expand_func, char *token);
+t_bool	expand(void);
+/*
+ ** utils.c **
+ */
+char	*join_expanded_tokens(t_token *expanded_tokens);
+int	get_str_len(char *token);
+void	get_word(t_token **new_tokens, char **line);
+void	split_word(t_token **new_tokens, char *token);
+t_bool	is_file_path(t_token *token);
 
 /*
  *************

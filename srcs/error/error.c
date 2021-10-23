@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 15:51:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 17:11:37 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/23 19:07:07 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	my_exit(t_exit_cd exit_cd)
 	exit(exit_cd);
 }
 
-t_exit_cd builtin_err(char *msg, t_exit_cd exit_cd, t_bool is_child_process)
+t_exit_cd	builtin_err(char *msg, t_exit_cd exit_cd, t_bool is_child_process)
 {
 	print_err_msg(msg);
 	if (is_child_process)

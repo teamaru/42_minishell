@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 15:49:34 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/19 22:51:59 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/23 19:07:35 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,5 @@ void	free_all(t_bool is_exit)
 	free_tokens(&g_request.tokens);
 	free_cmd_list(&g_request.cmds);
 	if (is_exit)
-	  free_environs(&g_request.environs);
+		free_environs(&g_request.environs);
 }

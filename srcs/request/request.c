@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 14:45:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/21 16:30:56 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/23 19:06:25 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ t_bool	request_convert_to_pipe_list(void)
 
 void	init_request(void)
 {
-  g_request.tokens = NULL;
-  g_request.cmds = NULL;
-  g_request.builtin_id = NON_BUILTIN;
-  init_builtin_funcs();
-  g_request.excution = FALSE;
-  g_request.pid = 0;
+	g_request.tokens = NULL;
+	g_request.cmds = NULL;
+	g_request.builtin_id = NON_BUILTIN;
+	init_builtin_funcs();
+	g_request.excution = FALSE;
+	g_request.pid = 0;
 	g_request.interrupt_heredocument = FALSE;
 }

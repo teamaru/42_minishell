@@ -40,20 +40,30 @@ mkdir ${TMP_DIR}
 
 run_all_tests () {
 	for file in $(ls ${CASES_DIR} | sed 's/\.txt//'); do
-		echo -e "\n---------------------------------"
+		echo -e "\n\n---------------------------------"
 		echo "${file}TEST"
-		echo "---------------------------------"
+		echo -e "---------------------------------"
 		echo -e "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" >> ${LOG_FILE}
 		echo "            ${file}TEST" >> ${LOG_FILE}
 		echo -e "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n" >> ${LOG_FILE}
 		run_tests "${file}"
 	done
+	print_result
+}
+
+print_result () {
+	echo -e "\n\n\nRESULT"
+	if [[ ${result_ok} -eq ${result_all} ]]; then
+		printf "\t${COLOR_GREEN}${result_ok} / ${result_all}${COLOR_RESET}\t\n"
+	else
+		printf "\t${COLOR_RED}${result_ok} / ${result_all}${COLOR_RESET}\t\n"
+	fi
 }
 
 run_tests () {
 	while read -r line; do
 		test_cmd="${line}"
-		run_shell "$test_cmd"
+		run_shell "$test_cmd" "${CASES_DIR}/$1.txt"
 		check_diff "$test_cmd"
 		output_log "$test_cmd"
 	done < "${CASES_DIR}/$1.txt"
@@ -72,7 +82,15 @@ run_bash () {
 
 run_shell () {
 	run_minishell "$test_cmd"
+	clean
+	# if [ $2 = "${CASES_DIR}/cd.txt" ]; then
+	# 	clean
+	# fi
 	run_bash "$test_cmd"
+	clean
+	# if [ $2 = "${CASES_DIR}/cd.txt" ]; then
+	# 	clean
+	# fi
 }
 
 check_diff () {
@@ -98,9 +116,6 @@ print_ko () {
 
 is_ok () {
 	if [[ -z "${diff_stdout}" ]] && [[ ${bash_status} -eq ${minishell_status} ]]; then
-		return 0
-	elif [[ -n "${BASH_STDERR_FILE}" ]] && [[ -n "${MINISHELL_STDERR_FILE}" ]] \
-		&& [[ ${bash_status} -eq ${minishell_status} ]]; then
 		return 0
 	fi
 	return 1
@@ -132,11 +147,23 @@ output_log () {
 }
 
 clean () {
-	rm -rf "${TMP_DIR}"
+	rm -rf ./dir
+	rm -rf ./DIR
+	rm -rf ./hello
+	rm -rf ./a
+	rm -rf ./b
+	rm -rf ./link
+	rm -f ./testfile
+	rm -rf ./a:b
+	rm -rf cmd
+	rm -rf file
+	rm -rf ./symdir
+	rm -f *.txt
 }
 
 main () {
 	run_all_tests
+	rm -rf "${TMP_DIR}"
 	clean
 }
 

@@ -39,7 +39,7 @@ t_exit_cd	execute_exit(const char **cmd_args, t_bool is_child_process)
 	(void)is_child_process;
 	ft_putendl_fd(MSG_EXIT, STDERR);
 	if (!cmd_args[1])
-		g_request.exit_cd = SCCSS;
+		my_exit(g_request.exit_cd);
 	else if (str_arr_size(cmd_args) > 2)
 		return (builtin_err(ERR_MSG_TOO_MANY_ARGS, GNRL_ERR, is_child_process));
 	else if (!is_all_digits(cmd_args[1]))

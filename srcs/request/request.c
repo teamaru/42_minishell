@@ -42,13 +42,11 @@ t_bool	request_convert_to_pipe_list(void)
 
 void	init_request(void)
 {
-	g_request.tokens = NULL;
-	g_request.cmds = NULL;
-	g_request.cmd = NULL;
-	g_request.builtin_id = NON_BUILTIN;
-	init_builtin_funcs();
-	g_request.option = NON;
-	g_request.arguments = NULL;
-	g_request.excution = FALSE;
+  g_request.tokens = NULL;
+  g_request.cmds = NULL;
+  g_request.builtin_id = NON_BUILTIN;
+  init_builtin_funcs();
+  g_request.excution = FALSE;
+  g_request.pid = 0;
 	g_request.interrupt_heredocument = FALSE;
 }

@@ -1,0 +1,1546 @@
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            cdTEST
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+-------------------------
+[KO ] case: mkdir dir \n cd dir \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n cd dir\n cd .\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n cd dir\n cd ./\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n cd dir\n cd ..\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n cd dir\n cd ../\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: touch testfile\n cd testfile
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+# minishell: stderr
+mini_shell : Not a directory
+# bash: stderr
+bash: line 2: cd: testfile: Not a directory
+# minishell: exit status = 0
+# bash     : exit status = 1
+
+-------------------------
+[KO ] case: cd NO_SUCH_FILE\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 1: cd: NO_SUCH_FILE: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: cd hello world\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 1: cd: hello: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: cd /\n cd ../../akjwyefgjkwveyjfgweyugyuwegf76t273/../../ \npwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 2: cd: ../../akjwyefgjkwveyjfgweyugyuwegf76t273/../../: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n cd dir\n cd ../nosuchdir/../dir\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 3: cd: ../nosuchdir/../dir: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir hello\n cd hello world\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/hello
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/hello
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: cd /\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: cd /bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/bin
+# bash: stdout
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: cd /bin/../\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n cd DIR\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/DIR
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir DIR\n cd dir\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/DIR
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n chmod 000 dir\n cd dir\n pwd\nchmod 777 dir
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+mini_shell : Permission denied
+# bash: stderr
+bash: line 3: cd: dir: Permission denied
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n ln -s dir link\n cd link\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/link
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n ln -s dir link\n rmdir dir\n cd link\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 4: cd: link: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir dir\n cd dir\n rmdir ../dir\n cd ./\n pwd\ncd .\n pwd\n cd ./././././\n pwd\n cd .////////./\n pwd\n cd ../\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir/./
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir/./.
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir/./././././././
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir/././././././././///////./
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+mini_shell : No such file or directory
+mini_shell : No such file or directory
+mini_shell : No such file or directory
+mini_shell : No such file or directory
+mini_shell : No such file or directory
+# bash: stderr
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir -p a/b/c\n cd a/b/c\n rm -rf ../../b\n cd ./\n pwd\n cd ../\n pwd\n cd .////./\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c/./
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c/./../
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c/./.././///./
+# minishell: stderr
+mini_shell : No such file or directory
+mini_shell : No such file or directory
+mini_shell : No such file or directory
+# bash: stderr
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir -p a/b/c\n cd a/b/c\n rm -rf ../../b\n cd ./\n pwd\n cd .././.\n pwd\n cd ./\n pwd\n cd ../\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c/./
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c/./.././.
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c/./.././././
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a
+# minishell: stderr
+mini_shell : No such file or directory
+mini_shell : No such file or directory
+mini_shell : No such file or directory
+mini_shell : No such file or directory
+# bash: stderr
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export HOME=\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: unset HOME\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+bash: line 2: cd: HOME not set
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export HOME="./"\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export HOME="../../"\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export HOME=""\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export HOME="/BIN"\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/BIN
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export HOME=a\n mkdir -p a/b\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export HOME=NO_SUCH_FILE\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+bash: line 2: cd: NO_SUCH_FILE: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export CDPATH="/"\n cd bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/bin
+/bin
+# bash: stdout
+/bin
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH="/"\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH="/"\n export HOME=\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH="/"\n unset HOME\n cd \n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+bash: line 3: cd: HOME not set
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=""\n mkdir -p a/b\n cd b\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 3: cd: b: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH="./"\n mkdir dir\n cd dir\n pwd
+-------------------------
+diff :
+# minishell: stdout
+./dir
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/dir
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH="../a"\n mkdir -p a/b/c\n cd b\n pwd\n cd a\n pwd\n cd b\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a
+../a/b
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 3: cd: b: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a\n mkdir -p a/b/c\n cd b\n pwd
+-------------------------
+diff :
+# minishell: stdout
+a/b
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=A\n mkdir -p a/b/c\n cd b\n pwd
+-------------------------
+diff :
+# minishell: stdout
+A/b
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/A/b
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/A/b
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a\n mkdir -p a/b/c\n cd ./b\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 3: cd: ./b: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a\n mkdir -p a/b/c\n cd a\n cd ../b\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 4: cd: ../b: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a\n mkdir -p a/b/c\n cd .\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a\n mkdir -p a/b/c\n cd a\n cd ..\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a\n mkdir -p a/b/c\n mkdir b\n cd b\n pwd
+-------------------------
+diff :
+# minishell: stdout
+a/b
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a/b\n mkdir -p a/b/c\n cd c\n pwd
+-------------------------
+diff :
+# minishell: stdout
+a/b/c
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a:b:a:b\n mkdir -p a/test b/test\n mkdir -p a:b/test\n cd test\n pwd
+-------------------------
+diff :
+# minishell: stdout
+a/test
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/test
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=b:a:a:b\n mkdir -p a/test b/test\n mkdir -p a:b/test\n cd test\n pwd
+-------------------------
+diff :
+# minishell: stdout
+b/test
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/b/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/b/test
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/b/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a:b:a:b\n mkdir -p a/hello b/hello\n mkdir -p a:b/test\n cd test\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test
+# minishell: stderr
+mini_shell : No such file or directory
+# bash: stderr
+bash: line 4: cd: test: No such file or directory
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=a:b:a:b\n mkdir -p a/test b/test\n mkdir -p a:b/test\n chmod 000 a/test \ncd test\n pwd\n cd ../../\n chmod 777 a/test
+-------------------------
+diff :
+# minishell: stdout
+b/test
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/b/test
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/b/test
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/b/test
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export CDPATH="/"\n cd /\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export CDPATH="/"\n cd /bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/bin
+# bash: stdout
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export CDPATH="/bin"\n cd /bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/bin
+# bash: stdout
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export CDPATH="/bin"\n cd /bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/bin
+# bash: stdout
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH="a"\n mkdir a\n cd a\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH="a"\n mkdir -p a/a\n cd a\n pwd
+-------------------------
+diff :
+# minishell: stdout
+a/a
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/a
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/a
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/a
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: mkdir -p a/b/c/d/e/f/g/h/i/\n cd a/b/c/d/../../c/d/e/f/g/h/i/../../../g/h/i/../.././././../g/h/i/../../../../../../../c/d/../d/../d/e/../../d/e/.././././e/f/.//////../f/g/h/i/////../../../\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/42Tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c/d/e/f
+# bash: stdout
+/Users/tatsuya/Desktop/42tokyo/Cursus/projects/level3/minishell/handin/git/test/a/b/c/d/e/f
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export HOME="/"\n cd\n cd ../../../../../././././../../../././../../../\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+# bash: stdout
+/
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: cd //\n pwd\n cd //bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+/bin
+# bash: stdout
+//
+//bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: cd ///\n pwd\n cd ///bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+/bin
+# bash: stdout
+/
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: cd ////\n pwd\n cd ////bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+/bin
+# bash: stdout
+/
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: cd /////\n pwd\n cd /////bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+/bin
+# bash: stdout
+/
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: cd //////\n pwd\n cd //////bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+/bin
+# bash: stdout
+/
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: cd ///////\n pwd\n cd ///////bin\n pwd
+-------------------------
+diff :
+# minishell: stdout
+/
+/bin
+# bash: stdout
+/
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export HOME=//\n cd
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export HOME=//bin/..////////////bin/../\n cd
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export HOME=///\n cd
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: export CDPATH=//\n cd bin
+-------------------------
+diff :
+# minishell: stdout
+//bin
+# bash: stdout
+//bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=//bin/..////////////bin/../\n cd bin
+-------------------------
+diff :
+# minishell: stdout
+//bin/..////////////bin/../bin
+# bash: stdout
+//bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=///\n cd bin
+-------------------------
+diff :
+# minishell: stdout
+///bin
+# bash: stdout
+/bin
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: export CDPATH=":"\n cd dir\n pwd, mkdir dir
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+# minishell: stderr
+mini_shell : No such file or directory
+mini_shell : command not found
+# bash: stderr
+bash: line 2: cd: dir: No such file or directory
+bash: line 3: pwd,: command not found
+# minishell: exit status = 0
+# bash     : exit status = 127
+
+-------------------------
+[KO ] case: export CDPATH="hello:"\n cd dir\n pwd, mkdir dir
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+# minishell: stderr
+mini_shell : No such file or directory
+mini_shell : command not found
+# bash: stderr
+bash: line 2: cd: dir: No such file or directory
+bash: line 3: pwd,: command not found
+# minishell: exit status = 0
+# bash     : exit status = 127
+
+-------------------------
+[KO ] case: export CDPATH=":/"\n cd dir\n pwd, mkdir dir
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+# minishell: stderr
+mini_shell : No such file or directory
+mini_shell : command not found
+# bash: stderr
+bash: line 2: cd: dir: No such file or directory
+bash: line 3: pwd,: command not found
+# minishell: exit status = 0
+# bash     : exit status = 127
+
+-------------------------
+[KO ] case: export CDPATH="::/"\n cd bin\n pwd, mkdir bin
+-------------------------
+diff :
+# minishell: stdout
+/bin
+# bash: stdout
+/bin
+# minishell: stderr
+mini_shell : command not found
+# bash: stderr
+bash: line 3: pwd,: command not found
+# minishell: exit status = 0
+# bash     : exit status = 127
+
+-------------------------
+[KO ] case: export CDPATH="::/:"\n cd bin\n pwd, mkdir bin
+-------------------------
+diff :
+# minishell: stdout
+/bin
+# bash: stdout
+/bin
+# minishell: stderr
+mini_shell : command not found
+# bash: stderr
+bash: line 3: pwd,: command not found
+# minishell: exit status = 0
+# bash     : exit status = 127
+
+-------------------------
+[KO ] case: export CDPATH=""\n cd bin\n pwd, mkdir bin
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+# minishell: stderr
+mini_shell : No such file or directory
+mini_shell : command not found
+# bash: stderr
+bash: line 2: cd: bin: No such file or directory
+bash: line 3: pwd,: command not found
+# minishell: exit status = 0
+# bash     : exit status = 127
+
+-------------------------
+[KO ] case: export CDPATH="/:"\n cd bin\n pwd, mkdir bin
+-------------------------
+diff :
+# minishell: stdout
+/bin
+# bash: stdout
+/bin
+# minishell: stderr
+mini_shell : command not found
+# bash: stderr
+bash: line 3: pwd,: command not found
+# minishell: exit status = 0
+# bash     : exit status = 127
+
+-------------------------
+[KO ] case: export CDPATH="//::"\n cd bin\n pwd, mkdir bin
+-------------------------
+diff :
+# minishell: stdout
+//bin
+# bash: stdout
+//bin
+# minishell: stderr
+mini_shell : command not found
+# bash: stderr
+bash: line 3: pwd,: command not found
+# minishell: exit status = 0
+# bash     : exit status = 127
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            echoTEST
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+-------------------------
+[OK ] case: echo
+-------------------------
+diff :
+# minishell: stdout
+
+# bash: stdout
+
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo a
+-------------------------
+diff :
+# minishell: stdout
+a
+# bash: stdout
+a
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo tab
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+tab
+# minishell: stderr
+mini_shell : command not found
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo " tab "
+-------------------------
+diff :
+# minishell: stdout
+tab
+# bash: stdout
+	tab	
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo tab
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+tab
+# minishell: stderr
+mini_shell : command not found
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo hello world
+-------------------------
+diff :
+# minishell: stdout
+hello world
+# bash: stdout
+hello world
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo -n
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo -n a
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+a# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo -n hello world
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+hello world# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo -nnnnnnnn
+-------------------------
+diff :
+# minishell: stdout
+-nnnnnnnn
+# bash: stdout
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo -nnnnnnnn a
+-------------------------
+diff :
+# minishell: stdout
+-nnnnnnnn a
+# bash: stdout
+a# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo -nnnnnnnn hello world
+-------------------------
+diff :
+# minishell: stdout
+-nnnnnnnn hello world
+# bash: stdout
+hello world# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo -nnnnnnnn -nnnnnnnn
+-------------------------
+diff :
+# minishell: stdout
+-nnnnnnnn -nnnnnnnn
+# bash: stdout
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo -nnnnnnnn -nnnnnnnn a
+-------------------------
+diff :
+# minishell: stdout
+-nnnnnnnn -nnnnnnnn a
+# bash: stdout
+a# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo -nnnnnnnn -nnnnnnnn hello world
+-------------------------
+diff :
+# minishell: stdout
+-nnnnnnnn -nnnnnnnn hello world
+# bash: stdout
+hello world# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo -nk hello
+-------------------------
+diff :
+# minishell: stdout
+-nk hello
+# bash: stdout
+-nk hello
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo -nnnnnnnnnnk hello
+-------------------------
+diff :
+# minishell: stdout
+-nnnnnnnnnnk hello
+# bash: stdout
+-nnnnnnnnnnk hello
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo -nknknknk hello
+-------------------------
+diff :
+# minishell: stdout
+-nknknknk hello
+# bash: stdout
+-nknknknk hello
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo hello -n
+-------------------------
+diff :
+# minishell: stdout
+hello -n
+# bash: stdout
+hello -n
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo hello -nnnnnnn
+-------------------------
+diff :
+# minishell: stdout
+hello -nnnnnnn
+# bash: stdout
+hello -nnnnnnn
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo hello -nknknknknk
+-------------------------
+diff :
+# minishell: stdout
+hello -nknknknknk
+# bash: stdout
+hello -nknknknknk
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo hello -nnnnnnnnn -nnnnnnnnn
+-------------------------
+diff :
+# minishell: stdout
+hello -nnnnnnnnn -nnnnnnnnn
+# bash: stdout
+hello -nnnnnnnnn -nnnnnnnnn
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo "-n" hello
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+hello# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo '-n' hello
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+hello# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo "-n" "hello"
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+hello# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo '-n' 'hello'
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+hello# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo $PATH
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/Apps/development/flutter/bin:/Users/tatsuya/.nodebrew/current/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
+# bash: stdout
+/Users/tatsuya/Desktop/Apps/development/flutter/bin:/Users/tatsuya/.nodebrew/current/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo "$PATH"
+-------------------------
+diff :
+# minishell: stdout
+/Users/tatsuya/Desktop/Apps/development/flutter/bin:/Users/tatsuya/.nodebrew/current/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
+# bash: stdout
+/Users/tatsuya/Desktop/Apps/development/flutter/bin:/Users/tatsuya/.nodebrew/current/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo '$PATH'
+-------------------------
+diff :
+# minishell: stdout
+$PATH
+# bash: stdout
+$PATH
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo a "" b "" c
+-------------------------
+diff :
+# minishell: stdout
+a  b  c
+# bash: stdout
+a  b  c
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[OK ] case: echo a "$NO_SUCH_ENV" b $NO_SUCH_ENV c, unset NO_SUCH_ENV
+-------------------------
+diff :
+# minishell: stdout
+a  b c, unset NO_SUCH_ENV
+# bash: stdout
+a  b c, unset NO_SUCH_ENV
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo hello
+-------------------------
+diff :
+# minishell: stdout
+# bash: stdout
+hello
+# minishell: stderr
+mini_shell : command not found
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0
+
+-------------------------
+[KO ] case: echo "$ $ $ $ $ $ "
+-------------------------
+diff :
+# minishell: stdout
+      
+# bash: stdout
+$ $ $ $ $ $ 
+# minishell: stderr
+# bash: stderr
+# minishell: exit status = 0
+# bash     : exit status = 0

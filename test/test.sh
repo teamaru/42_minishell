@@ -134,6 +134,7 @@ output_log () {
 	fi
 	echo $(print_case "$1") >> ${LOG_FILE}
 	echo "-------------------------" >> ${LOG_FILE}
+	echo "diff :${dif_stdout}">> ${LOG_FILE}
 	echo "# minishell: stdout" >> ${LOG_FILE}
 	cat "${MINISHELL_STDOUT_FILE}" >> ${LOG_FILE}
 	echo "# bash: stdout" >> ${LOG_FILE}

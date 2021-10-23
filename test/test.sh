@@ -62,7 +62,7 @@ print_result () {
 
 run_tests () {
 	while read -r line; do
-		test_cmd="${line}"
+		test_cmd="${line}\nexit"
 		run_shell "$test_cmd" "${CASES_DIR}/$1.txt"
 		check_diff "$test_cmd"
 		output_log "$test_cmd"
@@ -82,15 +82,7 @@ run_bash () {
 
 run_shell () {
 	run_minishell "$test_cmd"
-	clean
-	# if [ $2 = "${CASES_DIR}/cd.txt" ]; then
-	# 	clean
-	# fi
 	run_bash "$test_cmd"
-	clean
-	# if [ $2 = "${CASES_DIR}/cd.txt" ]; then
-	# 	clean
-	# fi
 }
 
 check_diff () {
@@ -148,18 +140,7 @@ output_log () {
 }
 
 clean () {
-	rm -rf ./dir
-	rm -rf ./DIR
-	rm -rf ./hello
-	rm -rf ./a
-	rm -rf ./b
-	rm -rf ./link
-	rm -f ./testfile
-	rm -rf ./a:b
-	rm -rf cmd
-	rm -rf file
-	rm -rf ./symdir
-	rm -f *.txt
+	find . -maxdepth 1 -type f | grep -v -E "test.sh|result.log" | xargs rm
 }
 
 main () {

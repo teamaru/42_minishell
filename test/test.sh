@@ -82,7 +82,9 @@ run_bash () {
 
 run_shell () {
 	run_minishell "$test_cmd"
+	clean
 	run_bash "$test_cmd"
+	clean
 }
 
 check_diff () {

@@ -27,6 +27,8 @@ void init_signal(void)
     exit(FAILURE);
   if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
     exit(FAILURE);
+  if (sigaction(SIGQUIT, &quit_act, NULL) != 0)
+    exit(FAILURE);
 }
 
 void	interrupt(int sig_id)

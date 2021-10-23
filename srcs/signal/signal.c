@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   process.c                                          :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/03 12:38:09 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/03 12:38:09 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/20 21:53:41 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,9 @@ void init_signal(void)
     exit(FAILURE);
   if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
     exit(FAILURE);
-  if (sigaction(SIGQUIT, &quit_act, NULL) != 0)
-    exit(FAILURE);
 }
 
-void interrupt(int sig_id)
+void	interrupt(int sig_id)
 {
   (void)sig_id;
   rl_replace_line("", 0);

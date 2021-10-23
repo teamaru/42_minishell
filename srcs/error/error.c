@@ -6,13 +6,13 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 15:51:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/19 17:13:50 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/22 17:11:37 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-extern t_request g_request;
+extern t_request	g_request;
 
 t_bool	print_err_msg(char *msg)
 {
@@ -20,8 +20,9 @@ t_bool	print_err_msg(char *msg)
 		perror(MSG_HEADER);
 	else
 	{
-		printf(MSG_HEADER);
-		printf(": %s\n", msg);
+		ft_putstr_fd(MSG_HEADER, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putendl_fd(msg, STDERR_FILENO);
 	}
 	return (FALSE);
 }
@@ -42,13 +43,7 @@ t_exit_cd builtin_err(char *msg, t_exit_cd exit_cd, t_bool is_child_process)
 
 void	print_err_and_exit(char *msg, t_exit_cd exit_cd)
 {
-	if (!msg)
-		perror(MSG_HEADER);
-	else
-	{
-		printf(MSG_HEADER);
-		printf("%s\n", msg);
-	}
+	print_err_msg(msg);
 	free_all(TRUE);
 	exit(exit_cd);
 }

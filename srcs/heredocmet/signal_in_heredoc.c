@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   signal_in_heredoc.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/29 15:51:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 17:11:37 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/10/20 10:25:10 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/10/21 16:33:17 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,20 @@
 
 extern t_request	g_request;
 
-t_bool	print_err_msg(char *msg)
+void	exit_heredocument(int sig_no)
 {
-	if (!msg)
-		perror(MSG_HEADER);
-	else
-	{
-		ft_putstr_fd(MSG_HEADER, STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putendl_fd(msg, STDERR_FILENO);
-	}
-	return (FALSE);
+	(void)sig_no;
+	g_request.interrupt_heredocument = TRUE;
+	g_request.exit_cd = 1;
 }
 
-void	my_exit(t_exit_cd exit_cd)
+t_result	set_signal_in_heredocument(void)
 {
-	free_all(TRUE);
-	exit(exit_cd);
-}
+	struct sigaction	int_act;
 
-void	print_err_and_exit(char *msg, t_exit_cd exit_cd)
-{
-	print_err_msg(msg);
-	free_all(TRUE);
-	exit(exit_cd);
+	ft_bzero(&int_act, sizeof(int_act));
+	int_act.sa_handler = exit_heredocument;
+	if (sigaction(SIGINT, &int_act, NULL) != 0)
+		return (FAILURE);
+	return (SUCCESS);
 }

@@ -1,0 +1,19 @@
+echo $SHLVL\n export SHLVL=0
+echo $SHLVL\n export SHLVL=998
+echo $SHLVL\n export SHLVL=999
+echo $SHLVL\n export SHLVL=1000
+echo $SHLVL\n export SHLVL=+42
+echo $SHLVL\n export SHLVL=-1
+echo $SHLVL\n export SHLVL=4294967295
+echo $SHLVL\n export SHLVL=4294967296
+echo $SHLVL\n export SHLVL=-4294967296
+echo $SHLVL\n export SHLVL=-4294967297
+echo $SHLVL\n export SHLVL=a
+echo $SHLVL\n export SHLVL=`printf "\t\n\v\f\r 42"`
+echo $SHLVL\n export SHLVL=`printf " 42 "`
+echo $SHLVL\n export SHLVL=`printf " 42\t"`
+echo $SHLVL\n export SHLVL=`printf " 42\v"`
+echo $SHLVL\n export SHLVL=`printf " 42\n"`
+echo $SHLVL\n export SHLVL=`printf " 42\f"`
+echo $SHLVL\n export SHLVL=`printf " 42\r"`
+

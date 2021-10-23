@@ -16,11 +16,19 @@ extern t_request	g_request;
 
 t_bool	is_all_digits(const char *s)
 {
+	int i;
+	char *trimmed;
+	t_bool flg;
+
 	if (!s)
 		return (FALSE);
-	while (*s)
-		if (!ft_isdigit(*s++))
-			return (FALSE);
+	i = -1;
+	flg = TRUE;
+	trimmed = ft_strtrim(s, " ");
+	while (trimmed[++i])
+		if (!ft_isdigit(trimmed[i]))
+			flg = (FALSE);
+	free(trimmed);
 	return (TRUE);
 }
 

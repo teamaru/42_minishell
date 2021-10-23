@@ -74,7 +74,7 @@ t_exit_cd	declare_env(void)
 	environ = g_request.environs;
 	while (environ)
 	{
-		ft_printf("declare -x ");
+		ft_putstr_fd("declare -x ", STDOUT);
 		ft_putstr_fd(environ->key, STDOUT);
 		ft_putstr_fd("=", STDOUT);
 		ft_putstr_fd(environ->value, STDOUT);
@@ -89,7 +89,12 @@ t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 	char	**split;
 
 	if (!cmd_args[1])
-		return (declare_env());
+	{
+		declare_env();
+		if (is_child_process)
+			exit(SCCSS);
+		return (SCCSS);
+	}
 	split = split_key_value((char *)cmd_args[1]);
 	if (!split)
 		return (builtin_err(NULL, GNRL_ERR, is_child_process));

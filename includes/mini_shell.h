@@ -44,6 +44,7 @@
 #define ERR_MSG_QT_NOT_CLSD "quote is not closed"
 #define ERR_MSG_AMBGS_RDRCT "ambiguous redirect"
 #define ERR_MSG_NO_FILE "No such file or directory"
+#define ERR_MSG_HOME_NOT_SET "HOME not set"
 
 typedef enum e_bool
 {
@@ -270,6 +271,14 @@ t_exit_cd execute_pwd(const char **cmd_args, t_bool is_child_process);
  ** unset.c **
  */
 t_exit_cd  execute_unset(const char **cmd_args, t_bool is_child_process);
+/*
+ ** utils.c **
+ */
+ t_exit_cd return_or_exit(t_exit_cd exit_cd, t_bool is_child_process);
+ char	*add_slash(char *cdpath);
+ char	*join_path(char *cdpath, char *path);
+ t_bool	is_current_dir_exist(char *pwd);
+
 /*
  *************
  ** convert **

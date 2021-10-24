@@ -18,7 +18,5 @@ t_exit_cd	execute_unset(const char **cmd_args, t_bool is_child_process)
 {
 	if (cmd_args[1])
 		delete_environ(&g_request.environs, get_target_environ(cmd_args[1]));
-	if (is_child_process)
-		exit(SCCSS);
-	return (SCCSS);
+	return (return_or_exit(SCCSS, is_child_process));
 }

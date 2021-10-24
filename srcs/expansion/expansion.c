@@ -68,6 +68,12 @@ void	expand_env(char **token, t_token **expanded_tokens)
 			find_closing_qt(*token, &i);
 	if (i > 0)
 		append_token(expanded_tokens, new_token(ft_strndup(*token, i)));
+	if (ft_strlen((const char *)(*token)) == 1)
+	{
+		append_token(expanded_tokens, new_token(ft_strndup((*token + i), 1)));
+		(*token) += i + 1;
+		return ;
+	}
 	if ((*token)[i])
 		i++;
 	*token += i;

@@ -31,7 +31,5 @@ t_exit_cd	execute_echo(const char **cmd_args, t_bool is_child_process)
 	}
 	if (!has_opt)
 		ft_putstr_fd("\n", STDOUT);
-	if (is_child_process)
-		exit(SCCSS);
-	return (SCCSS);
+	return (return_or_exit(SCCSS, is_child_process));
 }

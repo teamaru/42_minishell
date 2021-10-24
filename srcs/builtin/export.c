@@ -87,22 +87,23 @@ t_exit_cd	declare_env(void)
 t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 {
 	char	**split;
+	int i;
 
 	if (!cmd_args[1])
 	{
 		declare_env();
-		if (is_child_process)
-			exit(SCCSS);
-		return (SCCSS);
+		return (return_or_exit(SCCSS, is_child_process));
 	}
-	split = split_key_value((char *)cmd_args[1]);
-	if (!split)
-		return (builtin_err(NULL, GNRL_ERR, is_child_process));
-	if (!replace_duplicated_environ(split[0], split[1]))
-		append_environ(&g_request.environs,
-			new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
-	multi_free(split);
-	if (is_child_process)
-		exit(SCCSS);
-	return (SCCSS);
+	i = 0;
+	while (cmd_args[++i])
+	{
+		split = split_key_value((char *)cmd_args[i]);
+		if (!split)
+			return (builtin_err(NULL, GNRL_ERR, is_child_process));
+		if (!replace_duplicated_environ(split[0], split[1]))
+			append_environ(&g_request.environs,
+				new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
+		multi_free(split);
+	}
+	return (return_or_exit(SCCSS, is_child_process));
 }

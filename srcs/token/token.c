@@ -48,7 +48,7 @@ t_bool	split_token(t_token **head, t_token **token)
 	new_tokens = NULL;
 	split_word(&new_tokens, (*token)->token);
 	if (is_file_path(*token) && token_listsize(new_tokens) != 1)
-		return (print_err_msg(ERR_MSG_AMBGS_RDRCT));
+		return (print_err_msg(ERR_MSG_AMBGS_RDRCT, GNRL_ERR));
 	insert_tokens(head, new_tokens, *token);
 	prev = (*token)->prev;
 	delete_token(head, *token);

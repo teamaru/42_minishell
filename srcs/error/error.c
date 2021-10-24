@@ -14,7 +14,7 @@
 
 extern t_request	g_request;
 
-t_bool	print_err_msg(char *msg)
+t_bool	print_err_msg(char *msg, t_exit_cd exit_cd)
 {
 	if (!msg)
 		perror(MSG_HEADER);
@@ -24,6 +24,7 @@ t_bool	print_err_msg(char *msg)
 		ft_putstr_fd(": ", STDERR_FILENO);
 		ft_putendl_fd(msg, STDERR_FILENO);
 	}
+	g_request.exit_cd = exit_cd;
 	return (FALSE);
 }
 
@@ -35,7 +36,7 @@ void	my_exit(t_exit_cd exit_cd)
 
 t_exit_cd	builtin_err(char *msg, t_exit_cd exit_cd, t_bool is_child_process)
 {
-	print_err_msg(msg);
+	print_err_msg(msg, exit_cd);
 	if (is_child_process)
 		exit(exit_cd);
 	return (exit_cd);
@@ -43,7 +44,7 @@ t_exit_cd	builtin_err(char *msg, t_exit_cd exit_cd, t_bool is_child_process)
 
 void	print_err_and_exit(char *msg, t_exit_cd exit_cd)
 {
-	print_err_msg(msg);
+	print_err_msg(msg, exit_cd);
 	free_all(TRUE);
 	exit(exit_cd);
 }

@@ -381,7 +381,7 @@ void	exec_simple_cmd(t_pipe_list *pipe_list);
 /*
  ** error.c **
  */
-t_bool print_err_msg(char *msg);
+t_bool	print_err_msg(char *msg, t_exit_cd exit_cd);
 void my_exit(t_exit_cd exit_cd);
 t_exit_cd builtin_err(char *msg, t_exit_cd exit_cd, t_bool is_child_process);
 void	print_err_and_exit(char *msg, t_exit_cd exit_cd);

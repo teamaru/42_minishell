@@ -10,8 +10,8 @@ echo a > out\n echo b >> out\n echo c >> out\n echo d >> out\n cat out
 echo a > out\n echo b >> out\n echo c >> out\n echo d > out\n cat out
 echo hello 2147483647> file
 echo hello 2147483648> file
-echo a > $NO_ENV | echo b\n unset NO_ENV
-printf '#include<unistd.h>\nint main(){write(1, "fd1\\n", 4);write(2, "fd2\\n", 4);}' > a.c \n gcc a.c \n ./a.out 2> file2 1> file1\n cat file2 file1
+eunset NO_ENV\n cho a > $NO_ENV | echo b
+printf '#include<unistd.h>\nint main(){write(1, "fd1",4 );write(2, "fd2", 4);}' > a.c \n gcc a.c \n ./a.out 2> file2 1> file1\n cat file2 file1
 printf '#include<unistd.h>\nint main(){write(1, "fd1\\n", 4);write(2, "fd2\\n", 4);}' > a.c \n gcc a.c \n ./a.out 1> file1 2> file2 \n cat file1 file2
 echo a 1> 1.txt 2> 2.txt \n ./a.out 1>> 1.txt 2>> 2.txt \n cat 1.txt 2.txt , printf '#include<unistd.h>\nint main(){write(1, "fd1\\n", 4);write(2, "fd2\\n", 4);write(3, "fd3\\n", 4);}' > a.c \n gcc a.c
 echo a 2> 2.txt 1> 1.txt 2> 2.txt \n echo b 1>> 1.txt 2>> 2.txt 2>> 2.txt 1>> 1.txt\n ./a.out 1>> 1.txt 2>> 2.txt 2>> 2.txt 1>> 1.txt\n cat 1.txt 2.txt 3.txt, printf '#include<unistd.h>\nint main(){write(1, "fd1\\n", 4);write(2, "fd2\\n", 4);}' > a.c \n gcc a.c

@@ -1,11 +1,11 @@
-/bin/ls \n touch a .a
-/bin/ls -a \n touch a .a
-/bin/ls | /usr/bin/grep a\n touch aa ab ac
-/bin/ls | /usr/bin/grep a | /usr/bin/grep c\n touch aa ab ac
-ls\n touch a .a
-ls -a\n touch a .a
-ls | grep a\n touch aa ab ac
-ls | grep a | grep c\n touch aa ab ac
+touch a .a\n /bin/ls 
+touch a .a\n /bin/ls -a
+touch aa ab ac\n /bin/ls | /usr/bin/grep a
+touch aa ab ac\n /bin/ls | /usr/bin/grep a | /usr/bin/grep c
+touch a .a\n ls
+touch a .a\n ls -a
+touch aa ab ac\n ls | grep a
+touch aa ab ac\n ls | grep a | grep c
 echo hello world | cat
 no_such_file
 ./no_such_file

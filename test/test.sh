@@ -149,6 +149,7 @@ main () {
 	run_all_tests
 	rm -rf "${TMP_DIR}"
 	clean
+	bash ./help/rmdir.sh
 }
 
 main $@

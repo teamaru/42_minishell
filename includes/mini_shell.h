@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/21 15:55:45 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/24 15:07:31 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,6 +324,10 @@ void	delete_environ(t_environ **head, t_environ *target_environ);
 void	free_environs(t_environ **head);
 t_environ	*new_environ(char *key, char *value);
 void	append_environ(t_environ **head, t_environ *new);
+/*
+** shlvl.c **
+*/
+void	update_shlvl(void);
 /*
 ** utils.c **
 */

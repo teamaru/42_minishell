@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 11:51:25 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 21:48:08 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/25 23:37:20 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ extern t_request	g_request;
 
 t_bool	is_all_digits(const char *s)
 {
-	int i;
-	char *trimmed;
-	t_bool flg;
+	int		i;
+	char	*trimmed;
+	t_bool	flg;
 
 	if (!s)
 		return (FALSE);

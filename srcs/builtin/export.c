@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 15:25:38 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 21:49:24 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/25 23:38:07 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ t_exit_cd	declare_env(void)
 t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 {
 	char	**split;
-	int i;
+	int		i;
 
 	if (!cmd_args[1])
 	{

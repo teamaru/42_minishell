@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 23:21:06 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 21:46:07 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/25 23:35:36 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ t_bool	search_cdpath(char *path)
 	return (FALSE);
 }
 
-t_bool set_home_dir(char **path)
+t_bool	set_home_dir(char **path)
 {
-	t_environ *home;
+	t_environ	*home;
 
 	home = get_target_environ("HOME");
 	if (!home)
@@ -63,7 +63,8 @@ t_exit_cd	execute_cd(const char **cmd_args, t_bool is_child_process)
 	path = (char *)cmd_args[1];
 	if (!path)
 		if (!set_home_dir(&path))
-			return (builtin_err(ERR_MSG_HOME_NOT_SET, GNRL_ERR, is_child_process));
+			return (builtin_err(ERR_MSG_HOME_NOT_SET,
+					GNRL_ERR, is_child_process));
 	if (!path || !*path)
 		return (return_or_exit(SCCSS, is_child_process));
 	if (*path == PERIOD && !is_current_dir_exist(pwd))

@@ -6,18 +6,19 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 12:58:43 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/24 12:58:43 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/25 23:38:32 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-t_exit_cd return_or_exit(t_exit_cd exit_cd, t_bool is_child_process)
+t_exit_cd	return_or_exit(t_exit_cd exit_cd, t_bool is_child_process)
 {
-  if (is_child_process)
-    exit(exit_cd);
-  return (exit_cd);
+	if (is_child_process)
+		exit(exit_cd);
+	return (exit_cd);
 }
+
 char	*add_slash(char *cdpath)
 {
 	char	*tmp;

@@ -73,7 +73,7 @@ t_exit_cd	declare_env(t_bool is_child_process)
 t_bool	set_environ(char **split, t_bool flg)
 {
 	if (!is_valid_identifier(split[0]))
-		flg = FALSE;
+		return (FALSE);
 	if (!replace_duplicated_environ(split[0], split[1]))
 		append_environ(&g_request.environs,
 			new_environ(ft_strdup(split[0]), ft_strdup(split[1])));

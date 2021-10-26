@@ -38,7 +38,7 @@ t_bool	is_valid_identifier(const char *arg)
 		return (FALSE);
 	i = -1;
 	while (arg[++i])
-		if (arg[i] == SPC)
+		if ((arg[i] != '_' && !ft_isalpha(arg[i])) || arg[i] == SPC)
 			return (FALSE);
 	return (TRUE);
 }

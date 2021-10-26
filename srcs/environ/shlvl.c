@@ -1,45 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   shlvl.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/25 20:26:12 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/24 15:05:35 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/10/24 15:05:50 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/10/24 17:15:39 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-t_request	g_request;
+extern t_request	g_request;
 
-void	shell_loop(void)
+void	update_shlvl(void)
 {
-	char	*line;
-	t_bool	flg;
+	t_environ	*shlvl_node;
+	int			new_lvl;
 
-	flg = TRUE;
-	make_environ_hash();
-	update_shlvl();
-	g_request.exit_cd = SCCSS;
-	while (flg)
+	shlvl_node = get_target_environ("SHLVL");
+	if (shlvl_node)
 	{
-		line = readline(PRMPT);
-		if (!line)
-			my_exit(SCCSS);
-		if (ft_strlen(line) > 0)
-			add_history(line);
-		init_request();
-		flg = process_request(line);
-		free_all(FALSE);
-		free(line);
+		new_lvl = ft_atoi(shlvl_node->value) + 1;
+		if (new_lvl > 999)
+			replace_env_value("SHLVL", NULL);
+		else
+			replace_env_value("SHLVL", ft_itoa(new_lvl));
 	}
-}
-
-int	main(void)
-{
-	init_signal();
-	shell_loop();
-	return (g_request.exit_cd);
+	else
+	{
+		append_environ(&g_request.environs,
+			new_environ(ft_strdup("SHLVL"), ft_strdup("1")));
+	}
 }

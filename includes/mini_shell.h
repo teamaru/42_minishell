@@ -341,6 +341,10 @@ void				free_environs(t_environ **head);
 t_environ			*new_environ(char *key, char *value);
 void				append_environ(t_environ **head, t_environ *new);
 /*
+** shlvl.c **
+*/
+void	update_shlvl(void);
+/*
 ** utils.c **
 */
 t_bool				is_env_end(char c);
@@ -380,6 +384,7 @@ t_result			exec_simple_buitin(t_pipe_list *pipe_list,
 ** simple_cmd.c **
 */
 void				exec_simple_cmd(t_pipe_list *pipe_list);
+char				**split_path(char *path, char delimiter);
 
 /*
  ***********

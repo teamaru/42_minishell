@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:23:39 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/25 23:28:28 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/26 14:47:23 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_result	exec_simple_buitin(t_pipe_list *pipe_list, t_builtin_id builtin_id)
 		return (FAILURE);
 	builtin_backup_fd(backup_fd);
 	if (change_multi_references(pipe_list) < 0)
-		print_err_and_exit(NULL, GNRL_ERR);
+		print_err_msg(NULL, GNRL_ERR);
 	g_request.exit_cd \
 		= g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
 	builtin_restore_fd(backup_fd);

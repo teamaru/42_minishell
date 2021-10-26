@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 15:05:50 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/24 17:15:39 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/26 14:40:20 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	update_shlvl(void)
 {
 	t_environ	*shlvl_node;
 	int			new_lvl;
+	char		*c_new_lvl;
 
 	shlvl_node = get_target_environ("SHLVL");
 	if (shlvl_node)
@@ -26,7 +27,11 @@ void	update_shlvl(void)
 		if (new_lvl > 999)
 			replace_env_value("SHLVL", NULL);
 		else
-			replace_env_value("SHLVL", ft_itoa(new_lvl));
+		{
+			c_new_lvl = ft_itoa(new_lvl);
+			replace_env_value("SHLVL", c_new_lvl);
+			free(c_new_lvl);
+		}
 	}
 	else
 	{

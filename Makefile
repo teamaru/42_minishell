@@ -15,7 +15,6 @@ READLINECONFIG := $(shell find ~/.inputrc -type f -print | xargs grep 'set echo-
 
 all: $(MINISHL)
 ifeq ($(READLINECONFIG),set echo-control-characters off)
-	@echo "${HOME}/.inputrc exist !!"
 else
 	@echo "set echo-control-characters off" >> ~/.inputrc
 	@echo "${HOME}/.inputrc setting now!!"

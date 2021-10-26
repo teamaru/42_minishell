@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/25 23:23:49 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/26 14:16:22 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,7 +343,7 @@ void				append_environ(t_environ **head, t_environ *new);
 /*
 ** shlvl.c **
 */
-void	update_shlvl(void);
+void				update_shlvl(void);
 /*
 ** utils.c **
 */

@@ -34,11 +34,11 @@ t_bool	is_valid_identifier(const char *arg)
 
 	if (!arg[0])
 		return (FALSE);
-	if (ft_isdigit(arg[0]))
+	if (ft_isdigit(arg[0]) || arg[0] == '=')
 		return (FALSE);
 	i = -1;
 	while (arg[++i])
-		if ((arg[i] != '_' && !ft_isalpha(arg[i])) || arg[i] == SPC)
+		if ((arg[i] != '_' && !ft_isalnum(arg[i])) || arg[i] == SPC)
 			return (FALSE);
 	return (TRUE);
 }

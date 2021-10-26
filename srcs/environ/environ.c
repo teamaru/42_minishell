@@ -20,7 +20,8 @@ void	replace_env_value(char *target_key, char *new_value)
 
 	target_environ = get_target_environ(target_key);
 	if (!target_environ)
-		return ;
+		return (append_environ(&g_request.environs,
+			new_environ(ft_strdup(target_key), ft_strdup(new_value))));
 	free(target_environ->value);
 	target_environ->value = ft_strdup(new_value);
 }
@@ -67,4 +68,5 @@ void	make_environ_hash(void)
 			new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
 		multi_free(split);
 	}
+	delete_environ(&g_request.environs, get_target_environ("OLDPWD"));
 }

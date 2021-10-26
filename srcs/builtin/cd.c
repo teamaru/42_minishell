@@ -14,6 +14,13 @@
 
 extern t_request	g_request;
 
+t_bool	is_current_dir_exist(char *pwd)
+{
+	struct stat	stat_buf;
+
+	return (lstat(pwd, &stat_buf) == 0);
+}
+
 t_bool	search_cdpath(char *path)
 {
 	t_environ	*cdpath;

@@ -44,6 +44,7 @@
 # define ERR_MSG_AMBGS_RDRCT "ambiguous redirect"
 # define ERR_MSG_NO_FILE "No such file or directory"
 # define ERR_MSG_HOME_NOT_SET "HOME not set"
+# define ERR_MSG_NOT_VLD_IDNTFR "not a valid identifier"
 
 typedef enum e_bool
 {
@@ -235,8 +236,7 @@ t_builtin_id		get_builtin_id(const char *token);
 /*
 ** cd.c **
 */
-char				*add_slash(char *cdpath);
-char				*join_path(char *cdpath, char *path);
+t_bool				is_current_dir_exist(char *pwd);
 t_bool				search_cdpath(char *path);
 t_bool				is_current_dir_exist(char *pwd);
 t_exit_cd			execute_cd(const char **cmd_args, t_bool is_child_process);
@@ -259,10 +259,9 @@ t_exit_cd			execute_exit(const char **cmd_args,
 /*
  ** export.c **
  */
-t_bool				is_key_exist(char *key);
 t_bool				replace_duplicated_environ(char *key, char *value);
 char				**split_key_value(char *arg);
-t_exit_cd			declare_env(void);
+t_exit_cd			declare_env(t_bool is_child_process);
 t_exit_cd			execute_export(const char **cmd_args,
 						t_bool is_child_process);
 /*
@@ -277,10 +276,11 @@ t_exit_cd			execute_unset(const char **cmd_args,
 /*
  ** utils.c **
  */
+t_bool				is_key_exist(char *key);
+t_bool				is_valid_identifier(const char *arg);
 t_exit_cd			return_or_exit(t_exit_cd exit_cd, t_bool is_child_process);
 char				*add_slash(char *cdpath);
 char				*join_path(char *cdpath, char *path);
-t_bool				is_current_dir_exist(char *pwd);
 /*
  *************
  ** convert **

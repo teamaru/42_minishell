@@ -12,6 +12,37 @@
 
 #include <mini_shell.h>
 
+extern t_request	g_request;
+
+t_bool	is_key_exist(char *key)
+{
+	t_environ	*environ;
+
+	environ = g_request.environs;
+	while (environ)
+	{
+		if (!ft_strcmp(environ->key, key))
+			return (TRUE);
+		environ = environ->next;
+	}
+	return (FALSE);
+}
+
+t_bool is_valid_identifier(const char *arg)
+{
+	int i;
+
+	if (!arg[0])
+		return (FALSE);
+	if (ft_isdigit(arg[0]))
+		return (FALSE);
+	i = -1;
+	while (arg[++i])
+		if (arg[i] == SPC)
+			return (FALSE);
+	return (TRUE);
+}
+
 t_exit_cd	return_or_exit(t_exit_cd exit_cd, t_bool is_child_process)
 {
 	if (is_child_process)
@@ -39,11 +70,4 @@ char	*join_path(char *cdpath, char *path)
 	cdpath = ft_strjoin(cdpath, path);
 	free(tmp);
 	return (cdpath);
-}
-
-t_bool	is_current_dir_exist(char *pwd)
-{
-	struct stat	stat_buf;
-
-	return (lstat(pwd, &stat_buf) == 0);
 }

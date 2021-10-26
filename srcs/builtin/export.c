@@ -14,20 +14,6 @@
 
 extern t_request	g_request;
 
-t_bool	is_key_exist(char *key)
-{
-	t_environ	*environ;
-
-	environ = g_request.environs;
-	while (environ)
-	{
-		if (!ft_strcmp(environ->key, key))
-			return (TRUE);
-		environ = environ->next;
-	}
-	return (FALSE);
-}
-
 t_bool	replace_duplicated_environ(char *key, char *value)
 {
 	t_environ	*environ;
@@ -67,7 +53,7 @@ char	**split_key_value(char *arg)
 	return (split);
 }
 
-t_exit_cd	declare_env(void)
+t_exit_cd	declare_env(t_bool is_child_process)
 {
 	t_environ	*environ;
 
@@ -81,29 +67,42 @@ t_exit_cd	declare_env(void)
 		ft_putstr_fd("\n", STDOUT);
 		environ = environ->next;
 	}
-	return (SCCSS);
+	return (return_or_exit(SCCSS, is_child_process));
+}
+
+t_bool set_environ(char **split, t_bool flg)
+{
+	if (!is_valid_identifier(split[0]))
+		flg = FALSE;
+	if (!replace_duplicated_environ(split[0], split[1]))
+	append_environ(&g_request.environs,
+		new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
+	return (flg);
 }
 
 t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 {
 	char	**split;
 	int		i;
+	int flg;
 
 	if (!cmd_args[1])
-	{
-		declare_env();
-		return (return_or_exit(SCCSS, is_child_process));
-	}
+		return (declare_env(is_child_process));
 	i = 0;
+	flg = TRUE;
 	while (cmd_args[++i])
 	{
 		split = split_key_value((char *)cmd_args[i]);
 		if (!split)
-			return (builtin_err(NULL, GNRL_ERR, is_child_process));
-		if (!replace_duplicated_environ(split[0], split[1]))
-			append_environ(&g_request.environs,
-				new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
+		{
+			if (!is_valid_identifier(cmd_args[i]))
+				flg = FALSE;
+			continue ;
+		}
+		flg = set_environ(split, flg);
 		multi_free(split);
 	}
+	if (!flg)
+		return (builtin_err(ERR_MSG_NOT_VLD_IDNTFR, GNRL_ERR, is_child_process));
 	return (return_or_exit(SCCSS, is_child_process));
 }

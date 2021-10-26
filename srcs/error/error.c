@@ -30,6 +30,7 @@ t_bool	print_err_msg(char *msg, t_exit_cd exit_cd)
 
 void	my_exit(t_exit_cd exit_cd)
 {
+	ft_putendl_fd(MSG_EXIT, STDERR);
 	free_all(TRUE);
 	exit(exit_cd);
 }
@@ -38,13 +39,15 @@ t_exit_cd	builtin_err(char *msg, t_exit_cd exit_cd, t_bool is_child_process)
 {
 	print_err_msg(msg, exit_cd);
 	if (is_child_process)
+	{
+		ft_putendl_fd(MSG_EXIT, STDERR);
 		exit(exit_cd);
+	}
 	return (exit_cd);
 }
 
 void	print_err_and_exit(char *msg, t_exit_cd exit_cd)
 {
 	print_err_msg(msg, exit_cd);
-	free_all(TRUE);
-	exit(exit_cd);
+	my_exit(exit_cd);
 }

@@ -28,7 +28,5 @@ t_exit_cd	execute_env(const char **cmd_args, t_bool is_child_process)
 		ft_putstr_fd("\n", STDOUT);
 		environ = environ->next;
 	}
-	if (is_child_process)
-		exit(SCCSS);
-	return (SCCSS);
+	return (return_or_exit(SCCSS, is_child_process));
 }

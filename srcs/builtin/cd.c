@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 23:21:06 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 21:46:07 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/25 23:35:36 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,11 @@
 
 extern t_request	g_request;
 
-char	*add_slash(char *cdpath)
+t_bool	is_current_dir_exist(char *pwd)
 {
-	char	*tmp;
+	struct stat	stat_buf;
 
-	if (cdpath[ft_strlen(cdpath) - 1] == SLSH)
-		return (cdpath);
-	tmp = cdpath;
-	cdpath = ft_strjoin(cdpath, "/");
-	free(tmp);
-	return (cdpath);
-}
-
-char	*join_path(char *cdpath, char *path)
-{
-	char	*tmp;
-
-	tmp = cdpath;
-	cdpath = ft_strjoin(cdpath, path);
-	free(tmp);
-	return (cdpath);
+	return (lstat(pwd, &stat_buf) == 0);
 }
 
 t_bool	search_cdpath(char *path)
@@ -61,11 +46,15 @@ t_bool	search_cdpath(char *path)
 	return (FALSE);
 }
 
-t_bool	is_current_dir_exist(char *pwd)
+t_bool	set_home_dir(char **path)
 {
-	struct stat	stat_buf;
+	t_environ	*home;
 
-	return (lstat(pwd, &stat_buf) == 0);
+	home = get_target_environ("HOME");
+	if (!home)
+		return (FALSE);
+	*path = home->value;
+	return (TRUE);
 }
 
 t_exit_cd	execute_cd(const char **cmd_args, t_bool is_child_process)
@@ -80,7 +69,11 @@ t_exit_cd	execute_cd(const char **cmd_args, t_bool is_child_process)
 	replace_env_value("OLDPWD", pwd);
 	path = (char *)cmd_args[1];
 	if (!path)
-		path = ROOT;
+		if (!set_home_dir(&path))
+			return (builtin_err(ERR_MSG_HOME_NOT_SET,
+					GNRL_ERR, is_child_process));
+	if (!path || !*path)
+		return (return_or_exit(SCCSS, is_child_process));
 	if (*path == PERIOD && !is_current_dir_exist(pwd))
 		return (builtin_err(ERR_MSG_NO_FILE, GNRL_ERR, is_child_process));
 	if (is_path_part(path))
@@ -89,7 +82,5 @@ t_exit_cd	execute_cd(const char **cmd_args, t_bool is_child_process)
 		return (builtin_err(NULL, GNRL_ERR, is_child_process));
 	getcwd(pwd, BUFSIZ);
 	replace_env_value("PWD", pwd);
-	if (is_child_process)
-		exit(SCCSS);
-	return (SCCSS);
+	return (return_or_exit(SCCSS, is_child_process));
 }

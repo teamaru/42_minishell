@@ -20,7 +20,5 @@ t_exit_cd	execute_pwd(const char **cmd_args, t_bool is_child_process)
 	pwd[0] = '0';
 	getcwd(pwd, BUFSIZ);
 	ft_putendl_fd(pwd, STDOUT);
-	if (is_child_process)
-		exit(SCCSS);
-	return (SCCSS);
+	return (return_or_exit(SCCSS, is_child_process));
 }

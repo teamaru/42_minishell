@@ -6,27 +6,13 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 15:25:38 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 21:49:24 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/26 12:17:08 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
 extern t_request	g_request;
-
-t_bool	is_key_exist(char *key)
-{
-	t_environ	*environ;
-
-	environ = g_request.environs;
-	while (environ)
-	{
-		if (!ft_strcmp(environ->key, key))
-			return (TRUE);
-		environ = environ->next;
-	}
-	return (FALSE);
-}
 
 t_bool	replace_duplicated_environ(char *key, char *value)
 {
@@ -67,37 +53,57 @@ char	**split_key_value(char *arg)
 	return (split);
 }
 
-t_exit_cd	declare_env(void)
+t_exit_cd	declare_env(t_bool is_child_process)
 {
 	t_environ	*environ;
 
 	environ = g_request.environs;
 	while (environ)
 	{
-		ft_printf("declare -x ");
+		ft_putstr_fd("declare -x ", STDOUT);
 		ft_putstr_fd(environ->key, STDOUT);
 		ft_putstr_fd("=", STDOUT);
 		ft_putstr_fd(environ->value, STDOUT);
 		ft_putstr_fd("\n", STDOUT);
 		environ = environ->next;
 	}
-	return (SCCSS);
+	return (return_or_exit(SCCSS, is_child_process));
+}
+
+t_bool	set_environ(char **split, t_bool flg)
+{
+	if (!is_valid_identifier(split[0]))
+		return (FALSE);
+	if (!replace_duplicated_environ(split[0], split[1]))
+		append_environ(&g_request.environs,
+			new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
+	return (flg);
 }
 
 t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 {
 	char	**split;
+	int		i;
+	int		flg;
 
 	if (!cmd_args[1])
-		return (declare_env());
-	split = split_key_value((char *)cmd_args[1]);
-	if (!split)
-		return (builtin_err(NULL, GNRL_ERR, is_child_process));
-	if (!replace_duplicated_environ(split[0], split[1]))
-		append_environ(&g_request.environs,
-			new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
-	multi_free(split);
-	if (is_child_process)
-		exit(SCCSS);
-	return (SCCSS);
+		return (declare_env(is_child_process));
+	i = 0;
+	flg = TRUE;
+	while (cmd_args[++i])
+	{
+		split = split_key_value((char *)cmd_args[i]);
+		if (!split)
+		{
+			if (!is_valid_identifier(cmd_args[i]))
+				flg = FALSE;
+			continue ;
+		}
+		flg = set_environ(split, flg);
+		multi_free(split);
+	}
+	if (!flg)
+		return (builtin_err(ERR_MSG_NOT_VLD_IDNTFR,
+				GNRL_ERR, is_child_process));
+	return (return_or_exit(SCCSS, is_child_process));
 }

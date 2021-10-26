@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 15:25:38 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/25 23:38:07 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/26 12:17:08 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ t_exit_cd	declare_env(t_bool is_child_process)
 	return (return_or_exit(SCCSS, is_child_process));
 }
 
-t_bool set_environ(char **split, t_bool flg)
+t_bool	set_environ(char **split, t_bool flg)
 {
 	if (!is_valid_identifier(split[0]))
 		flg = FALSE;
 	if (!replace_duplicated_environ(split[0], split[1]))
-	append_environ(&g_request.environs,
-		new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
+		append_environ(&g_request.environs,
+			new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
 	return (flg);
 }
 
@@ -84,7 +84,7 @@ t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 {
 	char	**split;
 	int		i;
-	int flg;
+	int		flg;
 
 	if (!cmd_args[1])
 		return (declare_env(is_child_process));
@@ -103,6 +103,7 @@ t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 		multi_free(split);
 	}
 	if (!flg)
-		return (builtin_err(ERR_MSG_NOT_VLD_IDNTFR, GNRL_ERR, is_child_process));
+		return (builtin_err(ERR_MSG_NOT_VLD_IDNTFR,
+				GNRL_ERR, is_child_process));
 	return (return_or_exit(SCCSS, is_child_process));
 }

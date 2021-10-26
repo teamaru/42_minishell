@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 12:58:43 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/25 23:38:32 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/26 12:17:22 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ t_bool	is_key_exist(char *key)
 	return (FALSE);
 }
 
-t_bool is_valid_identifier(const char *arg)
+t_bool	is_valid_identifier(const char *arg)
 {
-	int i;
+	int	i;
 
 	if (!arg[0])
 		return (FALSE);

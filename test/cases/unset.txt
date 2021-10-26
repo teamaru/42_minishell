@@ -1,4 +1,3 @@
-unset\n env | grep -v -E '^_=' | sort
 export A='test $A'\n unset A\n echo $A
 export _A1='test $_A1'\n unset _A1\n echo $_A1
 export A=test B=multiple C=var D=hello\n unset A B C\n echo $A$B$C$D

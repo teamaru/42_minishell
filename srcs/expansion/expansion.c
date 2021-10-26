@@ -56,6 +56,23 @@ void	expand_quote(char **token, t_token **expanded_tokens)
 	*token += len;
 }
 
+int keylen(char *s)
+{
+	int len;
+
+	len = 0;
+	while (s && s[len] && !is_env_end(s[len]))
+		len++;
+	return (len);
+}
+
+void move_token_pointer(char **token, int i)
+{
+	if ((*token)[i])
+		i++;
+	*token += i;
+}
+
 void	expand_env(char **token, t_token **expanded_tokens)
 {
 	int		i;
@@ -68,16 +85,16 @@ void	expand_env(char **token, t_token **expanded_tokens)
 			find_closing_qt(*token, &i);
 	if (i > 0)
 		append_token(expanded_tokens, new_token(ft_strndup(*token, i)));
-	if (ft_strlen((const char *)(*token)) == 1)
-	{
-		append_token(expanded_tokens, new_token(ft_strndup((*token + i), 1)));
-		(*token) += i + 1;
-		return ;
-	}
 	if ((*token)[i])
 		i++;
+	key = get_env_key(*token + i);
+	if ((*token)[i - 1] == DLL && !key)
+	{
+		append_token(expanded_tokens, new_token(ft_strndup((*token + i - 1), 1)));
+		*token += i;
+		return ;
+	}
 	*token += i;
-	key = get_env_key(*token);
 	value = get_env_value(key);
 	free(key);
 	if (value)

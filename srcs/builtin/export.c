@@ -62,11 +62,14 @@ t_exit_cd	declare_env(t_bool is_child_process)
 	{
 		ft_putstr_fd("declare -x ", STDOUT);
 		ft_putstr_fd(environ->key, STDOUT);
-		ft_putstr_fd("=", STDOUT);
+		ft_putstr_fd("=\"", STDOUT);
 		ft_putstr_fd(environ->value, STDOUT);
+		ft_putstr_fd("\"", STDOUT);
 		ft_putstr_fd("\n", STDOUT);
 		environ = environ->next;
 	}
+	if (!get_target_environ("OLDPWD"))
+		ft_putstr_fd("declare -x OLDPWD", STDOUT);
 	return (return_or_exit(SCCSS, is_child_process));
 }
 
@@ -93,17 +96,16 @@ t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 	while (cmd_args[++i])
 	{
 		split = split_key_value((char *)cmd_args[i]);
-		if (!split)
+		if (!split || !ft_strcmp(split[0], ""))
 		{
 			if (!is_valid_identifier(cmd_args[i]))
-				flg = FALSE;
+				flg = print_err_msg(ERR_MSG_NOT_VLD_IDNTFR, GNRL_ERR);
 			continue ;
 		}
 		flg = set_environ(split, flg);
 		multi_free(split);
 	}
 	if (!flg)
-		return (builtin_err(ERR_MSG_NOT_VLD_IDNTFR,
-				GNRL_ERR, is_child_process));
+		return (return_or_exit(GNRL_ERR, is_child_process));
 	return (return_or_exit(SCCSS, is_child_process));
 }

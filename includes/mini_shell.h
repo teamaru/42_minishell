@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/26 14:16:22 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/26 21:46:59 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -549,6 +549,12 @@ void				quit(int sig_id);
  ** change_reference.c **
  */
 int					change_multi_references(t_pipe_list *cmd);
+/*
+ ** change_reference.c **
+ */
+t_bool				is_last_heredoc(t_redirection_list *node);
+t_bool				is_heredoc(t_redirection_list *node);
+
 /*
  ******************
  ** heredocument **

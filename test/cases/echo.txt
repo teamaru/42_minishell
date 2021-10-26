@@ -1,8 +1,5 @@
 echo
 echo a
-echo	tab
-echo "	tab	"
-echo		tab
 echo hello world
 echo -n
 echo -n a

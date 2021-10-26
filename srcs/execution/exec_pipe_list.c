@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/19 15:17:21 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/25 22:45:38 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,10 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 
 	environs = env_list_to_array(g_request.environs);
 	cmd_args = pipe_list->cmd_args;
-	if (is_path_part((char *)cmd_args[0]))
-	{
-		if (!search_path((char **)cmd_args))
-			print_err_and_exit(ERR_MSG_INVLD_CMD, CMD_NOT_FND);
-	}
+	if (get_target_environ("PATH") && is_path_part((char *)cmd_args[0]))
+		search_path((char **)cmd_args);
+	if (access(cmd_args[0], F_OK) == -1)
+		print_err_and_exit(NULL, CMD_NOT_FND);
 	if (access(cmd_args[0], X_OK) == -1)
 		print_err_and_exit(NULL, DENIED);
 	if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)

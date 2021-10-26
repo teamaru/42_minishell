@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 13:33:31 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/19 15:21:32 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/25 23:27:36 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,22 @@
 
 extern t_request	g_request;
 
+static t_result	preparation_fork(t_pipe_list *node, int pipe_fd[2])
+{
+	if (has_pipe(node) && pipe(pipe_fd) < 0)
+		return (FAILURE);
+	if (write_heredoc(node->heredoc) == FAILURE)
+		return (FAILURE);
+	return (SUCCESS);
+}
+
 static pid_t	do_pipe(t_pipe_list *first,
 	t_pipe_list *node, int last_pipe_fd[2])
 {
 	int		new_pipe_fd[2];
 	pid_t	child_pid;
 
-	if (has_pipe(node) && pipe(new_pipe_fd) < 0)
-		return (-1);
-	if (write_heredoc(node->heredoc) == FAILURE)
+	if (preparation_fork(node, new_pipe_fd) < 0)
 		return (-1);
 	child_pid = fork();
 	if (child_pid < 0)

@@ -35,7 +35,15 @@ elif [[ -e ${MINISHELL_PATH} ]]; then
 else
 	build_minishell
 fi
-mkdir ${TMP_DIR}
+
+create_file () {
+	mkdir ${TMP_DIR}
+	mkdir a b
+	printf '#!/bin/bash\necho a' > a/cmd
+	printf '#!/bin/bash\necho b' > b/cmd
+	printf '#!/bin/bash\necho cwd' > cmd
+	chmod +x a/cmd b/cmd cmd
+}
 
 
 run_all_tests () {
@@ -145,14 +153,16 @@ output_log () {
 }
 
 clean () {
-	find . -maxdepth 1 -type f | grep -v -E "test.sh|result.log" | xargs rm
+	find . -maxdepth 1 -type f | grep -v -E "cmd|test.sh|result.log" | xargs rm
 }
 
 main () {
+	create_file
 	run_all_tests
 	rm -rf "${TMP_DIR}"
 	clean
 	bash ./help/rmdir.sh
+	rm -f ./cmd ./sym
 }
 
 main $@

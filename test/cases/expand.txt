@@ -3,15 +3,8 @@ export HELLO=hello\n echo $hello
 echo $
 echo "$"
 echo  '$'
-echo \$
-echo "\$"
-export HELLO=hello\n echo \$HELLO
-export HELLO=hello\n echo \\$HELLO
+export HELLO=hello\n echo '\\'$HELLO
 export HELLO=hello\n echo "$HELLO"
-export HELLO=hello\n echo "\$HELLO"
-export HELLO=hello\n echo "\\$HELLO"
-export HELLO=hello\n echo \\"$HELLO"
-export HELLO=hello\n echo "\"\"$HELLO"
 export TEST=ech\n "$TEST"o hello
 export TEST="echo hello"\n $TEST
 export TEST='echo hello'\n $TEST

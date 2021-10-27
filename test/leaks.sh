@@ -4,19 +4,19 @@
 # USER SETTING
 #-------------------------------------
 readonly MINISHELL_DIR="../"
-readonly MINISHELL_EXE="minishell"
+readonly MINISHELL_EXE="minishell_leaks"
 readonly MINISHELL_PROMPT="$ "
 #-------------------------------------
 
 readonly MINISHELL_PATH="${MINISHELL_DIR}${MINISHELL_EXE}"
-readonly LOG_FILE_NAME="result.log"
+readonly LOG_FILE_NAME="leaks.log"
 
 source help/helper.sh
 
 rm -f "${TMP_DIR}/*" "${LOG_FILE}"
 
 build_minishell () {
-	make -C "${MINISHELL_DIR}"
+	make -C "${MINISHELL_DIR}" leaks
 }
 
 exec_minishell (){
@@ -58,16 +58,6 @@ run_all_tests () {
 	done
 	print_result
 }
-
-print_result () {
-	echo -e "\n\n\nRESULT"
-	if [[ ${result_ok} -eq ${result_all} ]]; then
-		printf "\t${COLOR_GREEN}${result_ok} / ${result_all}${COLOR_RESET}\t\n"
-	else
-		printf "\t${COLOR_RED}${result_ok} / ${result_all}${COLOR_RESET}\t\n"
-	fi
-}
-
 run_tests () {
 	while read -r line; do
 		test_cmd="${line}\nexit"
@@ -76,31 +66,18 @@ run_tests () {
 		output_log "$test_cmd"
 	done < "${CASES_DIR}/$1.txt"
 }
+run_shell () {
+	run_minishell "$test_cmd"
+	clean
+}
 
 run_minishell () {
-	echo -e "$1" | "${MINISHELL_PATH}" > ${MINISHELL_STDOUT_FILE} 2> ${MINISHELL_STDERR_FILE}
+	echo -e "$1" | "${MINISHELL_PATH}" > ${MINISHELL_STDOUT_FILE} 2> /dev/null
 	minishell_status=$?
 	sed -i "" -e "/${MINISHELL_PROMPT}/d" ${MINISHELL_STDOUT_FILE}
 }
 
-run_bash () {
-	echo -e "$1" | bash > ${BASH_STDOUT_FILE} 2> ${BASH_STDERR_FILE}
-	bash_status=$?
-	if [[ "$2" = "${CASES_DIR}/syntax_err.txt" ]] && [[ ${bash_status} -ne 0 ]]; then
-		bash_status=258
-	fi
-}
-
-run_shell () {
-	run_minishell "$test_cmd"
-	clean
-	run_bash "$test_cmd" $2
-	clean
-}
-
 check_diff () {
-	diff_stdout=$(diff ${MINISHELL_STDOUT_FILE} ${BASH_STDOUT_FILE})
-	diff_stderr=$(diff ${BASH_STDERR_FILE} ${MINISHELL_STDERR_FILE})
 	if is_ok ; then
 		print_ok
 		let result_ok++
@@ -109,6 +86,15 @@ check_diff () {
 		let result_ko++
 	fi
 	let result_all++
+}
+
+print_result () {
+	echo -e "\n\n\nRESULT"
+	if [[ ${result_ok} -eq ${result_all} ]]; then
+		printf "\t${COLOR_GREEN}${result_ok} / ${result_all}${COLOR_RESET}\t\n"
+	else
+		printf "\t${COLOR_RED}${result_ok} / ${result_all}${COLOR_RESET}\t\n"
+	fi
 }
 
 print_ok () {
@@ -120,10 +106,8 @@ print_ko () {
 }
 
 is_ok () {
-	if [[ -z "${diff_stdout}" ]] && [[ ${bash_status} -eq ${minishell_status} ]]; then
-		return 0
-	fi
-	return 1
+	cat ${MINISHELL_STDOUT_FILE} | grep "0 leaks for 0 total leaked bytes." > /dev/null
+	return $?
 }
 
 print_case () {
@@ -139,21 +123,11 @@ output_log () {
 	fi
 	echo $(print_case "$1") >> ${LOG_FILE}
 	echo "-------------------------" >> ${LOG_FILE}
-	echo "diff :${diff_stdout}">> ${LOG_FILE}
-	echo "# minishell: stdout" >> ${LOG_FILE}
-	cat "${MINISHELL_STDOUT_FILE}" >> ${LOG_FILE}
-	echo "# bash: stdout" >> ${LOG_FILE}
-	cat "${BASH_STDOUT_FILE}" >> ${LOG_FILE}
-	echo "# minishell: stderr" >> ${LOG_FILE}
-	cat "${MINISHELL_STDERR_FILE}" >> ${LOG_FILE}
-	echo "# bash: stderr" >> ${LOG_FILE}
-	cat "${BASH_STDERR_FILE}" >> ${LOG_FILE}
-	echo "# minishell: exit status = ${minishell_status}" >> ${LOG_FILE}
-	echo "# bash     : exit status = ${bash_status}" >> ${LOG_FILE}
+	cat ${MINISHELL_STDOUT_FILE} | grep "bytes" >> ${LOG_FILE}
 }
 
 clean () {
-	find . -maxdepth 1 -type f | grep -v -E "cmd|test.sh|leaks.log|leaks.sh|${LOG_FILE_NAME}" | xargs rm
+	find . -maxdepth 1 -type f | grep -v -E "cmd|test.sh|result.log|leaks.sh|${LOG_FILE_NAME}" | xargs rm
 }
 
 main () {

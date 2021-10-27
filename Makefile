@@ -13,6 +13,14 @@ RDLNFLG  := -lreadline
 LDFLAGS  := -lreadline -lhistory -L$(shell brew --prefix readline)/lib
 READLINECONFIG := $(shell find ~/.inputrc -type f -print | xargs grep 'set echo-control-characters off' )
 
+NAME_LEAKS	:= minishell_leaks
+SRCS_LEAKS	:= leaks.c
+
+ifdef LEAKS
+MINISHL := $(NAME_LEAKS)
+endif
+
+
 all: $(MINISHL)
 ifeq ($(READLINECONFIG),set echo-control-characters off)
 else
@@ -37,9 +45,12 @@ clean:
 	$(MAKE) fclean -C $(LIBFTDIR)
 
 fclean: clean
-	$(RM) $(MINISHL)
+	$(RM) $(MINISHL) $(NAME_LEAKS)
 
 debug: $(LIBFT)
 	$(CC) -g -o $(MINISHL) $(INCLUDE) -I $(shell brew --prefix readline)/include $(SRCS) $(LIBFT) $(RDLNFLG) $(LDFLAGS)
 
 re: fclean all
+
+leaks: $(LIBFT)
+	$(MAKE) CFLAGS="$(CFLAGS) -D LEAKS=1" SRCS="$(SRCS)" LEAKS=TRUE

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/27 10:27:49 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/27 10:28:27 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/10/27 14:39:56 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/10/27 14:40:08 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #if LEAKS
 
-void end(void)
+void	end(void)
 {
 	system("leaks minishell_leaks");
 }

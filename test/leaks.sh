@@ -15,7 +15,7 @@ source help/helper.sh
 
 rm -f "${TMP_DIR}/*" "${LOG_FILE}"
 
-build_minishell () {
+build_minishell_leaks () {
 	make -C "${MINISHELL_DIR}" leaks
 }
 
@@ -23,17 +23,17 @@ exec_minishell (){
 	"${MINISHELL_PATH}"
 }
 
-clean_minishell () {
-	make -C "${MINISHELL_DIR}" fclean
+clean_minishell_leaks () {
+	make -C "${MINISHELL_DIR}" fcleanleaks
 }
 
 if [[ $1 == clean ]]; then
-	clean_minishell
+	clean_minishell_leaks
 	exit
 elif [[ -e ${MINISHELL_PATH} ]]; then
-	echo "minishell exist!"
+	echo "minishell_leaks exist!"
 else
-	build_minishell
+	build_minishell_leaks
 fi
 
 create_file () {

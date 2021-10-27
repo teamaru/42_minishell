@@ -12,21 +12,21 @@ MAKEFLGS := -C
 RDLNFLG  := -lreadline
 LDFLAGS  := -lreadline -lhistory -L$(shell brew --prefix readline)/lib
 READLINECONFIG := $(shell find ~/.inputrc -type f -print | xargs grep 'set echo-control-characters off' )
-
-NAME_LEAKS	:= minishell_leaks
-SRCS_LEAKS	:= leaks.c
-
-ifdef LEAKS
-MINISHL := $(NAME_LEAKS)
-endif
-
-
-all: $(MINISHL)
 ifeq ($(READLINECONFIG),set echo-control-characters off)
 else
 	@echo "set echo-control-characters off" >> ~/.inputrc
 	@echo "${HOME}/.inputrc setting now!!"
 endif
+
+MINISHL_LEAKS	:= minishell_leaks
+SRCS_LEAKS	:= ./test/help/leaks.c
+INCLUDE_LEAKS := -I./test/help
+
+ifdef LEAKS
+MINISHL := $(MINISHL_LEAKS)
+endif
+
+all: $(MINISHL)
 
 $(MINISHL): $(OBJS) $(LIBFT)
 	$(CC) -o $(MINISHL) $(INCLUDE) $(OBJS) $(LIBFT) $(RDLNFLG) $(LDFLAGS)
@@ -39,18 +39,25 @@ $(LIBFT):
 
 -include $(DEPS)
 
-.PHONY: clean
 clean:
 	$(RM) $(OBJS) $(DEPS)
 	$(MAKE) fclean -C $(LIBFTDIR)
 
 fclean: clean
-	$(RM) $(MINISHL) $(NAME_LEAKS)
+	$(RM) $(MINISHL)
+
+re: fclean all
 
 debug: $(LIBFT)
 	$(CC) -g -o $(MINISHL) $(INCLUDE) -I $(shell brew --prefix readline)/include $(SRCS) $(LIBFT) $(RDLNFLG) $(LDFLAGS)
 
-re: fclean all
-
 leaks: $(LIBFT)
-	$(MAKE) CFLAGS="$(CFLAGS) -D LEAKS=1" SRCS="$(SRCS)" LEAKS=TRUE
+	$(MAKE) CFLAGS="$(CFLAGS) -D LEAKS=1" INCLUDE="$(INCLUDE) $(INCLUDE_LEAKS)" SRCS="$(SRCS) $(SRCS_LEAKS)" LEAKS=TRUE
+
+cleanleaks: clean
+	$(RM) ./test/help/leaks.o ./test/help/leaks.d
+
+fcleanleaks: cleanleaks
+	$(RM) $(MINISHL_LEAKS)
+
+.PHONY: all clean fclean debug re leaks cleanleaks fcleanleaks

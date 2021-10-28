@@ -28,10 +28,10 @@ t_bool	is_all_digits(const char *s)
 	if (trimmed[0] == '+' || trimmed[0] == '-')
 		i++;
 	if (!trimmed[i + 1])
-		return (FALSE);
+		flg = FALSE;
 	while (trimmed[++i])
 		if (!ft_isdigit(trimmed[i]))
-			flg = (FALSE);
+			flg = FALSE;
 	free(trimmed);
 	return (flg);
 }

@@ -41,6 +41,11 @@ char	**split_key_value(char *arg)
 	i = 0;
 	while (arg[i] && arg[i] != '=')
 		i++;
+	if (i == 0)
+	{
+		free(split);
+		return (NULL);
+	}
 	split[0] = ft_strndup(arg, i);
 	if (ft_strlen(arg) == ft_strlen(split[0]))
 	{
@@ -64,12 +69,11 @@ t_exit_cd	declare_env(t_bool is_child_process)
 		ft_putstr_fd(environ->key, STDOUT);
 		ft_putstr_fd("=\"", STDOUT);
 		ft_putstr_fd(environ->value, STDOUT);
-		ft_putstr_fd("\"", STDOUT);
-		ft_putstr_fd("\n", STDOUT);
+		ft_putstr_fd("\"\n", STDOUT);
 		environ = environ->next;
 	}
 	if (!get_target_environ("OLDPWD"))
-		ft_putstr_fd("declare -x OLDPWD", STDOUT);
+		ft_putstr_fd("declare -x OLDPWD\n", STDOUT);
 	return (return_or_exit(SCCSS, is_child_process));
 }
 

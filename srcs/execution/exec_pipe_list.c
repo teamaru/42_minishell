@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/25 22:45:38 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/28 23:13:56 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,61 @@
 
 extern t_request	g_request;
 
+t_exit_cd	is_correct_path(const char *cmd_path)
+{
+	char		*dir_path;
+	int			dir_path_size;
+	int			i;
+	struct stat	buf;
+	t_exit_cd	exit_cd;
+
+	/*最後のスラッシュまでを文字列に*/
+	exit_cd = SCCSS;
+	i = -1;
+	dir_path_size = 0;
+	while (cmd_path[++i])
+	{
+		if (cmd_path[i] == '/')
+			dir_path_size = i;
+	}
+	if (dir_path_size == 0)
+		return  (exit_cd);
+	dir_path = (char *)ft_calloc((dir_path_size + 1), sizeof(char));
+	if (!dir_path)
+		return (GNRL_ERR);
+	ft_strlcpy(dir_path, cmd_path, dir_path_size + 1);
+	// printf("dir_path = %s\n", dir_path);
+	stat(dir_path, &buf);
+	if (S_ISREG(buf.st_mode))
+		exit_cd = DENIED;
+	if (!S_ISDIR(buf.st_mode))
+		exit_cd = CMD_NOT_FND;
+	// printf("dir_path correct!!\n");
+	free(dir_path);
+	return (exit_cd);
+}
+
 void	exec_path_cmd(t_pipe_list *pipe_list)
 {
 	const char	**cmd_args;
 	char		**environs;
+	t_exit_cd	enable_path;
 
 	environs = env_list_to_array(g_request.environs);
 	cmd_args = pipe_list->cmd_args;
 	if (get_target_environ("PATH") && is_path_part((char *)cmd_args[0]))
 		search_path((char **)cmd_args);
+			// print_err_and_exit(NULL, DENIED);
+	/*pathで指定されたdirが存在するかどうか*/
+	enable_path = is_correct_path(cmd_args[0]);
+	if (enable_path == DENIED)
+		print_err_and_exit("Not a directory", DENIED);
+	else if (enable_path == CMD_NOT_FND)
+		print_err_and_exit(NULL, CMD_NOT_FND);
+	// printf("cmd = %s\n", cmd_args[0]);
 	if (access(cmd_args[0], F_OK) == -1)
 		print_err_and_exit(NULL, CMD_NOT_FND);
+	// printf("cmd = %s\n", cmd_args[0]);
 	if (access(cmd_args[0], X_OK) == -1)
 		print_err_and_exit(NULL, DENIED);
 	if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)

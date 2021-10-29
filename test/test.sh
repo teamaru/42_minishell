@@ -42,7 +42,8 @@ create_file () {
 	printf '#!/bin/bash\necho a' > a/cmd
 	printf '#!/bin/bash\necho b' > b/cmd
 	printf '#!/bin/bash\necho cwd' > cmd
-	chmod +x a/cmd b/cmd cmd
+	printf '#!/bin/bash\necho 42' > exe
+	chmod +x a/cmd b/cmd cmd exe
 }
 
 
@@ -153,7 +154,7 @@ output_log () {
 }
 
 clean () {
-	find . -maxdepth 1 -type f | grep -v -E "cmd|test.sh|leaks.log|leaks.sh|${LOG_FILE_NAME}" | xargs rm
+	find . -maxdepth 1 -type f | grep -v -E "cmd|test.sh|leaks.log|leaks.sh|${LOG_FILE_NAME}|exe" | xargs rm
 }
 
 main () {
@@ -162,7 +163,7 @@ main () {
 	rm -rf "${TMP_DIR}"
 	clean
 	bash ./help/rmdir.sh
-	rm -f ./cmd ./sym
+	rm -f ./cmd ./sym ./exe
 }
 
 main $@

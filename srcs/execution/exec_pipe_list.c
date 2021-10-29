@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/28 23:13:56 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/29 12:34:55 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_exit_cd	is_correct_path(const char *cmd_path)
 	stat(dir_path, &buf);
 	if (S_ISREG(buf.st_mode))
 		exit_cd = DENIED;
-	if (!S_ISDIR(buf.st_mode))
+	else if (!S_ISDIR(buf.st_mode))
 		exit_cd = CMD_NOT_FND;
 	// printf("dir_path correct!!\n");
 	free(dir_path);

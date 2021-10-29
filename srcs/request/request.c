@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 14:45:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/23 19:06:25 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/29 16:27:13 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ t_bool	process_request(char *line)
 	if (!is_valid_syntax())
 		return (TRUE);
 	parse();
-	if (!expand())
-		return (TRUE);
+	// if (!expand())
+	// 	return (TRUE);
+	expand();
 	if (!request_convert_to_pipe_list())
 		return (TRUE);
 	return (TRUE);

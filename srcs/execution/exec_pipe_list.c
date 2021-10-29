@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/29 12:34:55 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/29 13:49:58by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 	const char	**cmd_args;
 	char		**environs;
 	t_exit_cd	enable_path;
+	struct stat	buf;
 
 	environs = env_list_to_array(g_request.environs);
 	cmd_args = pipe_list->cmd_args;
@@ -62,9 +63,14 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 	/*pathで指定されたdirが存在するかどうか*/
 	enable_path = is_correct_path(cmd_args[0]);
 	if (enable_path == DENIED)
-		print_err_and_exit("Not a directory", DENIED);
+		print_err_and_exit(ERR_MSG_NOT_DIR, DENIED);
 	else if (enable_path == CMD_NOT_FND)
 		print_err_and_exit(NULL, CMD_NOT_FND);
+
+	stat(cmd_args[0], &buf);
+	if (S_ISDIR(buf.st_mode))
+		print_err_and_exit(ERR_MSG_IS_DIR, DENIED);
+	/* binary file か通常のfileか判定 */
 	// printf("cmd = %s\n", cmd_args[0]);
 	if (access(cmd_args[0], F_OK) == -1)
 		print_err_and_exit(NULL, CMD_NOT_FND);
@@ -72,7 +78,16 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 	if (access(cmd_args[0], X_OK) == -1)
 		print_err_and_exit(NULL, DENIED);
 	if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)
-		print_err_and_exit(NULL, GNRL_ERR);
+	{
+		//rがある なら exit_cd 0
+		if (!access(cmd_args[0], R_OK))
+			exit(0);
+		//sizeがzeroならpermsisson
+		else if (!buf.st_size)
+			print_err_and_exit(ERR_MSG_PERM_DENIED, DENIED);
+		else
+			print_err_and_exit(NULL, GNRL_ERR);
+	}
 }
 
 void	child_exec_cmd(t_pipe_list *pipe_list)

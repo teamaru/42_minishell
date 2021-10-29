@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/26 21:46:59 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/29 14:45:09 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@
 # define ERR_MSG_NO_FILE "No such file or directory"
 # define ERR_MSG_HOME_NOT_SET "HOME not set"
 # define ERR_MSG_NOT_VLD_IDNTFR "not a valid identifier"
+# define ERR_MSG_PERM_DENIED "Permission denied"
+# define ERR_MSG_NOT_DIR "Not a directory"
+# define ERR_MSG_IS_DIR "is a directory"
 
 typedef enum e_bool
 {

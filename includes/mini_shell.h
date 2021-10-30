@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/30 16:29:01 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/30 16:44:51 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -385,17 +385,21 @@ void				handle_pipelines(t_pipe_list *pipe_list);
 /*
 ** serch_cmd_path.c **
 */
-t_bool				search_path(char **cmd);
+t_exit_cd			search_path(char **cmd);
 /*
 ** simple_builtin.c **
 */
 t_result			exec_simple_buitin(t_pipe_list *pipe_list,
 						t_builtin_id builtin_id);
 /*
-** simple_cmd.c **
+** split_path.c **
 */
 void				exec_simple_cmd(t_pipe_list *pipe_list);
 char				**split_path(char *path, char delimiter);
+/*
+** wait_process.c **
+*/
+void				wait_processes(t_pipe_list *pipe_list);
 
 /*
  ***********
@@ -439,6 +443,7 @@ t_bool				is_match_str(char *input, char *delimiter);
 t_bool				is_dollar(char c);
 t_bool				has_heredoc(t_heredoc_to_fd *heredoc);
 t_bool				has_pipe(t_pipe_list *pipe_list);
+t_bool				is_enable_environ_path(void);
 
 /*
 ** free.c **

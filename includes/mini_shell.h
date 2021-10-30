@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/30 16:44:51 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:25:50 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,7 +363,8 @@ int					get_env_len(char *token);
 /*
 ** check_executable_cmd_path.c **
 */
-t_exit_cd			check_executable_cmd_path(const char *cmd_path, char **err_msg);
+t_exit_cd			check_executable_cmd_path(const char *cmd_path,
+						char **err_msg);
 /*
 ** create_environ.c **
 */

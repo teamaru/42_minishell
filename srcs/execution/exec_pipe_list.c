@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/29 13:49:58by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:00:33 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 		if (exit_cd != SCCSS)
 			print_err_and_exit_free(&err_msg, exit_cd);
 		free(err_msg);
-		call_execve_function(cmd_args);
 	}
 	else
 	{
@@ -58,8 +57,8 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 			print_err_and_exit(ERR_MSG_PERM_DENIED, DENIED);
 		else if (exit_cd != SCCSS)
 			print_err_and_exit(ERR_MSG_NO_FILE, CMD_NOT_FND);
-		call_execve_function(cmd_args);
 	}
+	call_execve_function(cmd_args);
 }
 
 void	child_exec_cmd(t_pipe_list *pipe_list)

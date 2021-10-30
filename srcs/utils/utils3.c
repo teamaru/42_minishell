@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 12:25:40 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/30 16:31:56 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:24:38 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_bool	has_pipe(t_pipe_list *pipe_list)
 
 t_bool	is_enable_environ_path(void)
 {
-	t_environ *path;
+	t_environ	*path;
 
 	path = get_target_environ("PATH");
 	if (!path || path->value[0] == '\0')

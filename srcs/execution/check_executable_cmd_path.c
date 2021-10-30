@@ -6,17 +6,17 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 16:19:39 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/30 16:27:01 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/30 16:58:08 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-t_exit_cd is_correct_dir_path(const char *cmd_path, char **err_msg)
+t_exit_cd	is_correct_dir_path(const char *cmd_path, char **err_msg)
 {
-	char *dir_path;
-	struct stat buf;
-	t_exit_cd exit_cd;
+	char		*dir_path;
+	struct stat	buf;
+	t_exit_cd	exit_cd;
 
 	exit_cd = SCCSS;
 	dir_path = get_dir_path(cmd_path);
@@ -38,10 +38,10 @@ t_exit_cd is_correct_dir_path(const char *cmd_path, char **err_msg)
 	return (exit_cd);
 }
 
-t_exit_cd is_correct_complete_path(const char *cmd_path, char **err_msg)
+t_exit_cd	is_correct_complete_path(const char *cmd_path, char **err_msg)
 {
-	t_exit_cd exit_cd;
-	struct stat buf;
+	t_exit_cd	exit_cd;
+	struct stat	buf;
 
 	exit_cd = SCCSS;
 	stat(cmd_path, &buf);
@@ -56,9 +56,9 @@ t_exit_cd is_correct_complete_path(const char *cmd_path, char **err_msg)
 	return (exit_cd);
 }
 
-t_exit_cd can_execute_path_cmd(const char *cmd_path, char **err_msg)
+t_exit_cd	can_execute_path_cmd(const char *cmd_path, char **err_msg)
 {
-	t_exit_cd exit_cd;
+	t_exit_cd	exit_cd;
 
 	exit_cd = SCCSS;
 	if (access(cmd_path, X_OK) == -1)
@@ -70,7 +70,7 @@ t_exit_cd can_execute_path_cmd(const char *cmd_path, char **err_msg)
 
 t_exit_cd	check_executable_cmd_path(const char *cmd_path, char **err_msg)
 {
-	t_exit_cd exit_cd;
+	t_exit_cd	exit_cd;
 
 	exit_cd = SCCSS;
 	if (exit_cd == SCCSS)

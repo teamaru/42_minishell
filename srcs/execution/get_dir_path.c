@@ -6,17 +6,17 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 16:25:15 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/30 16:25:33 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:00:50 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-char *get_dir_path(const char *cmd_path)
+char	*get_dir_path(const char *cmd_path)
 {
-	char *dir_path;
-	int dir_path_size;
-	size_t i;
+	char	*dir_path;
+	int		dir_path_size;
+	size_t	i;
 
 	i = 0;
 	dir_path_size = 0;

@@ -14,38 +14,54 @@
 
 extern t_request	g_request;
 
-t_exit_cd	is_correct_path(const char *cmd_path)
+char	*get_dir_path(const char *cmd_path)
 {
 	char		*dir_path;
 	int			dir_path_size;
-	int			i;
-	struct stat	buf;
-	t_exit_cd	exit_cd;
+	size_t		i;
 
-	/*最後のスラッシュまでを文字列に*/
-	exit_cd = SCCSS;
-	i = -1;
+	i = 0;
 	dir_path_size = 0;
-	while (cmd_path[++i])
+	while (cmd_path[i])
 	{
 		if (cmd_path[i] == '/')
 			dir_path_size = i;
+		i += 1;
 	}
-	if (dir_path_size == 0)
-		return  (exit_cd);
 	dir_path = (char *)ft_calloc((dir_path_size + 1), sizeof(char));
 	if (!dir_path)
-		return (GNRL_ERR);
+		return (NULL);
 	ft_strlcpy(dir_path, cmd_path, dir_path_size + 1);
-	// printf("dir_path = %s\n", dir_path);
-	stat(dir_path, &buf);
-	if (S_ISREG(buf.st_mode))
-		exit_cd = DENIED;
-	else if (!S_ISDIR(buf.st_mode))
-		exit_cd = CMD_NOT_FND;
-	// printf("dir_path correct!!\n");
+	return (dir_path);
+}
+
+t_exit_cd	is_correct_path(const char *cmd_path)
+{
+	char		*dir_path;
+	struct stat	buf;
+	t_exit_cd	exit_cd;
+
+	exit_cd = SCCSS;
+	dir_path = get_dir_path(cmd_path);
+	if (!dir_path)
+		return (GNRL_ERR);
+	else if (dir_path[0] != '\0')
+	{
+		stat(dir_path, &buf);
+		if (S_ISREG(buf.st_mode))
+			exit_cd = DENIED;
+		else if (!S_ISDIR(buf.st_mode))
+			exit_cd = CMD_NOT_FND;
+	}
 	free(dir_path);
 	return (exit_cd);
+}
+
+void	print_err_and_exit_free(char **msg, t_exit_cd exit_cd)
+{
+	print_err_msg(*msg, exit_cd);
+	free_set((void **)msg, NULL);
+	exit(exit_cd);
 }
 
 void	exec_path_cmd(t_pipe_list *pipe_list)

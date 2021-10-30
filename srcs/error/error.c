@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 15:51:50 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/23 19:07:07 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/30 16:28:40 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,12 @@ void	print_err_and_exit(char *msg, t_exit_cd exit_cd)
 {
 	print_err_msg(msg, exit_cd);
 	free_all(TRUE);
+	exit(exit_cd);
+}
+
+void	print_err_and_exit_free(char **msg, t_exit_cd exit_cd)
+{
+	print_err_msg(*msg, exit_cd);
+	free_set((void **)msg, NULL);
 	exit(exit_cd);
 }

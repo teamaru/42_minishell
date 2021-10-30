@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/29 14:45:09 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/30 16:29:01 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,6 +361,10 @@ int					get_env_len(char *token);
  **************
  */
 /*
+** check_executable_cmd_path.c **
+*/
+t_exit_cd			check_executable_cmd_path(const char *cmd_path, char **err_msg);
+/*
 ** create_environ.c **
 */
 t_bool				is_execution(char **line);
@@ -370,6 +374,10 @@ char				**env_list_to_array(t_environ *environs);
 */
 void				child_exec_cmd(t_pipe_list *pipe_list);
 void				execute_cmds(t_pipe_list *pipe_list);
+/*
+** exec_pipe_list.c **
+*/
+char				*get_dir_path(const char *cmd_path);
 /*
 ** handle_pipe.c **
 */
@@ -402,6 +410,7 @@ void				my_exit(t_exit_cd exit_cd);
 t_exit_cd			builtin_err(char *msg, t_exit_cd exit_cd,
 						t_bool is_child_process);
 void				print_err_and_exit(char *msg, t_exit_cd exit_cd);
+void				print_err_and_exit_free(char **msg, t_exit_cd exit_cd);
 /*
  ***********
  ** utils **

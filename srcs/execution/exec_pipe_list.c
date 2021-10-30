@@ -14,104 +14,6 @@
 
 extern t_request	g_request;
 
-char	*get_dir_path(const char *cmd_path)
-{
-	char		*dir_path;
-	int			dir_path_size;
-	size_t		i;
-
-	i = 0;
-	dir_path_size = 0;
-	while (cmd_path[i])
-	{
-		if (cmd_path[i] == '/')
-			dir_path_size = i;
-		i += 1;
-	}
-	dir_path = (char *)ft_calloc((dir_path_size + 1), sizeof(char));
-	if (!dir_path)
-		return (NULL);
-	ft_strlcpy(dir_path, cmd_path, dir_path_size + 1);
-	return (dir_path);
-}
-
-t_exit_cd	is_correct_dir_path(const char *cmd_path, char **err_msg)
-{
-	char		*dir_path;
-	struct stat	buf;
-	t_exit_cd	exit_cd;
-
-	exit_cd = SCCSS;
-	dir_path = get_dir_path(cmd_path);
-	if (!dir_path)
-		return (GNRL_ERR);
-	else if (dir_path[0] != '\0')
-	{
-		stat(dir_path, &buf);
-		if (S_ISREG(buf.st_mode))
-			exit_cd = DENIED;
-		else if (!S_ISDIR(buf.st_mode))
-			exit_cd = CMD_NOT_FND;
-	}
-	free(dir_path);
-	if (exit_cd == DENIED)
-		free_set((void **)err_msg, (void *)ft_strdup(ERR_MSG_NOT_DIR));
-	else if (exit_cd == CMD_NOT_FND)
-		free_set((void **)err_msg, (void *)ft_strdup(ERR_MSG_NO_FILE));
-	return (exit_cd);
-}
-
-void	print_err_and_exit_free(char **msg, t_exit_cd exit_cd)
-{
-	print_err_msg(*msg, exit_cd);
-	free_set((void **)msg, NULL);
-	exit(exit_cd);
-}
-
-t_exit_cd	is_correct_complete_path(const char *cmd_path, char **err_msg)
-{
-	t_exit_cd	exit_cd;
-	struct stat	buf;
-
-	exit_cd = SCCSS;
-	stat(cmd_path, &buf);
-	if (S_ISDIR(buf.st_mode))
-		exit_cd = DENIED;
-	else if (access(cmd_path, F_OK) == -1)
-		exit_cd = CMD_NOT_FND;
-	if (exit_cd == DENIED)
-		free_set((void **)err_msg, (void *)ft_strdup(ERR_MSG_IS_DIR));
-	else if (exit_cd == CMD_NOT_FND)
-		free_set((void **)err_msg, (void *)ft_strdup(ERR_MSG_INVLD_CMD));
-	return (exit_cd);
-}
-
-t_exit_cd	can_execute_path_cmd(const char *cmd_path, char **err_msg)
-{
-	t_exit_cd	exit_cd;
-
-	exit_cd = SCCSS;
-	if (access(cmd_path, X_OK) == -1)
-		exit_cd = DENIED;
-	if (exit_cd == DENIED)
-		free_set((void **)err_msg, (void *)ft_strdup(ERR_MSG_PERM_DENIED));
-	return (exit_cd);
-}
-
-t_exit_cd	check_executable_cmd_path(const char *cmd_path, char **err_msg)
-{
-	t_exit_cd	exit_cd;
-
-	exit_cd = SCCSS;
-	if (exit_cd == SCCSS)
-		exit_cd = is_correct_dir_path(cmd_path, err_msg);
-	if (exit_cd == SCCSS)
-		exit_cd = is_correct_complete_path(cmd_path, err_msg);
-	if (exit_cd == SCCSS)
-		exit_cd = can_execute_path_cmd(cmd_path, err_msg);
-	return (exit_cd);
-}
-
 t_bool	is_enable_environ_path(void)
 {
 	t_environ *path;
@@ -120,6 +22,12 @@ t_bool	is_enable_environ_path(void)
 	if (!path || path->value[0] == '\0')
 		return (FALSE);
 	return (TRUE);
+}
+
+static void replace_path(char **cmd, char *path)
+{
+	free(cmd[0]);
+	cmd[0] = ft_strdup(path);
 }
 
 void	exec_path_cmd(t_pipe_list *pipe_list)
@@ -142,15 +50,11 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 		free(err_msg);
 		if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)
 		{
-			//rがある なら exit_cd 0
 			stat(cmd_args[0], &buf);
 			if (!access(cmd_args[0], R_OK))
 				exit(0);
-			//sizeがzeroならpermsisson
 			else if (!buf.st_size)
-			{
 				print_err_and_exit(ERR_MSG_PERM_DENIED, DENIED);
-			}
 			else
 				print_err_and_exit(NULL, GNRL_ERR);
 		}
@@ -160,29 +64,47 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 		if (is_enable_environ_path() == FALSE)
 			print_err_and_exit(ERR_MSG_NO_FILE, CMD_NOT_FND);
 
-		search_path((char **)cmd_args);
-		// printf("cmd = %s\n", cmd_args[0]);
+		t_environ *path;
+		char **paths;
+		int i;
+		t_bool	flag;
 
-		exit_cd = check_executable_cmd_path(cmd_args[0], &err_msg);
-		if (exit_cd != SCCSS)
-			print_err_and_exit_free(&err_msg, exit_cd);
-		free(err_msg);
+		path = get_target_environ("PATH");
+		paths = split_path(path->value, ':');
+		i = -1;
+		flag = FALSE;
+		while (paths[++i])
+		{
+			exit_cd = SCCSS;
+			paths[i] = add_slash(paths[i]);
+			paths[i] = join_path(paths[i], (char *)cmd_args[0]);
+			exit_cd = check_executable_cmd_path(paths[i], NULL);
+			if (!flag && exit_cd == DENIED)
+				flag = TRUE;
+			if (exit_cd != SCCSS)
+				continue;
+			replace_path((char **)cmd_args, paths[i]);
+			break;
+		}
+		multi_free(paths);
+		if (exit_cd != SCCSS && flag)
+			exit_cd = DENIED;
+		if (exit_cd == DENIED)
+			print_err_and_exit(ERR_MSG_PERM_DENIED, DENIED);
+		else if (exit_cd != SCCSS)
+			print_err_and_exit(ERR_MSG_NO_FILE, CMD_NOT_FND);
+
 		if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)
 		{
-			//rがある なら exit_cd 0
 			stat(cmd_args[0], &buf);
 			if (!access(cmd_args[0], R_OK))
 				exit(0);
-			//sizeがzeroならpermsisson
 			else if (!buf.st_size)
-			{
 				print_err_and_exit(ERR_MSG_PERM_DENIED, DENIED);
-			}
 			else
 				print_err_and_exit(NULL, GNRL_ERR);
 		}
 	}
-	/*pathで指定されたdirが存在するかどうか*/
 }
 
 void	child_exec_cmd(t_pipe_list *pipe_list)

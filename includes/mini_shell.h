@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/30 17:25:50 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/31 18:21:21 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -551,6 +551,12 @@ t_bool				is_file_path(t_token *token);
  ** signal **
  *************
  */
+/*
+ ** signal_in_execution.c **
+ */
+void				init_signal_in_execution(void);
+void				init_int_act_in_execution(void);
+void				interrupt_in_execution(int	sig_id);
 /*
  ** signal.c **
  */

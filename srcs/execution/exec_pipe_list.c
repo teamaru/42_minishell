@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/30 17:00:33 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/31 18:22:16 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,5 @@ void	execute_cmds(t_pipe_list *pipe_list)
 		handle_pipelines(pipe_list);
 		wait_processes(pipe_list);
 	}
+	init_signal();
 }

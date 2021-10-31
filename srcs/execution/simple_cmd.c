@@ -6,13 +6,22 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 12:07:08 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/19 17:15:06 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/31 18:59:59 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
 extern t_request	g_request;
+
+void	cmd_set_exit_cd(int status)
+{
+	t_exit_cd	exit_cd;
+
+	exit_cd = g_request.exit_cd;
+	if (!WIFSIGNALED(status) && exit_cd != 130 && exit_cd != 131)
+		g_request.exit_cd = WEXITSTATUS(status);
+}
 
 void	exec_simple_cmd(t_pipe_list *pipe_list)
 {
@@ -29,15 +38,17 @@ void	exec_simple_cmd(t_pipe_list *pipe_list)
 		return ;
 	}
 	else if (pipe_list->pid == 0)
+	{
 		child_exec_cmd(pipe_list);
+	}
 	else
 	{
+		g_request.pid = pipe_list->pid;
 		close_and_unlink(&pipe_list->heredoc, FALSE);
 		if (kill(pipe_list->pid, 0) == -1)
 			print_err_msg(NULL, GNRL_ERR);
-		g_request.pid = pipe_list->pid;
 		changed_pid = waitpid(pipe_list->pid, &status, 0);
-		g_request.exit_cd = WEXITSTATUS(status);
+		cmd_set_exit_cd(status);
 	}
 	g_request.pid = 0;
 }

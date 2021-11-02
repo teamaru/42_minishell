@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 22:23:01 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 22:23:01 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/02 21:41:11 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	make_environ_hash(void)
 	extern char	**environ;
 	char		**env;
 	char		**split;
-	t_environ *oldpwd;
+	t_environ	*oldpwd;
 
 	env = environ;
 	g_request.environs = NULL;

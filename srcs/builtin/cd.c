@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 23:21:06 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/25 23:35:36 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/02 21:40:18 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 extern t_request	g_request;
 
-t_bool	is_current_dir_exist()
+t_bool	is_current_dir_exist(void)
 {
-	char pwd[BUFSIZ];
+	char		pwd[BUFSIZ];
 	struct stat	stat_buf;
 
 	getcwd(pwd, BUFSIZ);
@@ -69,8 +69,8 @@ t_exit_cd	execute_cd(const char **cmd_args, t_bool is_child_process)
 	replace_oldpwd();
 	path = (char *)cmd_args[1];
 	if (!path && !set_home_dir(&path))
-			return (builtin_err(ERR_MSG_HOME_NOT_SET,
-					GNRL_ERR, is_child_process));
+		return (builtin_err(ERR_MSG_HOME_NOT_SET,
+				GNRL_ERR, is_child_process));
 	if (!path || !*path)
 		return (return_or_exit(SCCSS, is_child_process));
 	if (*path == PERIOD && !is_current_dir_exist())

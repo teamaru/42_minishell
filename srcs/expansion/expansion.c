@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 12:28:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 21:57:40 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/02 21:41:53 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ void	expand_quote(char **token, t_token **expanded_tokens)
 	*token += len;
 }
 
-int keylen(char *s)
+int	keylen(char *s)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (s && s[len] && !is_env_end(s[len]))
@@ -66,7 +66,7 @@ int keylen(char *s)
 	return (len);
 }
 
-void move_token_pointer(char **token, int i)
+void	move_token_pointer(char **token, int i)
 {
 	if ((*token)[i])
 		i++;
@@ -90,7 +90,8 @@ void	expand_env(char **token, t_token **expanded_tokens)
 	key = get_env_key(*token + i);
 	if ((*token)[i - 1] == DLL && !key)
 	{
-		append_token(expanded_tokens, new_token(ft_strndup((*token + i - 1), 1)));
+		append_token(expanded_tokens,
+			new_token(ft_strndup((*token + i - 1), 1)));
 		*token += i;
 		return ;
 	}

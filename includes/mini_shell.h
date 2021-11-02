@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/26 21:46:59 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/02 21:44:38 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,14 +149,14 @@ typedef struct s_environ
 	struct s_environ	*prev;
 	char				*key;
 	char				*value;
-	t_bool			is_declear;
+	t_bool				is_declear;
 }	t_environ;
 
 typedef struct s_pwd
 {
 	struct s_pwd	*next;
 	struct s_pwd	*prev;
-	char *dir;
+	char			*dir;
 }	t_pwd;
 
 typedef t_exit_cd	(*t_builtin_func)(
@@ -246,8 +246,8 @@ t_builtin_id		get_builtin_id(const char *token);
 /*
 ** cd.c **
 */
-void renew_pwd(char *path);
-char					*stringify_pwd(void);
+void				renew_pwd(char *path);
+char				*stringify_pwd(void);
 t_bool				is_current_dir_exist(void);
 t_bool				search_cdpath(char *path);
 t_exit_cd			execute_cd(const char **cmd_args, t_bool is_child_process);
@@ -270,8 +270,9 @@ t_exit_cd			execute_exit(const char **cmd_args,
 /*
  ** export.c **
  */
- void print_pwd();
-t_bool				replace_duplicated_environ(char *key, char *value, t_bool is_declear);
+void				print_pwd(void);
+t_bool				replace_duplicated_environ(char *key,
+						char *value, t_bool is_declear);
 char				**split_key_value(char *arg, t_bool *is_declear);
 t_exit_cd			declare_env(t_bool is_child_process);
 t_exit_cd			execute_export(const char **cmd_args,
@@ -279,16 +280,16 @@ t_exit_cd			execute_export(const char **cmd_args,
 /*
  ** pwd1.c **
  */
-void					init_pwd(void);
+void				init_pwd(void);
 t_exit_cd			execute_pwd(const char **cmd_args, t_bool is_child_process);
 /*
  ** pwd2.c **
  */
- void replace_oldpwd(void);
- void normalize_pwd(void);
- void replace_pwd(char **split, t_bool flg);
- char *stringify_pwd(void);
- void renew_pwd(char *path);
+void				replace_oldpwd(void);
+void				normalize_pwd(void);
+void				replace_pwd(char **split, t_bool flg);
+char				*stringify_pwd(void);
+void				renew_pwd(char *path);
 /*
  ** unset.c **
  */
@@ -305,11 +306,11 @@ char				*join_path(char *cdpath, char *path);
 /*
  ** list.c **
  */
-void	move_pwd_head(t_pwd **head, t_pwd *pwd);
-void	delete_pwd(t_pwd **head, t_pwd *target_pwd);
-void	free_pwd(t_pwd **head);
-t_pwd	*new_pwd(char *dir);
-void	append_pwd(t_pwd **head, t_pwd *new);
+void				move_pwd_head(t_pwd **head, t_pwd *pwd);
+void				delete_pwd(t_pwd **head, t_pwd *target_pwd);
+void				free_pwd(t_pwd **head);
+t_pwd				*new_pwd(char *dir);
+void				append_pwd(t_pwd **head, t_pwd *new);
 /*
  *************
  ** convert **

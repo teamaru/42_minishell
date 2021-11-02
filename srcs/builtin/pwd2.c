@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 21:25:06 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/02 21:25:06 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/02 21:38:27 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 extern t_request	g_request;
 
-void replace_oldpwd(void)
+void	replace_oldpwd(void)
 {
-	t_environ *pwd_env;
-	char *pwd;
+	t_environ	*pwd_env;
+	char		*pwd;
 
 	pwd_env = get_target_environ("PWD");
 	if (pwd_env)
@@ -29,10 +29,10 @@ void replace_oldpwd(void)
 	replace_env_value("OLDPWD", pwd);
 }
 
-void normalize_pwd(void)
+void	normalize_pwd(void)
 {
-	t_pwd *pwd;
-	t_pwd *next;
+	t_pwd	*pwd;
+	t_pwd	*next;
 
 	pwd = g_request.pwd;
 	while (pwd)
@@ -52,9 +52,9 @@ void normalize_pwd(void)
 	}
 }
 
-void replace_pwd(char **split, t_bool flg)
+void	replace_pwd(char **split, t_bool flg)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	if (flg)
@@ -63,10 +63,10 @@ void replace_pwd(char **split, t_bool flg)
 		append_pwd(&g_request.pwd, new_pwd(ft_strdup(split[i])));
 }
 
-char *stringify_pwd(void)
+char	*stringify_pwd(void)
 {
-	t_pwd *pwd;
-	char *str_pwd;
+	t_pwd	*pwd;
+	char	*str_pwd;
 
 	pwd = g_request.pwd;
 	str_pwd = NULL;
@@ -79,10 +79,10 @@ char *stringify_pwd(void)
 	return (str_pwd);
 }
 
-void renew_pwd(char *path)
+void	renew_pwd(char *path)
 {
-	char *str_pwd;
-	char **split;
+	char	*str_pwd;
+	char	**split;
 
 	if (!is_current_dir_exist())
 		append_pwd(&g_request.pwd, new_pwd(ft_strdup(path)));

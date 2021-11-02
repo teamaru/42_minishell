@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 15:25:38 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/26 12:17:08 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/02 21:39:20 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ t_exit_cd	declare_env(t_bool is_child_process)
 	return (return_or_exit(SCCSS, is_child_process));
 }
 
-void add_declear_pwd(char **split, t_bool *is_declear, char *key)
+void	add_declear_pwd(char **split, t_bool *is_declear, char *key)
 {
 	free(split[1]);
 	if (!ft_strcmp(key, "PWD"))
@@ -112,7 +112,7 @@ t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 	char	**split;
 	int		i;
 	int		flg;
-	t_bool is_declear;
+	t_bool	is_declear;
 
 	if (!cmd_args[1])
 		return (declare_env(is_child_process));

@@ -14,6 +14,20 @@
 
 extern t_request	g_request;
 
+t_bool	set_environ(char **split, t_bool flg, t_bool is_declear)
+{
+	if (!is_valid_identifier(split[0]))
+		return (FALSE);
+	if (!ft_strcmp(split[0], "PWD") && is_declear)
+		add_declear_pwd(split, &is_declear, "PWD");
+	else if (!ft_strcmp(split[0], "OLDPWD") && g_request.oldpwd && is_declear)
+		add_declear_pwd(split, &is_declear, "OLD");
+	if (!replace_duplicated_environ(split[0], split[1], is_declear))
+		append_environ(&g_request.environs,
+			new_environ(ft_strdup(split[0]), ft_strdup(split[1]), is_declear));
+	return (flg);
+}
+
 void	replace_env_value(char *target_key, char *new_value)
 {
 	t_environ	*target_environ;

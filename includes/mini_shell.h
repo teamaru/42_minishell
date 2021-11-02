@@ -270,7 +270,7 @@ t_exit_cd			execute_exit(const char **cmd_args,
 /*
  ** export.c **
  */
-void				print_pwd(void);
+void	add_declear_pwd(char **split, t_bool *is_declear, char *key);
 t_bool				replace_duplicated_environ(char *key,
 						char *value, t_bool is_declear);
 char				**split_key_value(char *arg, t_bool *is_declear);
@@ -358,6 +358,7 @@ t_result			set_heredocument(
 /*
 ** environ.c **
 */
+t_bool	set_environ(char **split, t_bool flg, t_bool is_declear);
 void				replace_env_value(char *target_key, char *new_value);
 t_environ			*get_target_environ(const char *key);
 void				print_environ(t_environ *head);
@@ -550,14 +551,20 @@ void				expand_env(char **token, t_token **expanded_tokens);
 char				*expand_token(t_expand_func expand_func, char *token);
 t_bool				expand(void);
 /*
- ** utils.c **
+ ** utils1.c **
  */
 char				*join_expanded_tokens(t_token *expanded_tokens);
 int					get_str_len(char *token);
 void				get_word(t_token **new_tokens, char **line);
 void				split_word(t_token **new_tokens, char *token);
 t_bool				is_file_path(t_token *token);
+/*
+ ** utils2.c **
+ */
 
+int	keylen(char *s);
+void	move_token_pointer(char **token, int i);
+void append_doll(char **token, t_token **expanded_tokens, int i);
 /*
  *************
  ** signal **

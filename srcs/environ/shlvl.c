@@ -36,6 +36,6 @@ void	update_shlvl(void)
 	else
 	{
 		append_environ(&g_request.environs,
-			new_environ(ft_strdup("SHLVL"), ft_strdup("1")));
+			new_environ(ft_strdup("SHLVL"), ft_strdup("1"), FALSE));
 	}
 }

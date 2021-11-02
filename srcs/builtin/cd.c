@@ -14,10 +14,12 @@
 
 extern t_request	g_request;
 
-t_bool	is_current_dir_exist(char *pwd)
+t_bool	is_current_dir_exist()
 {
+	char pwd[BUFSIZ];
 	struct stat	stat_buf;
 
+	getcwd(pwd, BUFSIZ);
 	return (lstat(pwd, &stat_buf) == 0);
 }
 
@@ -38,7 +40,8 @@ t_bool	search_cdpath(char *path)
 		cdpaths[i] = join_path(cdpaths[i], path);
 		if (chdir(cdpaths[i]) == -1)
 			continue ;
-		ft_putendl_fd(cdpaths[i], STDOUT);
+		renew_pwd(cdpaths[i]);
+		print_pwd();
 		multi_free(cdpaths);
 		return (TRUE);
 	}
@@ -59,28 +62,28 @@ t_bool	set_home_dir(char **path)
 
 t_exit_cd	execute_cd(const char **cmd_args, t_bool is_child_process)
 {
-	char	pwd[BUFSIZ];
 	char	*path;
 	t_bool	is_changed;
 
 	is_changed = FALSE;
-	pwd[0] = '0';
-	getcwd(pwd, BUFSIZ);
-	replace_env_value("OLDPWD", pwd);
+	replace_oldpwd();
 	path = (char *)cmd_args[1];
-	if (!path)
-		if (!set_home_dir(&path))
+	if (!path && !set_home_dir(&path))
 			return (builtin_err(ERR_MSG_HOME_NOT_SET,
 					GNRL_ERR, is_child_process));
 	if (!path || !*path)
 		return (return_or_exit(SCCSS, is_child_process));
-	if (*path == PERIOD && !is_current_dir_exist(pwd))
+	if (*path == PERIOD && !is_current_dir_exist())
+	{
+		renew_pwd(path);
 		return (builtin_err(ERR_MSG_NO_FILE, GNRL_ERR, is_child_process));
+	}
 	if (is_path_part(path))
 		is_changed = search_cdpath(path);
-	if (!is_changed && chdir(path) == -1)
+	if (is_changed)
+		return (return_or_exit(SCCSS, is_child_process));
+	if (chdir(path) == -1)
 		return (builtin_err(NULL, GNRL_ERR, is_child_process));
-	getcwd(pwd, BUFSIZ);
-	replace_env_value("PWD", pwd);
+	renew_pwd(path);
 	return (return_or_exit(SCCSS, is_child_process));
 }

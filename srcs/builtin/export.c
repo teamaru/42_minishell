@@ -14,7 +14,7 @@
 
 extern t_request	g_request;
 
-t_bool	replace_duplicated_environ(char *key, char *value)
+t_bool	replace_duplicated_environ(char *key, char *value, t_bool is_declear)
 {
 	t_environ	*environ;
 
@@ -23,8 +23,12 @@ t_bool	replace_duplicated_environ(char *key, char *value)
 	{
 		if (!ft_strcmp(environ->key, key))
 		{
-			free(environ->value);
-			environ->value = ft_strdup(value);
+			if (!is_declear)
+			{
+				free(environ->value);
+				environ->value = ft_strdup(value);
+				environ->is_declear = is_declear;
+			}
 			return (TRUE);
 		}
 		environ = environ->next;
@@ -32,7 +36,7 @@ t_bool	replace_duplicated_environ(char *key, char *value)
 	return (FALSE);
 }
 
-char	**split_key_value(char *arg)
+char	**split_key_value(char *arg, t_bool *is_declear)
 {
 	int		i;
 	char	**split;
@@ -47,13 +51,13 @@ char	**split_key_value(char *arg)
 		return (NULL);
 	}
 	split[0] = ft_strndup(arg, i);
-	if (ft_strlen(arg) == ft_strlen(split[0]))
+	if (ft_strlen(arg) != ft_strlen(split[0]))
+		split[1] = ft_strdup(arg + i + 1);
+	else
 	{
-		free(split[0]);
-		free(split);
-		return (NULL);
+		*is_declear = TRUE;
+		split[1] = NULL;
 	}
-	split[1] = ft_strdup(arg + i + 1);
 	split[2] = NULL;
 	return (split);
 }
@@ -67,23 +71,39 @@ t_exit_cd	declare_env(t_bool is_child_process)
 	{
 		ft_putstr_fd("declare -x ", STDOUT);
 		ft_putstr_fd(environ->key, STDOUT);
-		ft_putstr_fd("=\"", STDOUT);
-		ft_putstr_fd(environ->value, STDOUT);
-		ft_putstr_fd("\"\n", STDOUT);
+		if (!environ->is_declear)
+		{
+			ft_putstr_fd("=\"", STDOUT);
+			ft_putstr_fd(environ->value, STDOUT);
+			ft_putstr_fd("\"", STDOUT);
+		}
+		ft_putstr_fd("\n", STDOUT);
 		environ = environ->next;
 	}
-	if (!get_target_environ("OLDPWD"))
-		ft_putstr_fd("declare -x OLDPWD\n", STDOUT);
 	return (return_or_exit(SCCSS, is_child_process));
 }
 
-t_bool	set_environ(char **split, t_bool flg)
+void add_declear_pwd(char **split, t_bool *is_declear, char *key)
+{
+	free(split[1]);
+	if (!ft_strcmp(key, "PWD"))
+		split[1] = stringify_pwd();
+	else
+		split[1] = ft_strdup(g_request.oldpwd);
+	*is_declear = FALSE;
+}
+
+t_bool	set_environ(char **split, t_bool flg, t_bool is_declear)
 {
 	if (!is_valid_identifier(split[0]))
 		return (FALSE);
-	if (!replace_duplicated_environ(split[0], split[1]))
+	if (!ft_strcmp(split[0], "PWD") && is_declear)
+		add_declear_pwd(split, &is_declear, "PWD");
+	else if (!ft_strcmp(split[0], "OLDPWD") && g_request.oldpwd && is_declear)
+		add_declear_pwd(split, &is_declear, "OLD");
+	if (!replace_duplicated_environ(split[0], split[1], is_declear))
 		append_environ(&g_request.environs,
-			new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
+			new_environ(ft_strdup(split[0]), ft_strdup(split[1]), is_declear));
 	return (flg);
 }
 
@@ -92,6 +112,7 @@ t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 	char	**split;
 	int		i;
 	int		flg;
+	t_bool is_declear;
 
 	if (!cmd_args[1])
 		return (declare_env(is_child_process));
@@ -99,14 +120,15 @@ t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 	flg = TRUE;
 	while (cmd_args[++i])
 	{
-		split = split_key_value((char *)cmd_args[i]);
+		is_declear = FALSE;
+		split = split_key_value((char *)cmd_args[i], &is_declear);
 		if (!split || !ft_strcmp(split[0], ""))
 		{
 			if (!is_valid_identifier(cmd_args[i]))
 				flg = print_err_msg(ERR_MSG_NOT_VLD_IDNTFR, GNRL_ERR);
 			continue ;
 		}
-		flg = set_environ(split, flg);
+		flg = set_environ(split, flg, is_declear);
 		multi_free(split);
 	}
 	if (!flg)

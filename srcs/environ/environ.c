@@ -20,10 +20,10 @@ void	replace_env_value(char *target_key, char *new_value)
 
 	target_environ = get_target_environ(target_key);
 	if (!target_environ)
-		return (append_environ(&g_request.environs,
-			new_environ(ft_strdup(target_key), ft_strdup(new_value))));
+		return ;
 	free(target_environ->value);
 	target_environ->value = ft_strdup(new_value);
+	target_environ->is_declear = FALSE;
 }
 
 t_environ	*get_target_environ(const char *key)
@@ -58,6 +58,7 @@ void	make_environ_hash(void)
 	extern char	**environ;
 	char		**env;
 	char		**split;
+	t_environ *oldpwd;
 
 	env = environ;
 	g_request.environs = NULL;
@@ -65,8 +66,11 @@ void	make_environ_hash(void)
 	{
 		split = ft_split(*env++, '=');
 		append_environ(&g_request.environs,
-			new_environ(ft_strdup(split[0]), ft_strdup(split[1])));
+			new_environ(ft_strdup(split[0]), ft_strdup(split[1]), FALSE));
 		multi_free(split);
 	}
-	delete_environ(&g_request.environs, get_target_environ("OLDPWD"));
+	oldpwd = get_target_environ("OLDPWD");
+	free(oldpwd->value);
+	oldpwd->value = NULL;
+	oldpwd->is_declear = TRUE;
 }

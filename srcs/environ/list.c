@@ -55,7 +55,7 @@ void	free_environs(t_environ **head)
 	*head = NULL;
 }
 
-t_environ	*new_environ(char *key, char *value)
+t_environ	*new_environ(char *key, char *value, t_bool is_declear)
 {
 	t_environ	*new;
 
@@ -64,6 +64,7 @@ t_environ	*new_environ(char *key, char *value)
 		return (NULL);
 	new->key = key;
 	new->value = value;
+	new->is_declear = is_declear;
 	new->prev = NULL;
 	new->next = NULL;
 	return (new);

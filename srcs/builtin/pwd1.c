@@ -12,13 +12,42 @@
 
 #include <mini_shell.h>
 
+extern t_request	g_request;
+
+void print_pwd()
+{
+  t_pwd *pwd;
+
+  pwd = g_request.pwd;
+	ft_putstr_fd("/", STDOUT);
+  while (pwd)
+  {
+    ft_putstr_fd(pwd->dir, STDOUT);
+    pwd = pwd->next;
+		if (pwd)
+			ft_putstr_fd("/", STDOUT);
+  }
+  ft_putstr_fd("\n", STDOUT);
+}
+
+void init_pwd()
+{
+	char pwd[BUFSIZ];
+	char **split;
+	int i;
+
+	getcwd(pwd, BUFSIZ);
+	split = ft_split(pwd, '/');
+	g_request.oldpwd = NULL;
+	i = -1;
+	while (split[++i])
+		append_pwd(&g_request.pwd, new_pwd(ft_strdup(split[i])));
+	multi_free(split);
+}
+
 t_exit_cd	execute_pwd(const char **cmd_args, t_bool is_child_process)
 {
-	char	pwd[BUFSIZ];
-
 	(void)cmd_args;
-	pwd[0] = '0';
-	getcwd(pwd, BUFSIZ);
-	ft_putendl_fd(pwd, STDOUT);
+	print_pwd();
 	return (return_or_exit(SCCSS, is_child_process));
 }

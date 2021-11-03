@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:23:39 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/26 14:47:23 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/29 17:31:51 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ void	builtin_restore_fd(int backup_fd[3])
 	dup2(backup_fd[0], STDIN);
 	dup2(backup_fd[1], STDOUT);
 	dup2(backup_fd[2], STDERR);
+	close(backup_fd[0]);
+	close(backup_fd[1]);
+	close(backup_fd[2]);
 }
 
 t_result	exec_simple_buitin(t_pipe_list *pipe_list, t_builtin_id builtin_id)

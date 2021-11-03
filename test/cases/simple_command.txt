@@ -22,6 +22,6 @@ touch perm\n chmod 500 perm\n ./perm
 touch empty\n chmod +x empty\n ./empty
 mkdir dir\n dir
 mkdir dir\n ./dir
-printf "#!/bin/bash\necho 42" > exe\n chmod +x exe\n ln -s exe sym\n chmod -h -x sym\n ./exe
+ln -s exe sym\n chmod -h -x sym\n ./exe
 unset NO_ENV\n echo a | $NO_ENV | cat
 

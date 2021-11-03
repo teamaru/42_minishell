@@ -45,6 +45,9 @@
 # define ERR_MSG_NO_FILE "No such file or directory"
 # define ERR_MSG_HOME_NOT_SET "HOME not set"
 # define ERR_MSG_NOT_VLD_IDNTFR "not a valid identifier"
+# define ERR_MSG_PERM_DENIED "Permission denied"
+# define ERR_MSG_NOT_DIR "Not a directory"
+# define ERR_MSG_IS_DIR "is a directory"
 
 typedef enum e_bool
 {
@@ -389,6 +392,11 @@ int					get_env_len(char *token);
  **************
  */
 /*
+** check_executable_cmd_path.c **
+*/
+t_exit_cd			check_executable_cmd_path(const char *cmd_path,
+						char **err_msg);
+/*
 ** create_environ.c **
 */
 t_bool				is_execution(char **line);
@@ -399,23 +407,31 @@ char				**env_list_to_array(t_environ *environs);
 void				child_exec_cmd(t_pipe_list *pipe_list);
 void				execute_cmds(t_pipe_list *pipe_list);
 /*
+** exec_pipe_list.c **
+*/
+char				*get_dir_path(const char *cmd_path);
+/*
 ** handle_pipe.c **
 */
 void				handle_pipelines(t_pipe_list *pipe_list);
 /*
 ** serch_cmd_path.c **
 */
-t_bool				search_path(char **cmd);
+t_exit_cd			search_path(char **cmd);
 /*
 ** simple_builtin.c **
 */
 t_result			exec_simple_buitin(t_pipe_list *pipe_list,
 						t_builtin_id builtin_id);
 /*
-** simple_cmd.c **
+** split_path.c **
 */
 void				exec_simple_cmd(t_pipe_list *pipe_list);
 char				**split_path(char *path, char delimiter);
+/*
+** wait_process.c **
+*/
+void				wait_processes(t_pipe_list *pipe_list);
 
 /*
  ***********
@@ -430,6 +446,7 @@ void				my_exit(t_exit_cd exit_cd);
 t_exit_cd			builtin_err(char *msg, t_exit_cd exit_cd,
 						t_bool is_child_process);
 void				print_err_and_exit(char *msg, t_exit_cd exit_cd);
+void				print_err_and_exit_free(char **msg, t_exit_cd exit_cd);
 /*
  ***********
  ** utils **
@@ -458,6 +475,7 @@ t_bool				is_match_str(char *input, char *delimiter);
 t_bool				is_dollar(char c);
 t_bool				has_heredoc(t_heredoc_to_fd *heredoc);
 t_bool				has_pipe(t_pipe_list *pipe_list);
+t_bool				is_enable_environ_path(void);
 
 /*
 ** free.c **

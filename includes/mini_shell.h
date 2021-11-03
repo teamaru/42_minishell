@@ -283,6 +283,7 @@ t_exit_cd			execute_export(const char **cmd_args,
 /*
  ** pwd1.c **
  */
+void					print_pwd(void);
 void				init_pwd(void);
 t_exit_cd			execute_pwd(const char **cmd_args, t_bool is_child_process);
 /*

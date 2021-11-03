@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/25 22:45:38 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:00:33 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,51 @@
 
 extern t_request	g_request;
 
+void	call_execve_function(const char **cmd_args)
+{
+	char		**environs;
+	struct stat	buf;
+
+	environs = env_list_to_array(g_request.environs);
+	if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)
+	{
+		stat(cmd_args[0], &buf);
+		if (!access(cmd_args[0], R_OK))
+			exit(0);
+		else if (!buf.st_size)
+			print_err_and_exit(ERR_MSG_PERM_DENIED, DENIED);
+		else
+			print_err_and_exit(NULL, GNRL_ERR);
+	}
+}
+
 void	exec_path_cmd(t_pipe_list *pipe_list)
 {
 	const char	**cmd_args;
-	char		**environs;
+	t_exit_cd	exit_cd;
+	char		*err_msg;
 
-	environs = env_list_to_array(g_request.environs);
 	cmd_args = pipe_list->cmd_args;
-	if (get_target_environ("PATH") && is_path_part((char *)cmd_args[0]))
-		search_path((char **)cmd_args);
-	if (access(cmd_args[0], F_OK) == -1)
-		print_err_and_exit(NULL, CMD_NOT_FND);
-	if (access(cmd_args[0], X_OK) == -1)
-		print_err_and_exit(NULL, DENIED);
-	if (execve(cmd_args[0], (char *const *)cmd_args, environs) < 0)
-		print_err_and_exit(NULL, GNRL_ERR);
+	err_msg = NULL;
+	exit_cd = SCCSS;
+	if (!is_path_part((char *)cmd_args[0]))
+	{
+		exit_cd = check_executable_cmd_path(cmd_args[0], &err_msg);
+		if (exit_cd != SCCSS)
+			print_err_and_exit_free(&err_msg, exit_cd);
+		free(err_msg);
+	}
+	else
+	{
+		if (is_enable_environ_path() == FALSE)
+			print_err_and_exit(ERR_MSG_NO_FILE, CMD_NOT_FND);
+		exit_cd = search_path((char **)cmd_args);
+		if (exit_cd == DENIED)
+			print_err_and_exit(ERR_MSG_PERM_DENIED, DENIED);
+		else if (exit_cd != SCCSS)
+			print_err_and_exit(ERR_MSG_NO_FILE, CMD_NOT_FND);
+	}
+	call_execve_function(cmd_args);
 }
 
 void	child_exec_cmd(t_pipe_list *pipe_list)
@@ -44,26 +74,6 @@ void	child_exec_cmd(t_pipe_list *pipe_list)
 		g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, TRUE);
 	else
 		exec_path_cmd(pipe_list);
-}
-
-void	wait_processes(t_pipe_list *pipe_list)
-{
-	pid_t		changed_pid;
-	t_pipe_list	*tmp_node;
-	int			status;
-
-	tmp_node = pipe_list;
-	while (tmp_node)
-	{
-		changed_pid = waitpid(tmp_node->pid, &status, 0);
-		g_request.exit_cd = WEXITSTATUS(status);
-		if (changed_pid < 0)
-		{
-			perror("waitpid");
-			return ;
-		}
-		tmp_node = tmp_node->next;
-	}
 }
 
 void	execute_cmds(t_pipe_list *pipe_list)

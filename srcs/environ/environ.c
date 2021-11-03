@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environ.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 22:23:01 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 22:23:01 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/10/30 16:57:06 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	replace_env_value(char *target_key, char *new_value)
 	target_environ = get_target_environ(target_key);
 	if (!target_environ)
 		return (append_environ(&g_request.environs,
-			new_environ(ft_strdup(target_key), ft_strdup(new_value))));
+				new_environ(ft_strdup(target_key), ft_strdup(new_value))));
 	free(target_environ->value);
 	target_environ->value = ft_strdup(new_value);
 }

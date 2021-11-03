@@ -56,7 +56,6 @@ export CDPATH="a"\n mkdir a\n cd a\n pwd
 export CDPATH="a"\n mkdir -p a/a\n cd a\n pwd
 mkdir -p a/b/c/d/e/f/g/h/i/\n cd a/b/c/d/../../c/d/e/f/g/h/i/../../../g/h/i/../.././././../g/h/i/../../../../../../../c/d/../d/../d/e/../../d/e/.././././e/f/.//////../f/g/h/i/////../../../\n pwd
 export HOME="/"\n cd\n cd ../../../../../././././../../../././../../../\n pwd
-cd //\n pwd\n cd //bin\n pwd
 cd ///\n pwd\n cd ///bin\n pwd
 cd ////\n pwd\n cd ////bin\n pwd
 cd /////\n pwd\n cd /////bin\n pwd
@@ -65,8 +64,6 @@ cd ///////\n pwd\n cd ///////bin\n pwd
 export HOME=//\n cd
 export HOME=//bin/..////////////bin/../\n cd
 export HOME=///\n cd
-export CDPATH=//\n cd bin
-export CDPATH=//bin/..////////////bin/../\n cd bin
 export CDPATH=///\n cd bin
 export CDPATH=":"\n cd dir\n pwd, mkdir dir
 export CDPATH="hello:"\n cd dir\n pwd, mkdir dir
@@ -75,4 +72,3 @@ export CDPATH="::/"\n cd bin\n pwd, mkdir bin
 export CDPATH="::/:"\n cd bin\n pwd, mkdir bin
 export CDPATH=""\n cd bin\n pwd, mkdir bin
 export CDPATH="/:"\n cd bin\n pwd, mkdir bin
-export CDPATH="//::"\n cd bin\n pwd, mkdir bin

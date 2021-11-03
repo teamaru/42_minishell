@@ -46,5 +46,8 @@ void	free_all(t_bool is_exit)
 	free_tokens(&g_request.tokens);
 	free_cmd_list(&g_request.cmds);
 	if (is_exit)
+	{
 		free_environs(&g_request.environs);
+		free_pwd(&g_request.pwd);
+	}
 }

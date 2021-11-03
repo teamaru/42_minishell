@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/02 21:44:38 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/03 13:59:37 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,7 +273,8 @@ t_exit_cd			execute_exit(const char **cmd_args,
 /*
  ** export.c **
  */
-void	add_declear_pwd(char **split, t_bool *is_declear, char *key);
+void				add_declear_pwd(char **split,
+						t_bool *is_declear, char *key);
 t_bool				replace_duplicated_environ(char *key,
 						char *value, t_bool is_declear);
 char				**split_key_value(char *arg, t_bool *is_declear);
@@ -283,7 +284,7 @@ t_exit_cd			execute_export(const char **cmd_args,
 /*
  ** pwd1.c **
  */
-void					print_pwd(void);
+void				print_pwd(void);
 void				init_pwd(void);
 t_exit_cd			execute_pwd(const char **cmd_args, t_bool is_child_process);
 /*
@@ -362,7 +363,7 @@ t_result			set_heredocument(
 /*
 ** environ.c **
 */
-t_bool	set_environ(char **split, t_bool flg, t_bool is_declear);
+t_bool				set_environ(char **split, t_bool flg, t_bool is_declear);
 void				replace_env_value(char *target_key, char *new_value);
 t_environ			*get_target_environ(const char *key);
 void				print_environ(t_environ *head);
@@ -581,9 +582,9 @@ t_bool				is_file_path(t_token *token);
  ** utils2.c **
  */
 
-int	keylen(char *s);
-void	move_token_pointer(char **token, int i);
-void append_doll(char **token, t_token **expanded_tokens, int i);
+int					keylen(char *s);
+void				move_token_pointer(char **token, int i);
+void				append_doll(char **token, t_token **expanded_tokens, int i);
 /*
  *************
  ** signal **

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/12 22:16:45 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 22:00:23 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/06 00:43:20 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_bool	split_token(t_token **head, t_token **token)
 	new_tokens = NULL;
 	split_word(&new_tokens, (*token)->token);
 	if (is_file_path(*token) && token_listsize(new_tokens) != 1)
-		return (print_err_msg(ERR_MSG_AMBGS_RDRCT, GNRL_ERR));
+		return (FALSE);
 	insert_tokens(head, new_tokens, *token);
 	prev = (*token)->prev;
 	delete_token(head, *token);

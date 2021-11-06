@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 16:19:39 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/11/06 12:47:15 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 18:47:04 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_exit_cd	is_correct_dir_path(const char *cmd_path, char **err_msg)
 	t_exit_cd	exit_cd;
 
 	exit_cd = SCCSS;
+	ft_bzero((void *)&buf, sizeof(struct stat) * 1);
 	dir_path = get_dir_path(cmd_path);
 	if (!dir_path)
 		return (GNRL_ERR);
@@ -44,6 +45,7 @@ t_exit_cd	is_correct_complete_path(const char *cmd_path, char **err_msg)
 	struct stat	buf;
 
 	exit_cd = SCCSS;
+	ft_bzero((void *)&buf, sizeof(struct stat) * 1);
 	stat(cmd_path, &buf);
 	if (S_ISDIR(buf.st_mode))
 		exit_cd = DENIED;

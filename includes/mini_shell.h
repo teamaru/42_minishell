@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/06 14:07:39 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 18:04:37 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -415,7 +415,7 @@ char				*get_dir_path(const char *cmd_path);
 /*
 ** handle_pipe.c **
 */
-void				handle_pipelines(t_pipe_list *pipe_list);
+pid_t				handle_pipelines(t_pipe_list *pipe_list);
 /*
 ** serch_cmd_path.c **
 */
@@ -426,6 +426,11 @@ t_exit_cd			search_path(char **cmd);
 t_result			exec_simple_buitin(t_pipe_list *pipe_list,
 						t_builtin_id builtin_id);
 /*
+** simple_cmd.c **
+*/
+void				cmd_set_exit_cd(int status, pid_t changed_pid);
+
+/*
 ** split_path.c **
 */
 void				exec_simple_cmd(t_pipe_list *pipe_list);
@@ -433,7 +438,7 @@ char				**split_path(char *path, char delimiter);
 /*
 ** wait_process.c **
 */
-void				wait_processes(t_pipe_list *pipe_list);
+void				wait_processes(t_pipe_list *pipe_list, pid_t last_child_pid);
 
 /*
  ***********
@@ -596,6 +601,11 @@ void				append_doll(char **token, t_token **expanded_tokens, int i);
 void				init_signal_in_execution(void);
 void				init_int_act_in_execution(void);
 void				interrupt_in_execution(int	sig_id);
+void				quit_act_in_execution(void);
+void				quit_act_in_execution(void);
+void				quit_in_pipe_execution(int sig_id);
+void				quit_act_in_pipe_execution(void);
+
 /*
  ** signal.c **
  */

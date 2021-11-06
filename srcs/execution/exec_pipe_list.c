@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/11/06 14:07:27 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 17:50:54 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	child_exec_cmd(t_pipe_list *pipe_list)
 	char			*err_msg;
 
 	err_msg = NULL;
+	quit_act_in_execution();
 	if (change_multi_references(pipe_list, &err_msg) < 0)
 		print_err_and_exit_free(&err_msg, GNRL_ERR);
 	if (!pipe_list->cmd_args)
@@ -81,6 +82,7 @@ void	child_exec_cmd(t_pipe_list *pipe_list)
 void	execute_cmds(t_pipe_list *pipe_list)
 {
 	t_builtin_id	builtin_id;
+	pid_t			last_child_pid;
 
 	if (pipe_list->cmd_args)
 		builtin_id = get_builtin_id(pipe_list->cmd_args[0]);
@@ -92,8 +94,8 @@ void	execute_cmds(t_pipe_list *pipe_list)
 		exec_simple_cmd(pipe_list);
 	else
 	{
-		handle_pipelines(pipe_list);
-		wait_processes(pipe_list);
+		last_child_pid = handle_pipelines(pipe_list);
+		wait_processes(pipe_list, last_child_pid);
 	}
 	init_signal();
 }

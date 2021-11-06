@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 13:33:31 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/11/06 14:26:49 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 18:18:13 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,31 +39,31 @@ static pid_t	do_pipe(t_pipe_list *first,
 	}
 	if (child_pid == 0)
 	{
+		signal(SIGQUIT, SIG_DFL);
 		child_operate_pipe_fd(first, node, last_pipe_fd, new_pipe_fd);
 		child_exec_cmd(node);
 	}
 	else
 	{
-		g_request.pid = child_pid;
 		close_and_unlink(&node->heredoc, FALSE);
 		parent_operate_pipe_fd(node, last_pipe_fd, new_pipe_fd);
 	}
-	g_request.pid = 0;
 	return (child_pid);
 }
 
-void	handle_pipelines(t_pipe_list *pipe_list)
+pid_t	handle_pipelines(t_pipe_list *pipe_list)
 {
 	t_pipe_list	*tmp_node;
 	int			last_pipe_fd[2];
-	pid_t		child_pid;
+	pid_t		last_child_pid;
 
 	tmp_node = pipe_list;
 	init_pipe_fd(last_pipe_fd);
 	while (tmp_node)
 	{
-		child_pid = do_pipe(pipe_list, tmp_node, last_pipe_fd);
-		tmp_node->pid = child_pid;
+		last_child_pid = do_pipe(pipe_list, tmp_node, last_pipe_fd);
+		tmp_node->pid = last_child_pid;
 		tmp_node = tmp_node->next;
 	}
+	return (last_child_pid);
 }

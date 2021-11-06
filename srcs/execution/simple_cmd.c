@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 12:07:08 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/31 18:59:59 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 14:21:22 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,7 @@ void	exec_simple_cmd(t_pipe_list *pipe_list)
 		return ;
 	}
 	else if (pipe_list->pid == 0)
-	{
 		child_exec_cmd(pipe_list);
-	}
 	else
 	{
 		g_request.pid = pipe_list->pid;

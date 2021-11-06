@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/03 12:38:09 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/31 18:57:03 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 14:19:44 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,4 @@ void	quit(int sig_id)
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	else
-		printf("Quit: %d\n", sig_id);
 }

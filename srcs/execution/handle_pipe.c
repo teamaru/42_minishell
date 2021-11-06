@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 13:33:31 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/25 23:27:36 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 14:26:49 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,6 @@ void	handle_pipelines(t_pipe_list *pipe_list)
 	while (tmp_node)
 	{
 		child_pid = do_pipe(pipe_list, tmp_node, last_pipe_fd);
-		if (child_pid < 0)
-		{
-			perror("do_pipe");
-			return ;
-		}
 		tmp_node->pid = child_pid;
 		tmp_node = tmp_node->next;
 	}

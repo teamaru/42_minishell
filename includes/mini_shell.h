@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/03 13:59:37 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/06 13:56:01 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -605,7 +605,7 @@ void				quit(int sig_id);
 /*
  ** change_reference.c **
  */
-int					change_multi_references(t_pipe_list *cmd);
+int					change_multi_references(t_pipe_list *cmd, char **err_msg);
 /*
  ** change_reference.c **
  */

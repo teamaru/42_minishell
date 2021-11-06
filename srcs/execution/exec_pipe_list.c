@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/11/06 12:54:05 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 13:59:16 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,11 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 void	child_exec_cmd(t_pipe_list *pipe_list)
 {
 	t_builtin_id	builtin_id;
+	char			*err_msg;
 
-	if (change_multi_references(pipe_list) < 0)
-		print_err_and_exit(ERR_MSG_AMBGS_RDRCT, GNRL_ERR);
+	err_msg = NULL;
+	if (change_multi_references(pipe_list, &err_msg) < 0)
+		print_err_and_exit_free(&err_msg, GNRL_ERR);
 	if (!pipe_list->cmd_args)
 		exit(0);
 	builtin_id = get_builtin_id(pipe_list->cmd_args[0]);

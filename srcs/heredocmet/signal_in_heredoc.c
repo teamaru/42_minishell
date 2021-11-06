@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 10:25:10 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/21 16:33:17 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 19:03:42 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,15 @@ void	exit_heredocument(int sig_no)
 t_result	set_signal_in_heredocument(void)
 {
 	struct sigaction	int_act;
+	struct sigaction	quit_act;
 
 	ft_bzero(&int_act, sizeof(int_act));
+	ft_bzero(&quit_act, sizeof(quit_act));
 	int_act.sa_handler = exit_heredocument;
+	quit_act.sa_handler = SIG_IGN;
 	if (sigaction(SIGINT, &int_act, NULL) != 0)
+		return (FAILURE);
+	if (sigaction(SIGQUIT, &quit_act, NULL) != 0)
 		return (FAILURE);
 	return (SUCCESS);
 }

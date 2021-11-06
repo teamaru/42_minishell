@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:23:39 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/29 17:31:51 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 13:49:58 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,20 @@ void	builtin_restore_fd(int backup_fd[3])
 
 t_result	exec_simple_buitin(t_pipe_list *pipe_list, t_builtin_id builtin_id)
 {
-	int	backup_fd[3];
+	int		backup_fd[3];
+	char	*err_msg;
 
 	if (write_heredoc(pipe_list->heredoc) == FAILURE)
 		return (FAILURE);
 	builtin_backup_fd(backup_fd);
-	if (change_multi_references(pipe_list) < 0)
-		print_err_msg(NULL, GNRL_ERR);
+	err_msg = NULL;
+	if (change_multi_references(pipe_list, &err_msg) < 0)
+	{
+		builtin_restore_fd(backup_fd);
+		print_err_msg(err_msg, GNRL_ERR);
+		free_set((void **)err_msg, NULL);
+		return (FAILURE);
+	}
 	g_request.exit_cd \
 		= g_request.builtin_funcs[builtin_id](pipe_list->cmd_args, FALSE);
 	builtin_restore_fd(backup_fd);

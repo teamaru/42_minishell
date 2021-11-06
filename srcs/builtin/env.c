@@ -22,10 +22,13 @@ t_exit_cd	execute_env(const char **cmd_args, t_bool is_child_process)
 	environ = g_request.environs;
 	while (environ)
 	{
-		ft_putstr_fd(environ->key, STDOUT);
-		ft_putstr_fd("=", STDOUT);
-		ft_putstr_fd(environ->value, STDOUT);
-		ft_putstr_fd("\n", STDOUT);
+		if (!environ->is_declear)
+		{
+			ft_putstr_fd(environ->key, STDOUT);
+			ft_putstr_fd("=", STDOUT);
+			ft_putstr_fd(environ->value, STDOUT);
+			ft_putstr_fd("\n", STDOUT);
+		}
 		environ = environ->next;
 	}
 	return (return_or_exit(SCCSS, is_child_process));

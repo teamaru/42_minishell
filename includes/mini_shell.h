@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/31 18:21:21 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 14:07:39 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,15 @@ typedef struct s_environ
 	struct s_environ	*prev;
 	char				*key;
 	char				*value;
+	t_bool				is_declear;
 }	t_environ;
+
+typedef struct s_pwd
+{
+	struct s_pwd	*next;
+	struct s_pwd	*prev;
+	char			*dir;
+}	t_pwd;
 
 typedef t_exit_cd	(*t_builtin_func)(
 		const char **cmd_args, t_bool is_child_process);
@@ -170,6 +178,8 @@ typedef struct s_request
 	t_exit_cd		exit_cd;
 	pid_t			pid;
 	t_bool			interrupt_heredocument;
+	char			*oldpwd;
+	t_pwd			*pwd;
 }	t_request;
 
 typedef enum e_type_rd
@@ -239,9 +249,10 @@ t_builtin_id		get_builtin_id(const char *token);
 /*
 ** cd.c **
 */
-t_bool				is_current_dir_exist(char *pwd);
+void				renew_pwd(char *path);
+char				*stringify_pwd(void);
+t_bool				is_current_dir_exist(void);
 t_bool				search_cdpath(char *path);
-t_bool				is_current_dir_exist(char *pwd);
 t_exit_cd			execute_cd(const char **cmd_args, t_bool is_child_process);
 /*
  ** echo.c **
@@ -262,15 +273,28 @@ t_exit_cd			execute_exit(const char **cmd_args,
 /*
  ** export.c **
  */
-t_bool				replace_duplicated_environ(char *key, char *value);
-char				**split_key_value(char *arg);
+void				add_declear_pwd(char **split,
+						t_bool *is_declear, char *key);
+t_bool				replace_duplicated_environ(char *key,
+						char *value, t_bool is_declear);
+char				**split_key_value(char *arg, t_bool *is_declear);
 t_exit_cd			declare_env(t_bool is_child_process);
 t_exit_cd			execute_export(const char **cmd_args,
 						t_bool is_child_process);
 /*
- ** pwd.c **
+ ** pwd1.c **
  */
+void				print_pwd(void);
+void				init_pwd(void);
 t_exit_cd			execute_pwd(const char **cmd_args, t_bool is_child_process);
+/*
+ ** pwd2.c **
+ */
+void				replace_oldpwd(void);
+void				normalize_pwd(void);
+void				replace_pwd(char **split, t_bool flg);
+char				*stringify_pwd(void);
+void				renew_pwd(char *path);
 /*
  ** unset.c **
  */
@@ -284,6 +308,14 @@ t_bool				is_valid_identifier(const char *arg);
 t_exit_cd			return_or_exit(t_exit_cd exit_cd, t_bool is_child_process);
 char				*add_slash(char *cdpath);
 char				*join_path(char *cdpath, char *path);
+/*
+ ** list.c **
+ */
+void				move_pwd_head(t_pwd **head, t_pwd *pwd);
+void				delete_pwd(t_pwd **head, t_pwd *target_pwd);
+void				free_pwd(t_pwd **head);
+t_pwd				*new_pwd(char *dir);
+void				append_pwd(t_pwd **head, t_pwd *new);
 /*
  *************
  ** convert **
@@ -331,6 +363,7 @@ t_result			set_heredocument(
 /*
 ** environ.c **
 */
+t_bool				set_environ(char **split, t_bool flg, t_bool is_declear);
 void				replace_env_value(char *target_key, char *new_value);
 t_environ			*get_target_environ(const char *key);
 void				print_environ(t_environ *head);
@@ -341,7 +374,7 @@ void				make_environ_hash(void);
 void				move_environ_head(t_environ **head, t_environ *environ);
 void				delete_environ(t_environ **head, t_environ *target_environ);
 void				free_environs(t_environ **head);
-t_environ			*new_environ(char *key, char *value);
+t_environ			*new_environ(char *key, char *value, t_bool is_declear);
 void				append_environ(t_environ **head, t_environ *new);
 /*
 ** shlvl.c **
@@ -538,14 +571,20 @@ void				expand_env(char **token, t_token **expanded_tokens);
 char				*expand_token(t_expand_func expand_func, char *token);
 t_bool				expand(void);
 /*
- ** utils.c **
+ ** utils1.c **
  */
 char				*join_expanded_tokens(t_token *expanded_tokens);
 int					get_str_len(char *token);
 void				get_word(t_token **new_tokens, char **line);
 void				split_word(t_token **new_tokens, char *token);
 t_bool				is_file_path(t_token *token);
+/*
+ ** utils2.c **
+ */
 
+int					keylen(char *s);
+void				move_token_pointer(char **token, int i);
+void				append_doll(char **token, t_token **expanded_tokens, int i);
 /*
  *************
  ** signal **
@@ -572,7 +611,7 @@ void				quit(int sig_id);
 /*
  ** change_reference.c **
  */
-int					change_multi_references(t_pipe_list *cmd);
+int					change_multi_references(t_pipe_list *cmd, char **err_msg);
 /*
  ** change_reference.c **
  */

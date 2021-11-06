@@ -1,24 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/29 23:12:29 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 21:49:41 by tsugiyam         ###   ########.fr       */
+/*   Created: 2021/11/02 21:51:41 by tsugiyam          #+#    #+#             */
+/*   Updated: 2021/11/03 14:00:24 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-t_exit_cd	execute_pwd(const char **cmd_args, t_bool is_child_process)
+int	keylen(char *s)
 {
-	char	pwd[BUFSIZ];
+	int	len;
 
-	(void)cmd_args;
-	pwd[0] = '0';
-	getcwd(pwd, BUFSIZ);
-	ft_putendl_fd(pwd, STDOUT);
-	return (return_or_exit(SCCSS, is_child_process));
+	len = 0;
+	while (s && s[len] && !is_env_end(s[len]))
+		len++;
+	return (len);
+}
+
+void	move_token_pointer(char **token, int i)
+{
+	if ((*token)[i])
+		i++;
+	*token += i;
+}
+
+void	append_doll(char **token, t_token **expanded_tokens, int i)
+{
+	append_token(expanded_tokens,
+		new_token(ft_strndup((*token + i - 1), 1)));
+	*token += i;
 }

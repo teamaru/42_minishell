@@ -21,6 +21,7 @@ void	shell_loop(void)
 
 	flg = TRUE;
 	make_environ_hash();
+	init_pwd();
 	update_shlvl();
 	g_request.exit_cd = SCCSS;
 	while (flg)

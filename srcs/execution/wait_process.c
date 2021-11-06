@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 16:43:16 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/30 17:23:07 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/04 10:16:33 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,6 @@ void	wait_processes(t_pipe_list *pipe_list)
 	{
 		changed_pid = waitpid(tmp_node->pid, &status, 0);
 		g_request.exit_cd = WEXITSTATUS(status);
-		if (changed_pid < 0)
-		{
-			perror("waitpid");
-			return ;
-		}
 		tmp_node = tmp_node->next;
 	}
 }

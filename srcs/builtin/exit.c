@@ -25,11 +25,15 @@ t_bool	is_all_digits(const char *s)
 	i = -1;
 	flg = TRUE;
 	trimmed = ft_strtrim(s, " ");
+	if (trimmed[0] == '+' || trimmed[0] == '-')
+		i++;
+	if (!trimmed[i + 1])
+		flg = FALSE;
 	while (trimmed[++i])
 		if (!ft_isdigit(trimmed[i]))
-			flg = (FALSE);
+			flg = FALSE;
 	free(trimmed);
-	return (TRUE);
+	return (flg);
 }
 
 int	str_arr_size(const char **strs)

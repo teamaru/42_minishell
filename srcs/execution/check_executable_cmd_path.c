@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 16:19:39 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/10/30 16:58:08 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/06 12:47:15 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_exit_cd	is_correct_complete_path(const char *cmd_path, char **err_msg)
 	if (exit_cd == DENIED && err_msg)
 		free_set((void **)err_msg, (void *)ft_strdup(ERR_MSG_IS_DIR));
 	else if (exit_cd == CMD_NOT_FND && err_msg)
-		free_set((void **)err_msg, (void *)ft_strdup(ERR_MSG_INVLD_CMD));
+		free_set((void **)err_msg, (void *)ft_strdup(ERR_MSG_NO_FILE));
 	return (exit_cd);
 }
 

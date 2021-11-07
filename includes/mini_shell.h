@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/06 18:04:37 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/07 23:26:11 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -483,6 +483,10 @@ t_bool				is_dollar(char c);
 t_bool				has_heredoc(t_heredoc_to_fd *heredoc);
 t_bool				has_pipe(t_pipe_list *pipe_list);
 t_bool				is_enable_environ_path(void);
+/*
+** utils4.c **
+*/
+void				nothing(int sig_no);
 
 /*
 ** free.c **
@@ -596,16 +600,22 @@ void				append_doll(char **token, t_token **expanded_tokens, int i);
  *************
  */
 /*
- ** signal_in_execution.c **
+ ** interrupt.c **
  */
 void				init_signal_in_execution(void);
 void				init_int_act_in_execution(void);
+void				int_act_in_execution(void);
 void				interrupt_in_execution(int	sig_id);
+
+/*
+ ** quit.c **
+ */
 void				quit_act_in_execution(void);
 void				quit_act_in_execution(void);
 void				quit_in_pipe_execution(int sig_id);
 void				quit_act_in_pipe_execution(void);
 
+void	int_act_in_execution(void);
 /*
  ** signal.c **
  */

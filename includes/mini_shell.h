@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/09 12:31:45 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/09 21:43:20 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -625,8 +625,7 @@ void				quit_act_in_execution(void);
 void				quit_act_in_execution(void);
 void				quit_in_pipe_execution(int sig_id);
 void				quit_act_in_pipe_execution(void);
-
-void	int_act_in_execution(void);
+void				int_act_in_execution(void);
 /*
  ** signal.c **
  */

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 12:28:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/02 21:41:53 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:35:04 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ void	expand_quote(char **token, t_token **expanded_tokens)
 
 void	expand_env(char **token, t_token **expanded_tokens)
 {
-	int		i;
-	char	*key;
-	char	*value;
-	static t_bool is_within_dblqt = FALSE;
+	int				i;
+	char			*key;
+	char			*value;
+	static t_bool	is_within_dblqt = FALSE;
 
 	i = -1;
 	while ((*token)[++i] && (*token)[i] != DLL)

@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 23:21:06 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/02 21:40:18 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:32:53 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ t_bool	search_cdpath(char *path)
 	return (FALSE);
 }
 
-void clone_pwd(t_pwd **cloned_pwd)
+void	clone_pwd(t_pwd **cloned_pwd)
 {
-	t_pwd *pwd;
+	t_pwd	*pwd;
 
 	pwd = g_request.pwd;
 	while (pwd)
@@ -52,25 +52,22 @@ void clone_pwd(t_pwd **cloned_pwd)
 	}
 }
 
-t_bool is_dir_exist(char *dir)
+t_bool	is_dir_exist(char *dir)
 {
-	char *str_pwd;
-	char **split;
-	t_bool res;
-	t_pwd *cloned_pwd;
-	int	i;
+	char	*str_pwd;
+	char	**split;
+	t_bool	res;
+	t_pwd	*cloned_pwd;
+	int		i;
 
 	cloned_pwd = NULL;
 	clone_pwd(&cloned_pwd);
-
 	split = ft_split(dir, '/');
 	i = -1;
 	while (split[++i])
 		append_pwd(&cloned_pwd, new_pwd(ft_strdup(split[i]), FALSE));
 	multi_free(split);
 	normalize_pwd(&cloned_pwd);
-
-
 	str_pwd = stringify_pwd(cloned_pwd);
 	res = is_path_exist(str_pwd);
 	free(str_pwd);

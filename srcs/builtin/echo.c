@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 19:12:21 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/22 21:46:48 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:34:28 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ extern t_request	g_request;
 
 t_bool	is_valid_opt(const char *opt)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (opt[++i])

@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 23:12:29 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/02 21:37:34 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:33:42 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ extern t_request	g_request;
 
 void	print_pwd(void)
 {
-	char *str_pwd;
+	char	*str_pwd;
 
 	str_pwd = stringify_pwd(g_request.pwd);
 	ft_putendl_fd(str_pwd, STDOUT);

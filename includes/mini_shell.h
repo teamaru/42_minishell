@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/06 18:04:37 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:31:45 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ typedef struct s_pwd
 	struct s_pwd	*next;
 	struct s_pwd	*prev;
 	char			*dir;
-	t_bool is_preserve;
+	t_bool			is_preserve;
 }	t_pwd;
 
 typedef t_exit_cd	(*t_builtin_func)(
@@ -253,9 +253,7 @@ t_builtin_id		get_builtin_id(const char *token);
 t_bool				is_current_dir_exist(void);
 t_bool				search_cdpath(char *path);
 t_exit_cd			execute_cd(const char **cmd_args, t_bool is_child_process);
-
-t_bool is_dir_exist(char *dir);
-t_bool is_path_exist(char *path);
+t_bool				is_dir_exist(char *dir);
 /*
  ** echo.c **
  */
@@ -297,8 +295,6 @@ void				normalize_pwd(t_pwd **head);
 void				replace_pwd(char **split, t_bool flg);
 char				*stringify_pwd(t_pwd *head);
 void				renew_pwd(char *path, t_bool is_changed);
-
-t_bool is_end_slash(char *str);
 /*
  ** unset.c **
  */
@@ -315,11 +311,11 @@ char				*join_path(char *cdpath, char *path);
 /*
  ** utils2.c **
  */
- t_bool is_path_exist(char *path);
- t_bool	set_home_dir(char **path);
- t_bool	is_current_dir_exist(void);
- t_bool is_end_slash(char *str);
- void	replace_pwd(char **split, t_bool flg);
+t_bool				is_path_exist(char *path);
+t_bool				set_home_dir(char **path);
+t_bool				is_current_dir_exist(void);
+t_bool				is_end_slash(char *str);
+void				replace_pwd(char **split, t_bool flg);
 /*
  ** list.c **
  */
@@ -450,7 +446,8 @@ char				**split_path(char *path, char delimiter);
 /*
 ** wait_process.c **
 */
-void				wait_processes(t_pipe_list *pipe_list, pid_t last_child_pid);
+void				wait_processes(t_pipe_list
+						*pipe_list, pid_t last_child_pid);
 
 /*
  ***********

@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 21:25:06 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/02 21:38:27 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:33:22 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,17 @@ char	*stringify_pwd(t_pwd *head)
 	while (pwd)
 	{
 		free_set((void **)&str_pwd, ft_strjoin(str_pwd, pwd->dir));
-		if ((pwd->next && !pwd->is_preserve) || (pwd->is_preserve && !is_end_slash(pwd->dir) && pwd->next))
+		if ((pwd->next && !pwd->is_preserve)
+			|| (pwd->is_preserve && !is_end_slash(pwd->dir) && pwd->next))
 			free_set((void **)&str_pwd, ft_strjoin(str_pwd, "/"));
 		pwd = pwd->next;
 	}
 	return (str_pwd);
 }
 
-void set_preserve_dir(char *path)
+void	set_preserve_dir(char *path)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (path && path[i])

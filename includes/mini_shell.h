@@ -263,6 +263,7 @@ t_exit_cd			execute_echo(const char **cmd_args,
  ** env.c **
  */
 t_exit_cd			execute_env(const char **cmd_args, t_bool is_child_process);
+t_exit_cd			declare_env(t_bool is_child_process);
 /*
  ** exit.c **
  */
@@ -278,7 +279,7 @@ void				add_declear_pwd(char **split,
 t_bool				replace_duplicated_environ(char *key,
 						char *value, t_bool is_declear);
 char				**split_key_value(char *arg, t_bool *is_declear);
-t_exit_cd			declare_env(t_bool is_child_process);
+t_bool				handle_export(char *cmd_arg);
 t_exit_cd			execute_export(const char **cmd_args,
 						t_bool is_child_process);
 /*

@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 15:25:38 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/02 21:39:20 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:49:27 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ void	add_declear_pwd(char **split, t_bool *is_declear, char *key)
 	*is_declear = FALSE;
 }
 
-t_bool handle_export(char *cmd_arg)
+t_bool	handle_export(char *cmd_arg)
 {
-	t_bool flg;
-	t_bool is_declear;
-	char **split;
+	t_bool	flg;
+	t_bool	is_declear;
+	char	**split;
 
 	flg = TRUE;
 	is_declear = FALSE;

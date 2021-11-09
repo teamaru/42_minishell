@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 12:07:08 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/11/07 23:24:02 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/09 21:13:46 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	cmd_set_exit_cd(int status, pid_t changed_pid)
 		g_request.exit_cd = WEXITSTATUS(status);
 }
 
-
 void	exec_simple_cmd(t_pipe_list *pipe_list)
 {
 	pid_t	changed_pid;
@@ -69,5 +68,4 @@ void	exec_simple_cmd(t_pipe_list *pipe_list)
 		g_request.pid = changed_pid;
 		cmd_set_exit_cd(status, changed_pid);
 	}
-	g_request.pid = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/03 13:59:37 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/06 18:04:37 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -427,7 +427,7 @@ char				*get_dir_path(const char *cmd_path);
 /*
 ** handle_pipe.c **
 */
-void				handle_pipelines(t_pipe_list *pipe_list);
+pid_t				handle_pipelines(t_pipe_list *pipe_list);
 /*
 ** serch_cmd_path.c **
 */
@@ -438,6 +438,11 @@ t_exit_cd			search_path(char **cmd);
 t_result			exec_simple_buitin(t_pipe_list *pipe_list,
 						t_builtin_id builtin_id);
 /*
+** simple_cmd.c **
+*/
+void				cmd_set_exit_cd(int status, pid_t changed_pid);
+
+/*
 ** split_path.c **
 */
 void				exec_simple_cmd(t_pipe_list *pipe_list);
@@ -445,7 +450,7 @@ char				**split_path(char *path, char delimiter);
 /*
 ** wait_process.c **
 */
-void				wait_processes(t_pipe_list *pipe_list);
+void				wait_processes(t_pipe_list *pipe_list, pid_t last_child_pid);
 
 /*
  ***********
@@ -604,6 +609,17 @@ void				handle_qt(char *token, int *i, t_bool *is_within_dblqt);
  *************
  */
 /*
+ ** signal_in_execution.c **
+ */
+void				init_signal_in_execution(void);
+void				init_int_act_in_execution(void);
+void				interrupt_in_execution(int	sig_id);
+void				quit_act_in_execution(void);
+void				quit_act_in_execution(void);
+void				quit_in_pipe_execution(int sig_id);
+void				quit_act_in_pipe_execution(void);
+
+/*
  ** signal.c **
  */
 void				init_signal(void);
@@ -618,7 +634,7 @@ void				quit(int sig_id);
 /*
  ** change_reference.c **
  */
-int					change_multi_references(t_pipe_list *cmd);
+int					change_multi_references(t_pipe_list *cmd, char **err_msg);
 /*
  ** change_reference.c **
  */

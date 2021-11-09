@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 20:26:12 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/10/24 15:05:35 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/10/31 18:21:36 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	shell_loop(void)
 	while (flg)
 	{
 		line = readline(PRMPT);
+		init_signal_in_execution();
 		if (!line)
 			my_exit(SCCSS);
 		if (ft_strlen(line) > 0)

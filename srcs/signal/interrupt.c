@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wait_process.c                                     :+:      :+:    :+:   */
+/*   interrupt.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/30 16:43:16 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/11/06 18:50:57 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/10/31 18:14:21 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/11/06 18:59:12 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,25 @@
 
 extern t_request	g_request;
 
-void	wait_processes(t_pipe_list *pipe_list, pid_t	last_child_pid)
+void	interrupt_in_execution(int sig_id)
 {
-	pid_t			changed_pid;
-	t_pipe_list		*tmp_node;
-	int				status;
+	g_request.exit_cd = sig_id + 128;
+	rl_replace_line("", 0);
+	ft_putstr_fd("\n", 1);
+}
 
-	quit_act_in_pipe_execution();
-	tmp_node = pipe_list;
-	changed_pid = waitpid(last_child_pid, &status, 0);
-	g_request.pid = changed_pid;
-	while (wait(NULL) > 0)
-		;
-	cmd_set_exit_cd(status, changed_pid);
+void	int_act_in_execution(void)
+{
+	struct sigaction	int_act;
+
+	ft_bzero(&int_act, sizeof(int_act));
+	int_act.sa_handler = interrupt_in_execution;
+	if (sigaction(SIGINT, &int_act, NULL) != 0)
+		exit(FAILURE);
+}
+
+void	init_signal_in_execution(void)
+{
+	int_act_in_execution();
+	quit_act_in_execution();
 }

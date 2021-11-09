@@ -7,4 +7,5 @@ unset OLDPWD\n echo $OLDPWD
 unset NO_SUCH_ENV\n unset NO_SUCH_ENV\n echo $?$NO_SUCH_ENV
 unset 1
 export A=a\n unset A=a\n echo $A
+cp /bin/ls .\n chmod 000 ./ls\n unset PATH\n ls
 unset ' \"$&`\n'

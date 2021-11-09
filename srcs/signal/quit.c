@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   quit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/03 12:38:09 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/06 14:19:44 by jnakahod         ###   ########.fr       */
+/*   Created: 2021/11/06 18:55:42 by jnakahod          #+#    #+#             */
+/*   Updated: 2021/11/06 19:12:06 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,37 @@
 
 extern t_request	g_request;
 
-void	init_signal(void)
+void	quit_in_execution(int sig_id)
 {
-	struct sigaction	int_act;
+	g_request.exit_cd = sig_id + 128;
+	printf("Quit: %d\n", sig_id);
+}
+
+void	quit_act_in_execution(void)
+{
 	struct sigaction	quit_act;
 
-	ft_bzero(&int_act, sizeof(int_act));
-	int_act.sa_handler = interrupt;
 	ft_bzero(&quit_act, sizeof(quit_act));
-	quit_act.sa_handler = quit;
-	if (sigaction(SIGINT, &int_act, NULL) != 0)
-		exit(FAILURE);
-	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-		exit(FAILURE);
+	quit_act.sa_handler = quit_in_execution;
 	if (sigaction(SIGQUIT, &quit_act, NULL) != 0)
 		exit(FAILURE);
 }
 
-void	interrupt(int sig_id)
+void	quit_in_pipe_execution(int sig_id)
 {
-	(void)sig_id;
-	g_request.exit_cd = 1;
-	rl_replace_line("", 0);
-	ft_putstr_fd("\n", 1);
-	rl_on_new_line();
-	rl_redisplay();
+	g_request.exit_cd = sig_id + 128;
+	if (g_request.pid <= 0)
+		printf("Quit: %d\n", sig_id);
+	else
+		rl_redisplay();
 }
 
-void	quit(int sig_id)
+void	quit_act_in_pipe_execution(void)
 {
-	(void)sig_id;
-	if (g_request.pid == 0)
-	{
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	struct sigaction	quit_act;
+
+	ft_bzero(&quit_act, sizeof(quit_act));
+	quit_act.sa_handler = quit_in_pipe_execution;
+	if (sigaction(SIGQUIT, &quit_act, NULL) != 0)
+		exit(FAILURE);
 }

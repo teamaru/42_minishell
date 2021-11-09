@@ -29,17 +29,17 @@ void	replace_oldpwd(void)
 	replace_env_value("OLDPWD", pwd);
 }
 
-void	normalize_pwd(void)
+void	normalize_pwd(t_pwd **head)
 {
 	t_pwd	*pwd;
 	t_pwd	*next;
 
-	pwd = g_request.pwd;
+	pwd = *head;
 	while (pwd)
 	{
-		if (!ft_strcmp(pwd->dir, ".."))
+		if (!ft_strcmp(pwd->dir, "..") || !ft_strcmp(pwd->dir, "../"))
 			delete_pwd(&g_request.pwd, pwd->prev);
-		free_set((void **)&pwd->dir, ft_strtrim(pwd->dir, "."));
+		free_set((void **)&pwd->dir, ft_strtrim(pwd->dir, "./"));
 		if (!pwd->dir || !ft_strcmp(pwd->dir, ""))
 		{
 			next = pwd->next;
@@ -52,40 +52,52 @@ void	normalize_pwd(void)
 	}
 }
 
-void	replace_pwd(char **split, t_bool flg)
-{
-	int	i;
-
-	i = -1;
-	if (flg)
-		free_pwd(&g_request.pwd);
-	while (split[++i])
-		append_pwd(&g_request.pwd, new_pwd(ft_strdup(split[i])));
-}
-
-char	*stringify_pwd(void)
+char	*stringify_pwd(t_pwd *head)
 {
 	t_pwd	*pwd;
 	char	*str_pwd;
 
-	pwd = g_request.pwd;
+	pwd = head;
 	str_pwd = NULL;
+	free_set((void **)&str_pwd, ft_strjoin(str_pwd, "/"));
 	while (pwd)
 	{
-		free_set((void **)&str_pwd, ft_strjoin(str_pwd, "/"));
 		free_set((void **)&str_pwd, ft_strjoin(str_pwd, pwd->dir));
+		if ((pwd->next && !pwd->is_preserve) || (pwd->is_preserve && !is_end_slash(pwd->dir) && pwd->next))
+			free_set((void **)&str_pwd, ft_strjoin(str_pwd, "/"));
 		pwd = pwd->next;
 	}
 	return (str_pwd);
 }
 
-void	renew_pwd(char *path)
+void set_preserve_dir(char *path)
+{
+	int i;
+
+	i = 0;
+	while (path && path[i])
+	{
+		while (path[i] && path[i] != '/')
+			i++;
+		if (path[i] == '/')
+			i++;
+		append_pwd(&g_request.pwd, new_pwd(ft_strndup(path, i), TRUE));
+		path += i;
+		i = 0;
+	}
+}
+
+void	renew_pwd(char *path, t_bool is_changed)
 {
 	char	*str_pwd;
 	char	**split;
 
 	if (!is_current_dir_exist())
-		append_pwd(&g_request.pwd, new_pwd(ft_strdup(path)));
+	{
+		set_preserve_dir(path);
+		if (is_changed)
+			normalize_pwd(&g_request.pwd);
+	}
 	else
 	{
 		split = ft_split(path, '/');
@@ -93,10 +105,10 @@ void	renew_pwd(char *path)
 			replace_pwd(split, TRUE);
 		else
 			replace_pwd(split, FALSE);
-		normalize_pwd();
+		normalize_pwd(&g_request.pwd);
 		multi_free(split);
 	}
-	str_pwd = stringify_pwd();
+	str_pwd = stringify_pwd(g_request.pwd);
 	replace_env_value("PWD", str_pwd);
 	free(str_pwd);
 }

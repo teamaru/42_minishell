@@ -14,13 +14,27 @@
 
 extern t_request	g_request;
 
+t_bool	is_valid_opt(const char *opt)
+{
+	int i;
+
+	i = 0;
+	while (opt[++i])
+		if (opt[i] != 'n')
+			return (FALSE);
+	return (TRUE);
+}
+
 t_exit_cd	execute_echo(const char **cmd_args, t_bool is_child_process)
 {
 	int		i;
 	t_bool	has_opt;
 
 	i = 1;
-	has_opt = (cmd_args[i] && !ft_strcmp(cmd_args[i], "-n"));
+	if (cmd_args[i] && cmd_args[i][0] == '-')
+		has_opt = is_valid_opt(cmd_args[i]);
+	else
+		has_opt = FALSE;
 	if (has_opt)
 		i++;
 	while (cmd_args[i])

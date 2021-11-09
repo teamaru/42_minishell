@@ -35,3 +35,11 @@ void	append_doll(char **token, t_token **expanded_tokens, int i)
 		new_token(ft_strndup((*token + i - 1), 1)));
 	*token += i;
 }
+
+void handle_qt(char *token, int *i, t_bool *is_within_dblqt)
+{
+	if (token[*i] == DBL_QT)
+		*is_within_dblqt = !*is_within_dblqt;
+	if (token[*i] == SGL_QT)
+		find_closing_qt(token, i);
+}

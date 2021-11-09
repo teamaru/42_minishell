@@ -87,7 +87,7 @@ void	add_declear_pwd(char **split, t_bool *is_declear, char *key)
 {
 	free(split[1]);
 	if (!ft_strcmp(key, "PWD"))
-		split[1] = stringify_pwd();
+		split[1] = stringify_pwd(g_request.pwd);
 	else
 		split[1] = ft_strdup(g_request.oldpwd);
 	*is_declear = FALSE;
@@ -110,10 +110,11 @@ t_exit_cd	execute_export(const char **cmd_args, t_bool is_child_process)
 		split = split_key_value((char *)cmd_args[i], &is_declear);
 		if (!split || !ft_strcmp(split[0], ""))
 		{
-			if (!is_valid_identifier(cmd_args[i]))
-				flg = print_err_msg(ERR_MSG_NOT_VLD_IDNTFR, GNRL_ERR);
+			flg = print_err_msg(ERR_MSG_NOT_VLD_IDNTFR, GNRL_ERR);
 			continue ;
 		}
+		if (!is_valid_identifier(split[0]))
+			flg = print_err_msg(ERR_MSG_NOT_VLD_IDNTFR, GNRL_ERR);
 		flg = set_environ(split, flg, is_declear);
 		multi_free(split);
 	}

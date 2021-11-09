@@ -56,7 +56,7 @@ void	free_pwd(t_pwd **head)
 	*head = NULL;
 }
 
-t_pwd	*new_pwd(char *dir)
+t_pwd	*new_pwd(char *dir, t_bool is_preserve)
 {
 	t_pwd	*new;
 
@@ -64,6 +64,7 @@ t_pwd	*new_pwd(char *dir)
 	if (!new)
 		return (NULL);
 	new->dir = dir;
+	new->is_preserve = is_preserve;
 	new->prev = NULL;
 	new->next = NULL;
 	return (new);

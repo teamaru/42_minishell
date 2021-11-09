@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 12:28:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/02 21:41:53 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:35:04 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,20 +58,21 @@ void	expand_quote(char **token, t_token **expanded_tokens)
 
 void	expand_env(char **token, t_token **expanded_tokens)
 {
-	int		i;
-	char	*key;
-	char	*value;
+	int				i;
+	char			*key;
+	char			*value;
+	static t_bool	is_within_dblqt = FALSE;
 
 	i = -1;
 	while ((*token)[++i] && (*token)[i] != DLL)
-		if ((*token)[i] == SGL_QT)
-			find_closing_qt(*token, &i);
+		handle_qt(*token, &i, &is_within_dblqt);
 	if (i > 0)
 		append_token(expanded_tokens, new_token(ft_strndup(*token, i)));
 	if ((*token)[i])
 		i++;
 	key = get_env_key(*token + i);
-	if ((*token)[i - 1] == DLL && !key)
+	if ((is_within_dblqt && (*token)[i - 1] == DLL && !key)
+		|| (!is_within_dblqt && (*token)[i - 1] == DLL && !(*token)[i]))
 		return (append_doll(token, expanded_tokens, i));
 	*token += i;
 	value = get_env_value(key);

@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/25 21:58:55 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/07 23:26:11 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:31:45 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ typedef struct s_pwd
 	struct s_pwd	*next;
 	struct s_pwd	*prev;
 	char			*dir;
+	t_bool			is_preserve;
 }	t_pwd;
 
 typedef t_exit_cd	(*t_builtin_func)(
@@ -249,11 +250,10 @@ t_builtin_id		get_builtin_id(const char *token);
 /*
 ** cd.c **
 */
-void				renew_pwd(char *path);
-char				*stringify_pwd(void);
 t_bool				is_current_dir_exist(void);
 t_bool				search_cdpath(char *path);
 t_exit_cd			execute_cd(const char **cmd_args, t_bool is_child_process);
+t_bool				is_dir_exist(char *dir);
 /*
  ** echo.c **
  */
@@ -263,6 +263,7 @@ t_exit_cd			execute_echo(const char **cmd_args,
  ** env.c **
  */
 t_exit_cd			execute_env(const char **cmd_args, t_bool is_child_process);
+t_exit_cd			declare_env(t_bool is_child_process);
 /*
  ** exit.c **
  */
@@ -278,7 +279,7 @@ void				add_declear_pwd(char **split,
 t_bool				replace_duplicated_environ(char *key,
 						char *value, t_bool is_declear);
 char				**split_key_value(char *arg, t_bool *is_declear);
-t_exit_cd			declare_env(t_bool is_child_process);
+t_bool				handle_export(char *cmd_arg);
 t_exit_cd			execute_export(const char **cmd_args,
 						t_bool is_child_process);
 /*
@@ -291,17 +292,17 @@ t_exit_cd			execute_pwd(const char **cmd_args, t_bool is_child_process);
  ** pwd2.c **
  */
 void				replace_oldpwd(void);
-void				normalize_pwd(void);
+void				normalize_pwd(t_pwd **head);
 void				replace_pwd(char **split, t_bool flg);
-char				*stringify_pwd(void);
-void				renew_pwd(char *path);
+char				*stringify_pwd(t_pwd *head);
+void				renew_pwd(char *path, t_bool is_changed);
 /*
  ** unset.c **
  */
 t_exit_cd			execute_unset(const char **cmd_args,
 						t_bool is_child_process);
 /*
- ** utils.c **
+ ** utils1.c **
  */
 t_bool				is_key_exist(char *key);
 t_bool				is_valid_identifier(const char *arg);
@@ -309,12 +310,20 @@ t_exit_cd			return_or_exit(t_exit_cd exit_cd, t_bool is_child_process);
 char				*add_slash(char *cdpath);
 char				*join_path(char *cdpath, char *path);
 /*
+ ** utils2.c **
+ */
+t_bool				is_path_exist(char *path);
+t_bool				set_home_dir(char **path);
+t_bool				is_current_dir_exist(void);
+t_bool				is_end_slash(char *str);
+void				replace_pwd(char **split, t_bool flg);
+/*
  ** list.c **
  */
 void				move_pwd_head(t_pwd **head, t_pwd *pwd);
 void				delete_pwd(t_pwd **head, t_pwd *target_pwd);
 void				free_pwd(t_pwd **head);
-t_pwd				*new_pwd(char *dir);
+t_pwd				*new_pwd(char *dir, t_bool is_preserve);
 void				append_pwd(t_pwd **head, t_pwd *new);
 /*
  *************
@@ -438,7 +447,8 @@ char				**split_path(char *path, char delimiter);
 /*
 ** wait_process.c **
 */
-void				wait_processes(t_pipe_list *pipe_list, pid_t last_child_pid);
+void				wait_processes(t_pipe_list
+						*pipe_list, pid_t last_child_pid);
 
 /*
  ***********
@@ -594,6 +604,7 @@ t_bool				is_file_path(t_token *token);
 int					keylen(char *s);
 void				move_token_pointer(char **token, int i);
 void				append_doll(char **token, t_token **expanded_tokens, int i);
+void				handle_qt(char *token, int *i, t_bool *is_within_dblqt);
 /*
  *************
  ** signal **

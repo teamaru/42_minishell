@@ -6,7 +6,7 @@
 /*   By: tsugiyam <tsugiyam@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/29 23:12:29 by tsugiyam          #+#    #+#             */
-/*   Updated: 2021/11/02 21:37:34 by tsugiyam         ###   ########.fr       */
+/*   Updated: 2021/11/09 12:33:42 by tsugiyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,11 @@ extern t_request	g_request;
 
 void	print_pwd(void)
 {
-	t_pwd	*pwd;
+	char	*str_pwd;
 
-	pwd = g_request.pwd;
-	ft_putstr_fd("/", STDOUT);
-	while (pwd)
-	{
-		ft_putstr_fd(pwd->dir, STDOUT);
-		pwd = pwd->next;
-		if (pwd)
-			ft_putstr_fd("/", STDOUT);
-	}
-	ft_putstr_fd("\n", STDOUT);
+	str_pwd = stringify_pwd(g_request.pwd);
+	ft_putendl_fd(str_pwd, STDOUT);
+	free(str_pwd);
 }
 
 void	init_pwd(void)
@@ -41,7 +34,7 @@ void	init_pwd(void)
 	g_request.oldpwd = NULL;
 	i = -1;
 	while (split[++i])
-		append_pwd(&g_request.pwd, new_pwd(ft_strdup(split[i])));
+		append_pwd(&g_request.pwd, new_pwd(ft_strdup(split[i]), FALSE));
 	multi_free(split);
 }
 

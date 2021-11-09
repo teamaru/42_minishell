@@ -493,6 +493,10 @@ t_bool				is_dollar(char c);
 t_bool				has_heredoc(t_heredoc_to_fd *heredoc);
 t_bool				has_pipe(t_pipe_list *pipe_list);
 t_bool				is_enable_environ_path(void);
+/*
+** utils4.c **
+*/
+void				nothing(int sig_no);
 
 /*
 ** free.c **
@@ -607,16 +611,22 @@ void				handle_qt(char *token, int *i, t_bool *is_within_dblqt);
  *************
  */
 /*
- ** signal_in_execution.c **
+ ** interrupt.c **
  */
 void				init_signal_in_execution(void);
 void				init_int_act_in_execution(void);
+void				int_act_in_execution(void);
 void				interrupt_in_execution(int	sig_id);
+
+/*
+ ** quit.c **
+ */
 void				quit_act_in_execution(void);
 void				quit_act_in_execution(void);
 void				quit_in_pipe_execution(int sig_id);
 void				quit_act_in_pipe_execution(void);
 
+void	int_act_in_execution(void);
 /*
  ** signal.c **
  */

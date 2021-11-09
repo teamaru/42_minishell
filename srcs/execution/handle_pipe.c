@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 13:33:31 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/11/06 18:18:13 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/07 23:26:43 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static pid_t	do_pipe(t_pipe_list *first,
 
 	if (preparation_fork(node, new_pipe_fd) < 0)
 		return (-1);
+	signal(SIGINT, nothing);
+	signal(SIGQUIT, nothing);
 	child_pid = fork();
 	if (child_pid < 0)
 	{
@@ -39,7 +41,6 @@ static pid_t	do_pipe(t_pipe_list *first,
 	}
 	if (child_pid == 0)
 	{
-		signal(SIGQUIT, SIG_DFL);
 		child_operate_pipe_fd(first, node, last_pipe_fd, new_pipe_fd);
 		child_exec_cmd(node);
 	}

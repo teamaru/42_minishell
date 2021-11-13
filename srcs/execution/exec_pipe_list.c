@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 21:29:47 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/11/09 21:13:49 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/11/13 17:18:19 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	exec_path_cmd(t_pipe_list *pipe_list)
 	exit_cd = SCCSS;
 	if (!is_path_part((char *)cmd_args[0]) || is_enable_environ_path() == FALSE)
 	{
-		if (is_enable_environ_path() == FALSE)
+		if (is_path_part((char *)cmd_args[0]) && !is_enable_environ_path())
 			free_set((void **)&cmd_args[0], ft_strjoin("./", cmd_args[0]));
 		exit_cd = check_executable_cmd_path(cmd_args[0], &err_msg);
 		if (exit_cd != SCCSS)

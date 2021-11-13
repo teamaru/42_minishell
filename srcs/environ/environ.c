@@ -84,6 +84,8 @@ void	make_environ_hash(void)
 		multi_free(split);
 	}
 	oldpwd = get_target_environ("OLDPWD");
+	if (!oldpwd)
+		return ;
 	free(oldpwd->value);
 	oldpwd->value = NULL;
 	oldpwd->is_declear = TRUE;
